@@ -6,9 +6,10 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/07 17:08:04 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/07 17:36:34 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../libraries/minishell.h"
 
@@ -48,28 +49,29 @@ void	pwd(void)
 // 	return (1);
 // }
 
+char *get_word_(char *line, int del)
+{
+	int i = 0;
+	if (!line)
+		return (NULL);
+	while (line[i] && line[i] != del)
+		i++;
+	char *word = malloc((i + 1) * sizeof(char));
+	ft_strlcpy(word, line, i + 1);
+	return (word);
+}
 
-// char *get_word(char *line, int del)
-// {
-// 	int i = 0;
-// 	if (!line)
-// 		return (NULL);
-// 	while (line[i] && line[i] != del)
-// 		i++;
-// 	char *word = malloc((i + 1) * sizeof(char));
-// 	ft_strlcpy(word, line, i + 1);
-// 	return (word);
-// }
-
-// t_env *get_env_ele_ptr(char *env_val)
-// {
-// 	t_env *env = data->env;
-// 	while()
-// 	{
-		
-// 	}
-// }
-
+t_env *get_env_ele_ptr(char *env_val)
+{
+	t_env *env = data->env;
+	while(env != NULL)
+	{
+		if (ft_strcmp(env->value, env_val) == 0)
+			return (env);	
+		env = env->next;
+	}
+	return (NULL);
+}
 int	export(t_command *cmd, t_env *envir)
 {
 	// int	i;
@@ -79,20 +81,24 @@ int	export(t_command *cmd, t_env *envir)
 		env(envir);
 	else
 	{
-		char *str = ft_strchr(cmd->args[1], '=');
+		char 	*str = ft_strchr(cmd->args[1], '=');
+		char 	*word = get_word_(cmd->args[1], '=');
+		t_env 	*env_var = get_env_ele_ptr(word);
+		free(word);
+		// if (str != NULL && str[-1] == '+')
+		// {
 		// char *word = get_word(cmd->args[1], '=');
 		// char *env_var = get_env_ele_ptr(word);
 		// free(word);
-		if (str != NULL && str[-1] == '+')
+		
+		if (str != NULL && env_var != NULL)
 		{
-			// get_env_element();
-			add_back(&data->env, lstnew(ft_strdup(cmd->args[1])));
+			free(env_var->value);
+			env_var->value = ft_strdup(&str[1]);
+			// add_back(&data->env, lstnew(ft_strdup(cmd->args[1])));
 		}
 		else if (str != NULL)
-		{
-			// if (env_var != NULL)
 			add_back(&data->env, lstnew(ft_strdup(cmd->args[1])));
-		}
 	}
 		// printf("%s\n", cmd->value);
 	// if (cmd[1] == NULL)
