@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/07 17:36:34 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:38:31 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ t_env *get_env_ele_ptr(char *env_val)
 	t_env *env = data->env;
 	while(env != NULL)
 	{
-		if (ft_strcmp(env->value, env_val) == 0)
+		printf("env_value: %s\n", env->value);
+		if (ft_strncmp(env->value, env_val, ft_strlen(env_val)) == 0)
 			return (env);	
 		env = env->next;
 	}
@@ -84,12 +85,9 @@ int	export(t_command *cmd, t_env *envir)
 		char 	*str = ft_strchr(cmd->args[1], '=');
 		char 	*word = get_word_(cmd->args[1], '=');
 		t_env 	*env_var = get_env_ele_ptr(word);
+		printf("env_value: %s\n", word);
+		printf("env_value: %s\n", word);
 		free(word);
-		// if (str != NULL && str[-1] == '+')
-		// {
-		// char *word = get_word(cmd->args[1], '=');
-		// char *env_var = get_env_ele_ptr(word);
-		// free(word);
 		
 		if (str != NULL && env_var != NULL)
 		{

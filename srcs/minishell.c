@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/07 12:50:16 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:29:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ char *get_cmd_path(char *cmd_)
 int is_builtin_cmd(t_command *command)
 {
 	if (ft_strcmp(command->value, "echo") == 0)
-		printf("echo\n");
+		echo(&command->args[1]);
 	else if (ft_strcmp(command->value, "pwd") == 0)
-		printf("pwd\n");
+		pwd();
 	else if (ft_strcmp(command->value, "cd") == 0)
 		cd(&command->args[1]);
 	else if (ft_strcmp(command->value, "env") == 0)
@@ -109,11 +109,14 @@ int	exec_command(t_command *commands_list)
 	{
 		pid_t	pid;
 		char	*cmd_path;
-		if (is_builtin_cmd(commands_list) && commands_list->type == TOKEN)
-		{
-			return (0);
-		}
-		else if (commands_list->type == TOKEN)
+		// if (is_builtin_cmd(commands_list) && commands_list->type == TOKEN)
+		// {
+		is_builtin_cmd(commands_list) && commands_list->type == TOKEN;
+		return (0);
+		// }
+		// else if (commands_list->type == TOKEN)
+
+		if (commands_list->type == TOKEN)
 		{
 			cmd_path = get_cmd_path(commands_list->value);
 			if (cmd_path != NULL)

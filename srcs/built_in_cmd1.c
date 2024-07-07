@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/06/27 17:13:19 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:30:35 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	echo(char **cmd)
 	int		i;
 	bool	flag;
 
-	i = 1;
+	i = 0;
 	flag = false;
 	if (!ft_strncmp("-n", cmd[i], ft_strlen(cmd[i])))
 	{
