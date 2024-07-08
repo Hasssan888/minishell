@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/08 12:14:19 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/08 12:57:35 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_env *get_env_ele_ptr(char *env_val)
 	t_env *env = data->env;
 	while(env != NULL)
 	{
-		printf("env_value: %s\n", env->value);
+		// printf("env_value: %s\n", env->value);
 		if (ft_strncmp(env->value, env_val, ft_strlen(env_val)) == 0)
 			return (env);	
 		env = env->next;
@@ -83,16 +83,17 @@ int	export(t_command *cmd, t_env *envir)
 		char 	*word = get_word_(cmd->args[1], "+=");
 		// if (str[i])
 		t_env 	*env_var = get_env_ele_ptr(word);
-		
-		printf("str = %s\n", str);
+		if (str != NULL)
+			printf("str = %s [%c]\n", str, str[0]);
 		printf("word = %s\n", word);
-		// printf("env = %s\n", env_var->value);
+		if (env_var != NULL)
+			printf("env = %s\n", env_var->value);
 
 		free(word);
 		
 		if (!str)
 			return (0);
-		else if (env_var != NULL && str[-1] == '=')
+		else if (env_var != NULL && str[0] == '=' && str[-1] != '+')
 		{
 			if (env_var->value != NULL)
 				free(env_var->value);
