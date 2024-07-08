@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/08 12:57:35 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:37:23 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,24 +73,68 @@ t_env *get_env_ele_ptr(char *env_val)
 	}
 	return (NULL);
 }
+
+void print_array(char **array)
+{
+	int i = 0;
+	if (!array || !array[0])
+		return ;
+	while(array != NULL && array[i] != NULL)
+		printf("%s\n", array[i++]);
+}
+
+t_env *sort_list(t_env *env) {
+    t_env *env_ptr1 = env;
+    int i = 0, j = 0;
+    int list_len = 0;
+
+    while (env_ptr1 != NULL) 
+	{
+        list_len++;
+        env_ptr1 = env_ptr1->next;
+    }
+
+    char **sorted_array = malloc((list_len + 1) * sizeof(char *));
+
+    env_ptr1 = env;
+	while (env_ptr1 != NULL) 
+	{
+        sorted_array[i++] = env_ptr1->value;
+        env_ptr1 = env_ptr1->next;
+    }
+	i = 0;
+    while (i < list_len - 1) 
+	{
+		j = 0;
+        while (j < list_len - i - 1) 
+		{
+            if (ft_strcmp(sorted_array[j], sorted_array[j + 1]) > 0) 
+			{
+                char *temp = sorted_array[j];
+                sorted_array[j] = sorted_array[j + 1];
+                sorted_array[j + 1] = temp;
+            }
+			j++;
+		}
+		i++;
+	}
+	sorted_array[list_len] = NULL;
+    print_array(sorted_array);
+
+    return env;
+}
+
 int	export(t_command *cmd, t_env *envir)
 {
 	if (!cmd->args[1])
-		env(envir);
+		sort_list(envir);
 	else
 	{
 		char 	*str = ft_strchr(cmd->args[1], '=');
 		char 	*word = get_word_(cmd->args[1], "+=");
-		// if (str[i])
 		t_env 	*env_var = get_env_ele_ptr(word);
-		if (str != NULL)
-			printf("str = %s [%c]\n", str, str[0]);
-		printf("word = %s\n", word);
-		if (env_var != NULL)
-			printf("env = %s\n", env_var->value);
-
-		free(word);
 		
+		free(word);
 		if (!str)
 			return (0);
 		else if (env_var != NULL && str[0] == '=' && str[-1] != '+')
@@ -101,7 +145,6 @@ int	export(t_command *cmd, t_env *envir)
 		}
 		else if (env_var != NULL && str[-1] == '+')
 		{
-			// printf("%s\n", env_var->value);
 			char *strr = ft_strdup(&str[1]);
 			char *val = ft_strjoin(env_var->value, strr);
 			free(env_var->value);
