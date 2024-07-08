@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/08 20:20:19 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/08 20:49:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_env *sort_list(t_env *env)
 	}
 	sorted_array[list_len] = NULL;
     print_array(sorted_array);
-
+	free_array(sorted_array);
     return env;
 }
 
