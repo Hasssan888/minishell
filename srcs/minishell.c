@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/08 13:46:12 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/08 20:45:56 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,7 @@ void	init_minishell(int ac, char **av, char **env)
 int	main(int ac, char **av, char **env)
 {
 	char	*command;
-	
+	t_pipex pipex;
 	data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(ac, av, env);	
 	print_minishell();
@@ -247,8 +247,11 @@ int	main(int ac, char **av, char **env)
 	command = readline(data->prompt);
 	while (command != NULL)
 	{
+		pipex.save1 = dup(STDIN_FILENO);
 		add_history(command);
 		parse_command(command);
+		dup2(pipex.save1, STDIN_FILENO);
+		close(pipex.save1);
 		// free(command);
 		command = readline(data->prompt);
 	}

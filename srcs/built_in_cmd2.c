@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/08 13:47:09 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/08 20:20:19 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,31 @@ int	export(t_command *cmd, t_env *envir)
 	return (0);
 }
 
+void del_node(t_env *env, t_env *env_var)
+{
+	if (!env || !env_var)
+		return ;
+	else if (env == env_var)
+	{
+		t_env *ptr = env_var->next;
+		free(env_var);
+		env = ptr;
+	}
+	// else if(!env_var->next)
+	// 	;
+	// else
+	// {
+		
+	// }
+}
+
 int unset(char *env_var, t_env *envirenement)
 {
-	(void) env_var;
-	(void) envirenement;
+	t_env *env_ptr = get_env_ele_ptr(env_var);
+	if (!env_ptr)
+		return (1);
+	del_node(envirenement ,env_ptr);
+
+	// printf("%s\n", env_ptr->value);
     return (0);
 }
