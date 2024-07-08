@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/07 18:30:35 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:43:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void ft_perror(char *message)
 
 int	cd(char **args)
 {
-	// printf("affas\n");
 	if (args[0] != NULL && args[1] != NULL)
 	{
 		ft_perror("cd: string not in pwd\n");
