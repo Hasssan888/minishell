@@ -155,4 +155,3 @@ int func(t_command *list)
     }
     return (0);
 }
-
