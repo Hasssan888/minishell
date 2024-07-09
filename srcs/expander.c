@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 14:53:14 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:50:55 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,15 @@ char	*get_var(char *env_var, int *i)
 	return (env_val);
 }
 
-char	*unquote_arg(t_command *list, char *arg)
+char	*unquote_arg(t_command *list, char *arg, int j, int k)
 {
-	int		j;
-	int		k;
 	char	quote;
 	char	*argument;
 
-	j = 0;
-	k = 0;
 	argument = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
 	while (arg[j])
 	{
+		quote = arg[j];
 		if (arg[j] == '\'' || arg[j] == '"')
 		{
 			quote = arg[j++];
@@ -158,8 +155,8 @@ t_command	*expander_command(t_command *list)
 		}
 		while (list->args != NULL && list->args[i] != NULL)
 		{
-			list->value = unquote_arg(list, list->value);
-			list->args[i] = unquote_arg(list, list->args[i]);
+			list->value = unquote_arg(list, list->value, 0, 0);
+			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
 			if (list->quoted != 1)
 				list->args[i] = expand_vars(list->args[i]);
 			if (data->syntax_error)

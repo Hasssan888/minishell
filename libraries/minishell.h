@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 15:02:44 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/09 19:08:07 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_data
 	int					ac;
 	t_env				*env;
 	t_command			*list;
+	t_command			*_tokens_list;
 	char				**av;
 	char				*prompt;
 	char 				*new_command;
@@ -144,11 +145,11 @@ extern t_data *data;					// for use this global var from all files
 // # include <termios.h>
 // # include <sys/stat.h>
 
-void	print_minishell(void);
+void			print_minishell(void);
 void			print_prompt(void);
-void	print_type(int type);
-void	print_args(char **args);
-void	print_list(t_command *table);
+void			print_type(int type);
+void			print_args(char **args);
+void			print_list(t_command *table);
 
 
 // buit-in commands:
@@ -159,7 +160,8 @@ void			pwd(void);
 int				env(t_env *env);
 int				echo(char **cmd);
 int				export(t_command *cmd, t_env *envir);
-// int				built_in_cmd(char **parsedcmd);
+int				is_builtin_cmd(t_command *command);
+char			*get_cmd_path(char *cmd_);
 
 
 // general purpose utiles
@@ -217,7 +219,7 @@ char	*lexer_command(char *line);
 // expander functions
 
 char	*get_var(char *env_var, int *i);
-char	*unquote_arg(t_command *list, char *arg);
+char	*unquote_arg(t_command *list, char *arg, int j, int k);
 char	*ft_strnstr_l(const char *big, const char *little, size_t len);
 char	*get_word(char *argument, int *i);
 char	*expand_vars(char *argument);

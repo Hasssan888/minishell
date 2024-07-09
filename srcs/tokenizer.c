@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 14:48:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:34:07 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,52 @@ int	get_token_type(char *token)
 		return (TOKEN);
 }
 
+char *duplicate_word(char *command_line, int *i, int j)
+{
+	char *token_val = malloc((j - *i) * sizeof(char) + 1);
+	ft_strlcpy(token_val, &command_line[*i], j - *i + 1);
+	*i = j;
+	return (token_val);
+}
+
+int get_quoted_word_index(char *command_line, int j)
+{
+	char quote;
+	
+	quote = command_line[j++];
+	while (command_line[j] && command_line[j] != quote)
+		j++;
+	if (command_line[j] == quote)
+		j++;
+	return (j);
+}
+
+int get_word_index(char *command_line, int j)
+{
+	char quote;
+	
+	while (command_line[j] && !ft_strchr(" \t\v<|>", command_line[j]))
+	{
+		if (command_line[j] == '\'' || command_line[j] == '"')
+		{
+			quote = command_line[j];
+			while (command_line[++j] && command_line[j] != quote)
+				;
+			if (command_line[j] == quote)
+				j++;
+		}
+		else if (command_line[j])
+			j++;
+	}
+	return (j);
+}
+
 char	*get_token(char *command_line, int *i)
 {
 	int		j;
-	char	*token_val;
-	char	quote;
 	char	special;
 
 	j = 0;
-	token_val = NULL;
 	j = *i;
 	while (command_line[*i])
 	{
@@ -52,41 +89,17 @@ char	*get_token(char *command_line, int *i)
 			j++;
 		*i = j;
 		if (command_line[j] == '\'' || command_line[j] == '"')
-		{
-			quote = command_line[j++];
-			while (command_line[j] && command_line[j] != quote)
-				j++;
-			if (command_line[j] == quote)
-				j++;
-		}
+			j = get_quoted_word_index(command_line, j);
 		else if (command_line[j] == '<' || command_line[j] == '>'
 			|| command_line[j] == '|')
 		{
 			special = command_line[j];
 			while (command_line[j] && command_line[j] == special)
 				j++;
-			token_val = malloc((j - *i) * sizeof(char) + 1);
-			ft_strlcpy(token_val, &command_line[*i], j - *i + 1);
-			*i = j;
-			return (token_val);
+			return (duplicate_word(command_line, i, j));
 		}
-		while (command_line[j] && !ft_strchr(" \t\v<|>", command_line[j]))
-		{
-			if (command_line[j] == '\'' || command_line[j] == '"')
-			{
-				quote = command_line[j];
-				while (command_line[++j] && command_line[j] != quote)
-					;
-				if (command_line[j] == quote)
-					j++;
-			}
-			else if (command_line[j])
-				j++;
-		}
-		token_val = malloc((j - *i) * sizeof(char) + 1);
-		ft_strlcpy(token_val, &command_line[*i], j - *i + 1);
-		*i = j;
-		return (token_val);
+		j = get_word_index(command_line, j);
+		return (duplicate_word(command_line, i, j));
 	}
 	return (NULL);
 }
