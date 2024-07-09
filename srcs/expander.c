@@ -89,46 +89,47 @@ char	*get_word(char *argument, int *i)
 	ft_strlcpy(str, &argument[j], (*i - j + 1));
 	return (str);
 }
-
-char	*expand_vars(char *argument)
+int get_expanded(char *argument, int *i)
 {
-	int		i;
-	char	*expanded;
-	char	*str;
+	data->str1 = get_var(&argument[++(*i)], i);
+	data->str2 = get_env_element(data->str1);
+	if (!data->str2)
+		return (0);
+	data->expanded = ft_strjoin(data->expanded, data->str2);
+	free(data->str2);
+	return (1);
+}
 
-	i = 0;
-	expanded = "";
+char	*expand_vars(char *argument, int i)
+{
+	data->expanded = "";
 	while (argument[i])
 	{
 		if (argument[i] == '$')
 		{
 			if (!argument[i + 1])
 			{
-				data->syntax_error = 1;
-				return (NULL);
+				free(argument);
+				return (ft_strdup("$"));
 			}
 			else if (argument[i + 1] == '?')
 			{
 				i += 2;
-				expanded = ft_strjoin(expanded, ft_strdup("$?"));
-				continue ;
+				data->expanded = ft_strjoin(data->expanded, ft_strdup("$?"));
+				// continue ;
 			}
-			str = get_var(&argument[++i], &i);
-			printf("exp: %s\n", str);
-			str = get_env_element(str);
-			if (!str)
+			else if (!get_expanded(argument, &i))
 				return (NULL);
-			expanded = ft_strjoin(expanded, str);
 		}
 		else
 		{
-			str = get_word(argument, &i);
-			expanded = ft_strjoin(expanded, str);
-			free(str);
+			data->str1 = get_word(argument, &i);
+			data->expanded = ft_strjoin(data->expanded, data->str1);
+			free(data->str1);
 		}
 	}
 	free(argument);
-	return (expanded);
+	return (data->expanded);
 }
 
 t_command	*expander_command(t_command *list)
@@ -158,7 +159,7 @@ t_command	*expander_command(t_command *list)
 			list->value = unquote_arg(list, list->value, 0, 0);
 			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
 			if (list->quoted != 1)
-				list->args[i] = expand_vars(list->args[i]);
+				list->args[i] = expand_vars(list->args[i], 0);
 			if (data->syntax_error)
 			{
 				clear_list(&head);

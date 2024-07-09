@@ -87,6 +87,7 @@ void get_redirect_node(t_command *_tokens_list, t_command *list_command)
 t_command *syntax_error(t_command *list_command, t_command *head)
 {
 	printf("syntax error\n");
+	data->syntax_error = 1;
 	free_node(list_command);
 	clear_list(&head);
 	return (NULL);
@@ -117,39 +118,40 @@ t_command *get_command_with_args(t_command *list_command, t_command *head, t_com
 	return (list_command);
 }
 
+void init_parser_var()
+{
+	data->list_command = new_node(data->_tokens_list->type,
+				ft_strdup(data->_tokens_list->value));
+	data->list_command->args = NULL;
+	data->rdrct_head = NULL;
+}
+
 t_command	*parser_command(t_command *_tokens_list)
 {
-	t_command	*head;
-	t_command	*list_command;
-	t_command	*rdrct_head;
 	data->_tokens_list = _tokens_list;
-
-	head = NULL;
+	data->head = NULL;
 	while (data->_tokens_list != NULL)
 	{
-		list_command = new_node(data->_tokens_list->type,
-				ft_strdup(data->_tokens_list->value));
-		list_command->args = NULL;
-		rdrct_head = NULL;
+		init_parser_var();
 		if (data->_tokens_list->type == TOKEN)
 		{
-			list_command = get_command_with_args(list_command, head, rdrct_head);
-			if (!list_command)
+			data->list_command = get_command_with_args(data->list_command, data->head, data->rdrct_head);
+			if (!data->list_command)
 				return (NULL);
 		}
 		else if (data->_tokens_list->type == RED_IN || data->_tokens_list->type == RED_OUT
 			|| data->_tokens_list->type == APP || data->_tokens_list->type == HER_DOC)
-			get_redirect_node(data->_tokens_list, list_command);
+			get_redirect_node(data->_tokens_list, data->list_command);
 		else
 		{
 			data->_tokens_list = free_node(data->_tokens_list);
 			if (!data->_tokens_list)
-				return (syntax_error(list_command, head));
+				return (syntax_error(data->list_command, data->head));
 		}
-		add_back_list(&head, list_command);
-		add_back_list(&head, rdrct_head);
+		add_back_list(&data->head, data->list_command);
+		add_back_list(&data->head, data->rdrct_head);
 	}
-	return (head);
+	return (data->head);
 }
 
 int	parse_command(char *line)

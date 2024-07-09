@@ -21,7 +21,7 @@ int	exec_command(t_command *commands_list)
 	{
 		// if (is_builtin_cmd(commands_list) && commands_list->type == TOKEN)
 		// {
-		is_builtin_cmd(commands_list) && commands_list->type == TOKEN;
+		is_builtin_cmd(commands_list);
 		return (0);
 		// }
 		// else if (commands_list->type == TOKEN)

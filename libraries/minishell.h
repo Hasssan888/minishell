@@ -85,8 +85,14 @@ typedef struct s_data
 	int					ac;
 	t_env				*env;
 	t_command			*list;
+	t_command			*head;
+	t_command			*list_command;
+	t_command			*rdrct_head;
 	t_command			*_tokens_list;
 	char				**av;
+	char				*expanded;
+	char				*str1;
+	char				*str2;
 	char				*prompt;
 	char 				*new_command;
 	char  				*special_chars;
@@ -222,7 +228,7 @@ char	*get_var(char *env_var, int *i);
 char	*unquote_arg(t_command *list, char *arg, int j, int k);
 char	*ft_strnstr_l(const char *big, const char *little, size_t len);
 char	*get_word(char *argument, int *i);
-char	*expand_vars(char *argument);
+char	*expand_vars(char *argument, int i);
 t_command	*expander_command(t_command *list);
 
 // clean functions

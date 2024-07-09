@@ -93,7 +93,7 @@ int	echo(char **cmd)
 		flag = true;
 		++i;
 	}
-	if (cmd[i][0] == '$' && cmd[i][1] != '$' && cmd[i][1] != ' ')
+	if (cmd[i][0] == '$' && cmd[i][1] != ' ')
 	{
 		path = getenv(&cmd[i][1]);
 		if (!path)
