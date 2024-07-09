@@ -6,7 +6,7 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/07/03 20:22:45 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/07/09 14:55:22 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,10 +24,15 @@ SRC = 	$(SRCDIR)/minishell.c \
 		$(SRCDIR)/built_in_cmd1.c \
 		$(SRCDIR)/built_in_cmd2.c \
 		$(SRCDIR)/cleanup.c \
-		$(SRCDIR)/mini_utiles.c \
+		$(SRCDIR)/mini_utiles1.c \
+		$(SRCDIR)/mini_utiles2.c \
 		$(SRCDIR)/tokenizer.c \
 		$(SRCDIR)/parsing.c \
 		$(SRCDIR)/parsing_utiles.c \
+		$(SRCDIR)/expander.c \
+		$(SRCDIR)/lexer.c \
+		$(SRCDIR)/execution.c \
+		$(SRCDIR)/print_functions.c \
 		$(EXECDIR)/allcmd.c\
 		$(EXECDIR)/error.c\
 		$(EXECDIR)/excute.c\

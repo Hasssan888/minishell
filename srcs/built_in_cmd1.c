@@ -6,22 +6,22 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/08 13:43:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/09 14:40:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libraries/minishell.h"
 
-int change_dir(char *path)
+int	change_dir(char *path)
 {
 	if (chdir(path))
-		return 0;
+		return (0);
 	free(data->prompt);
 	data->prompt = get_prompt();
 	return (1);
 }
 
-void ft_perror(char *message)
+void	ft_perror(char *message)
 {
 	ft_putstr_fd(message, 2);
 }
@@ -70,7 +70,7 @@ int	env(t_env *env)
 	return (0);
 }
 
-void echo_it(char **cmd, int i)
+void	echo_it(char **cmd, int i)
 {
 	while (cmd[i] != NULL)
 	{
@@ -84,6 +84,7 @@ int	echo(char **cmd)
 {
 	int		i;
 	bool	flag;
+	char	*path;
 
 	i = 0;
 	flag = false;
@@ -94,8 +95,8 @@ int	echo(char **cmd)
 	}
 	if (cmd[i][0] == '$' && cmd[i][1] != '$' && cmd[i][1] != ' ')
 	{
-		char *path = getenv(&cmd[i][1]);
-		if(!path)
+		path = getenv(&cmd[i][1]);
+		if (!path)
 		{
 			printf("\n");
 			return (0);
@@ -109,23 +110,25 @@ int	echo(char **cmd)
 	return (0);
 }
 
-// int	built_in_cmd(char **command)
-// {
-// 	if (command == NULL || command[0] == 0)
-// 		return (0);
-// 	else if (!ft_strncmp("exit", command, ft_strlen(command)))
-// 		exit(0);
-// 	else if (!ft_strncmp("echo", command, ft_strlen(command)))
-// 		echo(command);
-// 	else if (!ft_strncmp("pwd", command, ft_strlen(command)))
-// 		pwd();
-// 	else if (!ft_strncmp("cd", command, ft_strlen(command)))
-// 		cd(command);
-// 	else if (!ft_strncmp("env", command, ft_strlen(command)))
-// 		env(data->env);
-// 	else if (!ft_strncmp("export", command, ft_strlen(command)))
-// 		export(command);
-// 	else
-// 		return (0);
-// 	return (1);
-// }
+int	is_builtin_cmd(t_command *command)
+{
+	if (ft_strcmp(command->value, "echo") == 0)
+		echo(&command->args[1]);
+	else if (ft_strcmp(command->value, "pwd") == 0)
+		pwd();
+	else if (ft_strcmp(command->value, "cd") == 0)
+		cd(&command->args[1]);
+	else if (ft_strcmp(command->value, "env") == 0)
+		env(data->env);
+	else if (ft_strcmp(command->value, "export") == 0)
+		export(command, data->env);
+	else if (ft_strcmp(command->value, "unset") == 0)
+		unset(command->args[1], data->env);
+	else if (ft_strcmp(command->value, "exit") == 0)
+	{
+		printf("exit\n");
+		clear_list(&data->list);
+		exit(0);
+	}
+	return (1);
+}

@@ -12,13 +12,13 @@
 
 #include "../libraries/minishell.h"
 
-int ft_strisalnum(char *str)
+int	ft_strisalnum(char *str)
 {
-    while (*str)
-    {
-        if (!isalnum(*str))
-            return (0);
-        str++;
-    }
-    return (1);
+	while (*str)
+	{
+		if (!isalnum(*str))
+			return (0);
+		str++;
+	}
+	return (1);
 }

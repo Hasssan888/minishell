@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/08 13:45:51 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/09 15:02:44 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,8 +144,12 @@ extern t_data *data;					// for use this global var from all files
 // # include <termios.h>
 // # include <sys/stat.h>
 
+void	print_minishell(void);
 void			print_prompt(void);
-void			free_array(char **array);
+void	print_type(int type);
+void	print_args(char **args);
+void	print_list(t_command *table);
+
 
 // buit-in commands:
 
@@ -170,34 +174,59 @@ void			add_back_list(t_command **lst, t_command *new);
 t_command		*new_node(int type, char *value);
 void			clear_list(t_command **lst);
 
-// parsing and toknizing functions
+// parsing functions
 
 int				parse_command(char *command);
 
-// t_command 		*tokenize_command(char *commads);
-// char 			*get_token_value(t_token *token, char *commads);
-// int 			get_token_type(t_token *token);
-// void			parentheses(char *command);
-// int 			check_syntax(char *command);
+// tokenizer functions
+t_command	*tokenzer_command(char *command_line);
 
+
+// print functions
+
+void	print_minishell(void);
+void	print_prompt(void);
 
 // Built in commands
 
 int				env(t_env *env);
 int				export(t_command *cmd, t_env *envir);
 int 			unset(char *env_var, t_env *envirenement);
+char	*get_env_element(char *env_var);
+
+
 // envirenement utiles
 
 void			add_back(t_env **lst, t_env *new);
 t_env			*lstnew(char *content);
+t_env	*creat_env(char **env);
 
 // parsing utiles
 
-int 			ft_strisalnum(char *str);
-
+// int 			ft_strisalnum(char *str);
 int				exec_command(t_command *commands_list);
 char			*ft_strnstr_l(const char *big, const char *little, size_t len);
 char 			*get_env_element(char *env_var);
+
+
+// lexer functions
+
+int	check_unqoted(char *line);
+char	*lexer_command(char *line);
+
+// expander functions
+
+char	*get_var(char *env_var, int *i);
+char	*unquote_arg(t_command *list, char *arg);
+char	*ft_strnstr_l(const char *big, const char *little, size_t len);
+char	*get_word(char *argument, int *i);
+char	*expand_vars(char *argument);
+t_command	*expander_command(t_command *list);
+
+// clean functions
+t_command	*free_node(t_command *_tokens_list);
+void	clear_list(t_command **lst);
+void			free_array(char **array);
 
 
 // execution
@@ -222,5 +251,7 @@ void			ft_error_2(void);
 void    		ft_pipe(t_command *node1, char **ev, t_pipex *p);
 int				ft_strcmp(char *s1, char *s2);
 int 			func(t_command *list);
+
+int	exec_command(t_command *commands_list);
 
 #endif
