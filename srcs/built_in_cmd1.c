@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 14:40:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 09:55:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,14 @@ int	change_dir(char *path)
 	return (1);
 }
 
-void	ft_perror(char *message)
+void check_errors()
 {
-	ft_putstr_fd(message, 2);
+	if (errno == EACCES)
+		ft_perror("minishell: cd: Permission denied\n");
+	else if (errno == ENOENT)
+		ft_perror("minishell: cd: No such file or directory\n");
+	else if (errno == ENOTDIR)
+		ft_perror("minishell: cd: No such file or directory\n");
 }
 
 int	cd(char **args)
@@ -49,14 +54,7 @@ int	cd(char **args)
 	else if (args != NULL && change_dir(args[0]))
 		return (1);
 	else
-	{
-		if (errno == EACCES)
-			printf("minishell: cd: %s Permission denied\n", args[0]);
-		else if (errno == ENOENT)
-			printf("minishell: cd: %s No such file or directory\n", args[0]);
-		else if (errno == ENOTDIR)
-			printf("minishell: cd: %s No such file or directory\n", args[0]);
-	}
+		check_errors();
 	return (0);
 }
 
@@ -87,6 +85,8 @@ int	echo(char **cmd)
 	char	*path;
 
 	i = 0;
+	if (!cmd[0])
+		return (0);
 	flag = false;
 	if (!ft_strncmp("-n", cmd[i], ft_strlen(cmd[i])))
 	{

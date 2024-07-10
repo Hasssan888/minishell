@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:50:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 14:51:13 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 09:31:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,62 +41,53 @@ int	check_unqoted(char *line)
 	return (0);
 }
 
-char	*lexer_command(char *line)
+void	check_unqoted_line(int j)
 {
-	int		i;
-	int		j;
-	char	*trimed_line;
-	char	*unquoted_line;
-
-	i = 0;
-	j = 0;
-	trimed_line = ft_strtrim(line, " \t\n\v");
-	free(line);
-	unquoted_line = ft_calloc(ft_strlen(trimed_line) + 1, sizeof(char));
-	while (trimed_line[i])
-	{
-		if (trimed_line[i] && trimed_line[i] == '\'')
-		{
-			if (trimed_line[i + 1] == '\'')
-				i += 2;
-			else // if (trimed_line[i + 1] == '"')
-			{
-				unquoted_line[j++] = trimed_line[i++];
-				while (trimed_line[i] && trimed_line[i] != '\'')
-					unquoted_line[j++] = trimed_line[i++];
-				if (!trimed_line[i])
-					break ;
-				unquoted_line[j++] = trimed_line[i++];
-			}
-			// else
-			// 	unquoted_line[j++] = trimed_line[i++];
-		}
-		else if (trimed_line[i] && trimed_line[i] == '"')
-		{
-			if (trimed_line[i + 1] == '"')
-				i += 2;
-			else // if (trimed_line[i + 1] == '\'')
-			{
-				unquoted_line[j++] = trimed_line[i++];
-				while (trimed_line[i] && trimed_line[i] != '"')
-					unquoted_line[j++] = trimed_line[i++];
-				if (!trimed_line[i])
-					break ;
-				unquoted_line[j++] = trimed_line[i++];
-			}
-			// else
-			// 	unquoted_line[j++] = trimed_line[i++];
-		}
-		else
-			unquoted_line[j++] = trimed_line[i++];
-	}
-	free(trimed_line);
-	unquoted_line[j] = '\0';
-	if (check_unqoted(unquoted_line))
+	free(data->trimed_line);
+	data->unquoted_line[j] = '\0';
+	if (check_unqoted(data->unquoted_line))
 	{
 		printf("syntax error\n");
-		free(unquoted_line);
-		unquoted_line = NULL;
+		free(data->unquoted_line);
+		data->unquoted_line = NULL;
 	}
-	return (unquoted_line);
+}
+
+void	get_quoted_index(int *i, int *j)
+{
+	data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
+	while (data->trimed_line[(*i)] && data->trimed_line[(*i)] != '\'')
+		data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
+	if (!data->trimed_line[(*i)])
+		return ;
+	data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
+}
+
+char	*lexer_command(char *line, int i, int j)
+{
+	data->trimed_line = ft_strtrim(line, " \t\n\v");
+	free(line);
+	data->unquoted_line = ft_calloc(ft_strlen(data->trimed_line) + 1,
+			sizeof(char));
+	while (data->trimed_line[i])
+	{
+		if (data->trimed_line[i] && data->trimed_line[i] == '\'')
+		{
+			if (data->trimed_line[i + 1] == '\'')
+				i += 2;
+			else
+				get_quoted_index(&i, &j);
+		}
+		else if (data->trimed_line[i] && data->trimed_line[i] == '"')
+		{
+			if (data->trimed_line[i + 1] == '"')
+				i += 2;
+			else
+				get_quoted_index(&i, &j);
+		}
+		else
+			data->unquoted_line[j++] = data->trimed_line[i++];
+	}
+	check_unqoted_line(j);
+	return (data->unquoted_line);
 }

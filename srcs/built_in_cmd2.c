@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 14:40:09 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 09:55:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void	print_array(char **array)
 	int	i;
 
 	i = 0;
+	if (!array || !array[0])
+		return ;
 	while (array != NULL && array[i] != NULL)
 		printf("%s\n", array[i++]);
 }
@@ -62,13 +64,15 @@ void	print_array(char **array)
 t_env	*sort_list(t_env *env)
 {
 	t_env	*env_ptr1;
-	int		i = 0, j;
+	int		i;
+	int		j;
 	int		list_len;
 	char	**sorted_array;
 	char	*temp;
 
+	i = 0;
+	j = 0;
 	env_ptr1 = env;
-	i = 0, j = 0;
 	list_len = 0;
 	while (env_ptr1 != NULL)
 	{
@@ -106,36 +110,27 @@ t_env	*sort_list(t_env *env)
 
 int	export(t_command *cmd, t_env *envir)
 {
-	char	*str;
 	char	*word;
 	t_env	*env_var;
-	char	*strr;
-	char	*val;
 
 	if (!cmd->args[1])
 		sort_list(envir);
 	else
 	{
-		str = ft_strchr(cmd->args[1], '=');
+		data->str1 = ft_strchr(cmd->args[1], '=');
 		word = get_word_(cmd->args[1], "+=");
 		env_var = get_env_ele_ptr(word);
 		free(word);
-		if (!str)
+		if (!data->str1)
 			return (0);
-		else if (env_var != NULL && str[0] == '=' && str[-1] != '+')
+		else if (env_var != NULL && data->str1[0] == '=' && data->str1[-1] != '+')
 		{
 			if (env_var->value != NULL)
 				free(env_var->value);
 			env_var->value = ft_strdup(cmd->args[1]);
 		}
-		else if (env_var != NULL && str[-1] == '+')
-		{
-			strr = ft_strdup(&str[1]);
-			val = ft_strjoin(env_var->value, strr);
-			free(env_var->value);
-			free(strr);
-			env_var->value = val;
-		}
+		else if (env_var != NULL && data->str1[-1] == '+')
+			env_var->value = ft_strjoin(env_var->value, ft_strdup(&data->str1[1]));
 		else
 			add_back(&data->env, lstnew(ft_strdup(cmd->args[1])));
 	}
@@ -163,11 +158,12 @@ void	del_node(t_env *env, t_env *env_var)
 
 int	unset(char *env_var, t_env *envirenement)
 {
-	t_env *env_ptr = get_env_ele_ptr(env_var);
+	t_env	*env_ptr;
+
+	env_ptr = get_env_ele_ptr(env_var);
 	if (!env_ptr)
 		return (1);
 	del_node(envirenement, env_ptr);
-
 	// printf("%s\n", env_ptr->value);
 	return (0);
 }

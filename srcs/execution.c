@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:45:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 14:45:51 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 09:48:51 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,13 @@
 
 int	exec_command(t_command *commands_list)
 {
-		pid_t pid;
-		char *cmd_path;
+	pid_t	pid;
+	char	*cmd_path;
 
 	while (commands_list != NULL)
 	{
-		// if (is_builtin_cmd(commands_list) && commands_list->type == TOKEN)
-		// {
 		is_builtin_cmd(commands_list);
 		return (0);
-		// }
-		// else if (commands_list->type == TOKEN)
 		if (commands_list->type == TOKEN)
 		{
 			cmd_path = get_cmd_path(commands_list->value);
@@ -42,13 +38,7 @@ int	exec_command(t_command *commands_list)
 				printf("%s: command not found\n", commands_list->value);
 			free(cmd_path);
 		}
-		// else if (commands_list->type == RED_IN
-			// || commands_list->type == RED_OUT)
-		// {
-		// 	open(commands_list->args[0], O_RDWR | O_CREAT | O_TRUNC, 0644);
-		// }
 		commands_list = commands_list->next;
 	}
 	return (0);
 }
-

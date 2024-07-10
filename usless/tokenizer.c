@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 20:30:46 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/06/25 20:30:48 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 09:09:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ char *quoting(char *token_val, t_token *token, char *command)
 		char *token_val_ = malloc((token->i - token->index) * sizeof(char) + 1);
 		ft_strlcpy(token_val_, &command[token->index], (token->i - token->index + 1));
 		token_val = ft_strjoin(token_val, token_val_);
-		// token->index = token->i;
 	}
 	return (token_val);
 }

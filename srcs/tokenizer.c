@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 18:34:07 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 09:13:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,10 @@ int	get_token_type(char *token)
 		return (TOKEN);
 }
 
-char *duplicate_word(char *command_line, int *i, int j)
+int	get_quoted_word_index(char *command_line, int j)
 {
-	char *token_val = malloc((j - *i) * sizeof(char) + 1);
-	ft_strlcpy(token_val, &command_line[*i], j - *i + 1);
-	*i = j;
-	return (token_val);
-}
+	char	quote;
 
-int get_quoted_word_index(char *command_line, int j)
-{
-	char quote;
-	
 	quote = command_line[j++];
 	while (command_line[j] && command_line[j] != quote)
 		j++;
@@ -56,10 +48,10 @@ int get_quoted_word_index(char *command_line, int j)
 	return (j);
 }
 
-int get_word_index(char *command_line, int j)
+int	get_word_index(char *command_line, int j)
 {
-	char quote;
-	
+	char	quote;
+
 	while (command_line[j] && !ft_strchr(" \t\v<|>", command_line[j]))
 	{
 		if (command_line[j] == '\'' || command_line[j] == '"')

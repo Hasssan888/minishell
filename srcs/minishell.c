@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 14:45:21 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 09:45:20 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,12 @@ char	*get_prompt(void)
 {
 	char	*prompt1;
 	char	*prompt2;
-	char	*prompt3;
 	char	*final_prompt;
 
-	prompt1 = BBLU "┌──(aziz㉿aelkheta)-[" COLOR_RESET;
-	prompt2 = getcwd(NULL, 0);
-	prompt3 = ft_strjoin(BWHT, prompt2);
-	free(prompt2);
-	prompt1 = ft_strjoin(prompt1, prompt3);
-	free(prompt3);
-	final_prompt = ft_strjoin(prompt1, BBLU "]\n└─$ " COLOR_RESET);
-	free(prompt1);
+	prompt1 = ft_strjoin(ft_strdup(BWHT), getcwd(NULL, 0));
+	prompt2 = ft_strjoin(ft_strdup(BBLU "┌──(aziz㉿aelkheta)-[" COLOR_RESET),
+			prompt1);
+	final_prompt = ft_strjoin(prompt2, ft_strdup(BBLU "]\n└─$ " COLOR_RESET));
 	return (final_prompt);
 }
 
@@ -73,7 +68,6 @@ int	main(int ac, char **av, char **env)
 		parse_command(command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
-		// free(command);
 		command = readline(data->prompt);
 	}
 	clear_history();
