@@ -6,7 +6,7 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/07/10 10:36:02 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/07/10 13:30:07 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRC = 	$(SRCDIR)/minishell.c \
 		$(EXECDIR)/here_doc.c\
 		$(EXECDIR)/link_list.c\
 		$(EXECDIR)/main.c\
+		$(EXECDIR)/strjoin.c\
 		$(EXECDIR)/one_cmd.c\
 		$(EXECDIR)/open_file.c\
 

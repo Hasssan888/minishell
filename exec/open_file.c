@@ -46,7 +46,9 @@ void    open_infile(t_command *node, t_pipex *p)
     printf("count_read_in = %d\n", p->count_read_in);
     while (cur && i < p->count_read_in)
     {
-        if (cur->type == RED_IN)
+        if (cur->type == PIPE || cur->type == CMD)
+            break;
+        else if (cur->type == RED_IN)
         {
             fd[i] = open(cur->args[0], O_RDONLY, 0644);
             i++;
@@ -55,6 +57,7 @@ void    open_infile(t_command *node, t_pipex *p)
     }
     // p->infile = fd[i];
     p->infile = fd[i - 1];
+    printf("finsh while\n");
 }
 void    open_outfile(t_command *node, t_pipex *p)
 {
@@ -65,7 +68,9 @@ void    open_outfile(t_command *node, t_pipex *p)
     printf("count_read_out + appand = %d\n", p->count_read_out);
     while (cur && i < p->count_read_out)
     {
-        if (cur->type == RED_OUT)
+        if (cur->type == PIPE)
+            break;
+        else if (cur->type == RED_OUT )
         {
             fd[i] = open(cur->args[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
             i++;

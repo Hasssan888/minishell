@@ -18,27 +18,56 @@ void	ft_error_2(void)
 	exit(127);
 }
 
-void	ft_error(char *av)
+void	ft_error(char **av)
 {
-	if (ft_strcmp(av, "") == 0)
-	{
-		ft_putstr_fd("zsh: permission denied: ", 2);
-		write(2, "\n", 1);
-		exit(126);
-	}
-	else if (ft_strcmp(av, ".") == 0)
-	{
-		ft_putstr_fd(".: not enough arguments", 2);
-		write(2, "\n", 1);
-		exit(1);
-	}
-	else
-	{
-		ft_putstr_fd("zsh: command not found: ", 2);
-		ft_putstr_fd(av, 2);
-		write(2, "\n", 1);
-		exit(127);
-	}
+
+	int i = -1;
+	char *str;
+
+		if (ft_strcmp(av[0], "") == 0)
+		{
+			ft_putstr_fd("zsh: permission denied: ", 2);
+			write(2, "\n", 1);
+			// exit(126);
+		}
+		else if (ft_strcmp(av[0], ".") == 0)
+		{
+			ft_putstr_fd(".: not enough arguments", 2);
+			write(2, "\n", 1);
+			// exit(1);
+		}
+		else
+		{
+			ft_putstr_fd("zsh: command not found: ", 2);
+			while (av[++i])
+			{
+				str = strjoin1(av[i], " ");
+				ft_putstr_fd(str, 2);
+				free(str);
+			}
+				write(2, "\n", 1);
+			// exit(127);
+		}
+
+
+	
+	// if (ft_strcmp(av, "") == 0)
+	// {
+	// 	ft_putstr_fd("zsh: permission denied: ", 2);
+	// 	write(2, "\n", 1);
+	// }
+	// else if (ft_strcmp(av, ".") == 0)
+	// {
+	// 	ft_putstr_fd(".: not enough arguments", 2);
+	// 	write(2, "\n", 1);
+	// }
+	// else
+	// {
+	// 	ft_putstr_fd("zsh: command not found: ", 2);
+	// 	ft_putstr_fd(av, 2);
+	// 	write(2, "\n", 1);
+	// 	exit(127);
+	// }
 }
 
 char	*ft_strchr(const char *s, int c)

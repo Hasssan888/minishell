@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 10:35:37 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 13:28:18 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,7 +261,7 @@ char					*function(char **env);
 char					*slash(char *mycmdargs);
 char					*without_slash(char **env, char *mycmdargs);
 char					*search_path(char *mycmdargs, char **env);
-void					ft_error(char *av);
+void					ft_error(char **av);
 void					fork_pipe(t_command *node1, char **env, t_pipex *p);
 void					open_here_doc(t_command *node, t_pipex *pipex);
 void					here_doc(t_command *node, t_pipex *pipex);
@@ -270,6 +270,8 @@ void					ft_error_2(void);
 void					ft_pipe(t_command *node1, char **ev, t_pipex *p);
 int						ft_strcmp(char *s1, char *s2);
 int						func(t_command *list);
+char					*strjoin1(char *s1, char *s2);
+
 
 int						exec_command(t_command *commands_list);
 

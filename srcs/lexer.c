@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:50:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 09:31:46 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 12:29:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ void	check_unqoted_line(int j)
 	}
 }
 
-void	get_quoted_index(int *i, int *j)
+void	get_quoted_index(int *i, int *j, int quote)
 {
 	data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
-	while (data->trimed_line[(*i)] && data->trimed_line[(*i)] != '\'')
+	while (data->trimed_line[(*i)] && data->trimed_line[(*i)] != quote)
 		data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
 	if (!data->trimed_line[(*i)])
 		return ;
@@ -76,14 +76,14 @@ char	*lexer_command(char *line, int i, int j)
 			if (data->trimed_line[i + 1] == '\'')
 				i += 2;
 			else
-				get_quoted_index(&i, &j);
+				get_quoted_index(&i, &j, '\'');
 		}
 		else if (data->trimed_line[i] && data->trimed_line[i] == '"')
 		{
 			if (data->trimed_line[i + 1] == '"')
 				i += 2;
 			else
-				get_quoted_index(&i, &j);
+				get_quoted_index(&i, &j, '"');
 		}
 		else
 			data->unquoted_line[j++] = data->trimed_line[i++];

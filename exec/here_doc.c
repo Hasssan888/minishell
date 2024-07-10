@@ -26,7 +26,7 @@ void    ft_count_here_doc(t_command *node, t_pipex *p)
 //     {
 //         close(pipex->end[0]);
 //         pipex->line = get_next_line(0);
-//         char *str = ft_strjoin(node->args[0], "\n");
+//         char *str = strjoin1(node->args[0], "\n");
 //         while (pipex->line != NULL && ft_strcmp(str, pipex->line) != 0)
 //         {
 //             write(pipex->end[1], pipex->line, ft_strlen(pipex->line));
@@ -59,7 +59,7 @@ void	here_doc(t_command *node, t_pipex *pipex)
 	pipex->infile_here_doc = open("file_here_doc.txt", O_RDWR | O_CREAT | O_TRUNC , 0644);
 	if (pipex->line[0] == '\0')
 		here_doc_error(node->args);
-	str = ft_strjoin(node->args[0], "\n");
+	str = strjoin1(node->args[0], ft_strdup("\n"));
 	// printf("str = %s\n", str);
 	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
 	{

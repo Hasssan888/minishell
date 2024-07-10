@@ -37,14 +37,15 @@ char	*without_slash(char **env, char *mycmdargs)
 
 	path.path_from_envp = function(env);
 	if (!(path.path_from_envp))
-		ft_error(mycmdargs);
+		ft_error(&mycmdargs);
 	path.mypaths = ft_split(path.path_from_envp, ':');
 	free(path.path_from_envp);
 	path.i = 0;
 	while (path.mypaths[path.i])
 	{
-		path.part_path = ft_strjoin(path.mypaths[path.i], "/");
-		path.path = ft_strjoin(path.part_path, mycmdargs);
+		path.part_path = strjoin1(path.mypaths[path.i], "/");
+		path.path = strjoin1(path.part_path, mycmdargs);
+		printf("path.path = %s\n", path.path);
 		free(path.part_path);
 		if (access(path.path, F_OK) == 0)
 			return (path.path);
@@ -73,22 +74,24 @@ void	ft_excute(char **av, char **env)
 	int		i;
 
 	i = -1;
-	// if (ft_strcmp(av, "") == 0 || ft_strcmp(av, ".") == 0
-	// 	|| ft_strcmp(&av[ft_strlen(av) - 1], " ") == 0)
-	// 	ft_error(av);
-	// else
-	// {
-
-	mycmdargs = av;//ft_split(av, ' ');
-	path = search_path(mycmdargs[0], env);
-	if (!path)
+	if (ft_strcmp(av[0], "") == 0 || ft_strcmp(av[0], ".") == 0 || ft_strcmp(av[0], " ") == 0
+		/*|| ft_strcmp(av[ft_strlen(av[0]) - 1], " ") == 0*/)
+		{
+			printf("1_error\n");
+			ft_error(av);
+		}
+	else
 	{
-		while (mycmdargs[++i])
-			free(mycmdargs[i]);
-		free(mycmdargs);
-		//ft_error(av);
+		mycmdargs = av;//ft_split(av, ' ');
+		path = search_path(mycmdargs[0], env);
+		if (!path)
+		{
+			ft_error(av);
+			while (mycmdargs[++i])
+				free(mycmdargs[i]);
+			free(mycmdargs);
+		}
+		if (execve(path, mycmdargs, env) == -1)
+			exit(127);
 	}
-	if (execve(path, mycmdargs, env) == -1)
-		exit(127);
-	// }
 }

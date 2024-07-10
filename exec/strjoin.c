@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   strjoin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/02 16:40:30 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 13:21:32 by aelkheta         ###   ########.fr       */
+/*   Created: 2024/07/10 13:27:06 by aelkheta          #+#    #+#             */
+/*   Updated: 2024/07/10 13:27:42 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libraries/minishell.h"
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*strjoin1(char *s1, char *s2)
 {
 	size_t	len_s1;
 	size_t	len_s2;
@@ -27,7 +27,5 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (ft_free(s1));
 	ft_strlcpy(ptr, s1, len_s1 + 1);
 	ft_strlcpy((ptr + len_s1), s2, (len_s2 + 1));
-	free(s1);
-	free(s2);
 	return (ptr);
 }
