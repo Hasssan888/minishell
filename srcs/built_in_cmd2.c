@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 09:55:05 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 10:32:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,93 +19,6 @@ void	pwd(void)
 	cwd = getcwd(NULL, 0);
 	printf("%s\n", cwd);
 	free(cwd);
-}
-
-char	*get_word_(char *line, char *del)
-{
-	int		i;
-	char	*word;
-
-	i = 0;
-	if (!line)
-		return (NULL);
-	while (line[i] && !ft_strchr(del, line[i]))
-		i++;
-	word = malloc((i + 1) * sizeof(char));
-	ft_strlcpy(word, line, i + 1);
-	return (word);
-}
-
-t_env	*get_env_ele_ptr(char *env_val)
-{
-	t_env	*env;
-
-	env = data->env;
-	while (env != NULL)
-	{
-		if (ft_strncmp(env->value, env_val, ft_strlen(env_val)) == 0)
-			return (env);
-		env = env->next;
-	}
-	return (NULL);
-}
-
-void	print_array(char **array)
-{
-	int	i;
-
-	i = 0;
-	if (!array || !array[0])
-		return ;
-	while (array != NULL && array[i] != NULL)
-		printf("%s\n", array[i++]);
-}
-
-t_env	*sort_list(t_env *env)
-{
-	t_env	*env_ptr1;
-	int		i;
-	int		j;
-	int		list_len;
-	char	**sorted_array;
-	char	*temp;
-
-	i = 0;
-	j = 0;
-	env_ptr1 = env;
-	list_len = 0;
-	while (env_ptr1 != NULL)
-	{
-		list_len++;
-		env_ptr1 = env_ptr1->next;
-	}
-	sorted_array = malloc((list_len + 1) * sizeof(char *));
-	env_ptr1 = env;
-	while (env_ptr1 != NULL)
-	{
-		sorted_array[i++] = env_ptr1->value;
-		env_ptr1 = env_ptr1->next;
-	}
-	i = 0;
-	while (i < list_len - 1)
-	{
-		j = 0;
-		while (j < list_len - i - 1)
-		{
-			if (ft_strcmp(sorted_array[j], sorted_array[j + 1]) > 0)
-			{
-				temp = sorted_array[j];
-				sorted_array[j] = sorted_array[j + 1];
-				sorted_array[j + 1] = temp;
-			}
-			j++;
-		}
-		i++;
-	}
-	sorted_array[list_len] = NULL;
-	print_array(sorted_array);
-	free(sorted_array);
-	return (env);
 }
 
 int	export(t_command *cmd, t_env *envir)
@@ -123,47 +36,69 @@ int	export(t_command *cmd, t_env *envir)
 		free(word);
 		if (!data->str1)
 			return (0);
-		else if (env_var != NULL && data->str1[0] == '=' && data->str1[-1] != '+')
+		else if (env_var != NULL && data->str1[0] == '='
+			&& data->str1[-1] != '+')
 		{
 			if (env_var->value != NULL)
 				free(env_var->value);
 			env_var->value = ft_strdup(cmd->args[1]);
 		}
 		else if (env_var != NULL && data->str1[-1] == '+')
-			env_var->value = ft_strjoin(env_var->value, ft_strdup(&data->str1[1]));
+			env_var->value = ft_strjoin(env_var->value,
+					ft_strdup(&data->str1[1]));
 		else
 			add_back(&data->env, lstnew(ft_strdup(cmd->args[1])));
 	}
 	return (0);
 }
 
-void	del_node(t_env *env, t_env *env_var)
+void	del_one(t_env **env, t_env *env_var)
 {
-	t_env	*ptr;
+	t_env	*current;
 
-	if (!env || !env_var)
+	current = env_var->next;
+	free(env_var->value);
+	free(env_var);
+	*env = current;
+}
+
+void	del_node(t_env **env, t_env *env_var)
+{
+	t_env	*current;
+	t_env	*previous;
+
+	if (!env || !*env || !env_var)
 		return ;
-	else if (env == env_var)
+	if (*env == env_var)
 	{
-		ptr = env_var->next;
-		free(env_var);
-		env = ptr;
+		del_one(env, env_var);
+		return ;
 	}
-	// else if(!env_var->next)
-	// 	;
-	// else
-	// {
-	// }
+	previous = *env;
+	current = (*env)->next;
+	while (current)
+	{
+		if (current == env_var)
+		{
+			previous->next = current->next;
+			free(current->value);
+			free(current);
+			return ;
+		}
+		previous = current;
+		current = current->next;
+	}
 }
 
 int	unset(char *env_var, t_env *envirenement)
 {
 	t_env	*env_ptr;
 
+	if (!env_var)
+		return (0);
 	env_ptr = get_env_ele_ptr(env_var);
 	if (!env_ptr)
 		return (1);
-	del_node(envirenement, env_ptr);
-	// printf("%s\n", env_ptr->value);
+	del_node(&envirenement, env_ptr);
 	return (0);
 }

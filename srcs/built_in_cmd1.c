@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 09:55:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 10:33:09 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	change_dir(char *path)
 	return (1);
 }
 
-void check_errors()
+void	check_errors(void)
 {
 	if (errno == EACCES)
 		ft_perror("minishell: cd: Permission denied\n");
