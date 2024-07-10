@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 09:24:15 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 12:28:01 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ t_command	*syntax_error(t_command *list_command, t_command *head)
 	return (NULL);
 }
 
-t_command	*get_command_with_args(t_command *list_command, t_command *head,
-		t_command *rdrct_head)
+t_command	*get_command_with_args(t_command *list_command)
 {
 	int	i;
 
@@ -37,8 +36,8 @@ t_command	*get_command_with_args(t_command *list_command, t_command *head,
 		while (data->_tokens_list != NULL && (data->_tokens_list->type >= 2
 				&& data->_tokens_list->type <= 5))
 		{
-			data->_tokens_list = redirect_list(&head, list_command,
-					data->_tokens_list, &rdrct_head);
+			data->_tokens_list = redirect_list(&data->head, list_command,
+					data->_tokens_list, &data->rdrct_head);
 			if (data->syntax_error)
 				return (NULL);
 		}
@@ -63,8 +62,7 @@ t_command	*parser_command(t_command *_tokens_list)
 		init_parser_var();
 		if (data->_tokens_list->type == TOKEN)
 		{
-			data->list_command = get_command_with_args(data->list_command,
-					data->head, data->rdrct_head);
+			data->list_command = get_command_with_args(data->list_command);
 			if (!data->list_command)
 				return (NULL);
 		}
