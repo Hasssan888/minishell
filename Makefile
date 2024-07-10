@@ -6,7 +6,7 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/07/10 09:35:15 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/07/10 10:36:02 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC = 	$(SRCDIR)/minishell.c \
 		$(SRCDIR)/lexer.c \
 		$(SRCDIR)/expander_utiles.c \
 		$(SRCDIR)/execution.c \
+		$(SRCDIR)/built_in_utiles.c \
 		$(SRCDIR)/print_functions.c \
 		$(EXECDIR)/allcmd.c\
 		$(EXECDIR)/error.c\
@@ -47,7 +48,7 @@ OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC)) # for pathern substitution 
 
 LIBFT = ./libraries/libft/libft.a
 
-all: $(NAME)
+all: $(NAME) clean
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(OBJDIR)

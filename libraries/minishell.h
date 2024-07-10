@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 09:56:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 10:35:37 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,11 @@ int						echo(char **cmd);
 int						export(t_command *cmd, t_env *envir);
 int						is_builtin_cmd(t_command *command);
 char					*get_cmd_path(char *cmd_);
+char					*get_word_(char *line, char *del);
+t_env					*get_env_ele_ptr(char *env_val);
+void					print_array(char **array);
+t_env					*sort_list(t_env *env);
+
 
 // general purpose utiles
 
