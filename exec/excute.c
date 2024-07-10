@@ -45,7 +45,7 @@ char	*without_slash(char **env, char *mycmdargs)
 	{
 		path.part_path = strjoin1(path.mypaths[path.i], "/");
 		path.path = strjoin1(path.part_path, mycmdargs);
-		printf("path.path = %s\n", path.path);
+		// printf("path.path = %s\n", path.path);
 		free(path.part_path);
 		if (access(path.path, F_OK) == 0)
 			return (path.path);

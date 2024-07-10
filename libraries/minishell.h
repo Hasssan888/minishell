@@ -262,7 +262,7 @@ char					*slash(char *mycmdargs);
 char					*without_slash(char **env, char *mycmdargs);
 char					*search_path(char *mycmdargs, char **env);
 void					ft_error(char **av);
-void					fork_pipe(t_command *node1, char **env, t_pipex *p);
+pid_t					fork_pipe(t_command *node1, char **env, t_pipex *p);
 void					open_here_doc(t_command *node, t_pipex *pipex);
 void					here_doc(t_command *node, t_pipex *pipex);
 void					ft_excute(char **av, char **env);

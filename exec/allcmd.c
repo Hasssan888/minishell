@@ -1,15 +1,32 @@
 #include "../libraries/minishell.h"
 
+int if_is_buil(t_command *command)
+{	
+    if (ft_strcmp(command->value, "echo") == 0)
+		return(1);
+	else if (ft_strcmp(command->value, "pwd") == 0)
+		return(1);
+	else if (ft_strcmp(command->value, "cd") == 0)
+		return(1);
+	else if (ft_strcmp(command->value, "env") == 0)
+		return(1);
+	else if (ft_strcmp(command->value, "export") == 0)
+		return(1);
+	else if (ft_strcmp(command->value, "unset") == 0)
+		return(1);
+	else if (ft_strcmp(command->value, "exit") == 0)
+        return(1);
+    return (0);
+}
 
-void	fork_pipe(t_command *node1, char **env, t_pipex *p)
+pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 {
-	pid_t	pid;
 	if (pipe(p->end) == -1)
 		ft_error_2();
-	pid = fork();
-	if (pid == -1)
+	p->pid = fork();
+	if (p->pid == -1)
 		ft_error_2();
-	else if (pid == 0)
+	else if (p->pid == 0)
     {
         if (p->flag == 1)
         {
@@ -42,7 +59,10 @@ void	fork_pipe(t_command *node1, char **env, t_pipex *p)
                 dup2(p->outfile, STDOUT_FILENO);
                 close(p->outfile);
             }
-            ft_excute(node1->args, env);
+            if (if_is_buil(node1))
+                is_builtin_cmd(node1);
+            else
+                ft_excute(node1->args, env);
         }
         else if (p->flag == 2 && node1->next->type == HER_DOC && node1->next->next == NULL)
         {
@@ -54,7 +74,10 @@ void	fork_pipe(t_command *node1, char **env, t_pipex *p)
             close(p->infile_here_doc);
             // dup2(p->end[1], 1);
             // close(p->end[1]);
-            ft_excute(node1->args, env);
+            if (if_is_buil(node1))
+                is_builtin_cmd(node1);
+            else
+                ft_excute(node1->args, env);
         }
         else if (p->flag == 2 && node1->next->type == HER_DOC
                     && (node1->next->next->type == RED_OUT || node1->next->next->type == APP))
@@ -82,7 +105,10 @@ void	fork_pipe(t_command *node1, char **env, t_pipex *p)
             close(p->infile_here_doc);
             dup2(p->outfile, 1);
             close(p->outfile);
-            ft_excute(node1->args, env);
+            if (if_is_buil(node1))
+                is_builtin_cmd(node1);
+            else
+                ft_excute(node1->args, env);
         }
 
         else if (p->flag == 2)
@@ -95,7 +121,10 @@ void	fork_pipe(t_command *node1, char **env, t_pipex *p)
             close(p->infile_here_doc);
             dup2(p->end[1], 1);
             close(p->end[1]);
-            ft_excute(node1->args, env);
+            if (if_is_buil(node1))
+                is_builtin_cmd(node1);
+            else
+                ft_excute(node1->args, env);
         }
         else if (node1->type == CMD && node1->next != NULL && 
                 (node1->next->type == RED_OUT || node1->next->type == APP))
@@ -119,12 +148,18 @@ void	fork_pipe(t_command *node1, char **env, t_pipex *p)
             close(p->end[1]);
             dup2(p->outfile, STDOUT_FILENO);
             close(p->outfile);
-            ft_excute(node1->args, env);
+            if (if_is_buil(node1))
+                is_builtin_cmd(node1);
+            else
+                ft_excute(node1->args, env);
         }
         else if (node1->type == CMD && node1->next == NULL)
         {
             printf("STIN_OUT\n");
-            ft_excute(node1->args, env);
+            if (if_is_buil(node1))
+                is_builtin_cmd(node1);
+            else
+                ft_excute(node1->args, env);
         }
         else
         {
@@ -132,12 +167,16 @@ void	fork_pipe(t_command *node1, char **env, t_pipex *p)
             close(p->end[0]);
             dup2(p->end[1], STDOUT_FILENO);
             close(p->end[1]);
-            ft_excute(node1->args, env);
+            if (if_is_buil(node1))
+                is_builtin_cmd(node1);
+            else
+                ft_excute(node1->args, env);
         }
     }
 
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[1]);
 	close(p->end[0]);
-    wait(NULL);
+    // waitpid(p->pid, &p->status, 0);
+    return (p->pid);
 }
