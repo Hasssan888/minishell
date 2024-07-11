@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 10:33:09 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/11 11:05:35 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	echo(char **cmd)
 {
 	int		i;
 	bool	flag;
-	char	*path;
+	// char	*path;
 
 	i = 0;
 	if (!cmd[0])
@@ -93,17 +93,17 @@ int	echo(char **cmd)
 		flag = true;
 		++i;
 	}
-	if (cmd[i][0] == '$' && cmd[i][1] != ' ')
-	{
-		path = getenv(&cmd[i][1]);
-		if (!path)
-		{
-			printf("\n");
-			return (0);
-		}
-		printf("%s\n", path);
-		return (0);
-	}
+	// if (cmd[i][0] == '$' && cmd[i][1] != ' ')
+	// {
+	// 	path = getenv(&cmd[i][1]);
+	// 	if (!path)
+	// 	{
+	// 		printf("\n");
+	// 		return (0);
+	// 	}
+	// 	printf("%s\n", path);
+	// 	return (0);
+	// }
 	echo_it(cmd, i);
 	if (!flag)
 		printf("\n");
