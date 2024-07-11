@@ -85,6 +85,7 @@ typedef struct s_data
 	int					i;
 	int					j;
 	int					ac;
+	int					exit_status;
 	t_env				*env;
 	t_command			*list;
 	t_command			*head;

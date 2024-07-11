@@ -2,16 +2,22 @@
 
 void	handle_child_exit_status(int status)
 {
-	int	exit_status;
 
 	if (WIFEXITED(status))
 	{
-		exit_status = WEXITSTATUS(status);
-		if (exit_status != 0)
-			exit(exit_status);
+		data->exit_status = WEXITSTATUS(status);
+		if (data->exit_status != 0)
+        {
+            printf("data->exit_status = %d\n", data->exit_status);
+			exit(data->exit_status);
+        }
 	}
 	else
-		exit(EXIT_SUCCESS);
+    {
+        data->exit_status = EXIT_SUCCESS;
+        printf("data->exit_status = %d\n", data->exit_status);
+		exit(data->exit_status);
+    }
 }
 
 void    ft_pipe(t_command *node1, char **ev, t_pipex *p)
@@ -44,6 +50,7 @@ void    ft_pipe(t_command *node1, char **ev, t_pipex *p)
                 p->flag = 2;
             }
             p->r = fork_pipe(cur, ev, p);
+            printf("p->status = %d\n", p->status);
             if (ft_strcmp(cur->args[0], "cat") != 0)
                 waitpid(p->r, &p->status, 0);
             p->flag = 0;
@@ -52,6 +59,7 @@ void    ft_pipe(t_command *node1, char **ev, t_pipex *p)
         else
             cur = cur->next;
     }
+    printf("p->status = %d\n", p->status);
 }
 
 int func(t_command *list)
@@ -69,7 +77,7 @@ int func(t_command *list)
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
         pipex.i = wait(NULL);
 	}
-    handle_child_exit_status(pipex.status_1);
+    handle_child_exit_status(pipex.status);
     unlink("file_here_doc.txt");
     return (0);
 }

@@ -157,9 +157,15 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
         {
             printf("STIN_OUT\n");
             if (if_is_buil(node1))
+            {
+                 printf("is_builtin\n");
                 is_builtin_cmd(node1);
+            }
             else
+            {
+                 printf("is_not_builtin\n");
                 ft_excute(node1->args, env);
+            }
         }
         else
         {
