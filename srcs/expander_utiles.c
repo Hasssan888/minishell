@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 17:11:15 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/11 14:20:21 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,5 @@ int	get_expanded(char *argument, int *i)
 	if (!data->str2)
 		return (0);
 	data->expanded = ft_strjoin(data->expanded, data->str2);
-	return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/09 14:58:00 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:23:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,21 @@ t_env	*lstnew(char *content)
 t_env	*creat_env(char **env)
 {
 	t_env	*head;
+	t_env	*new;
 	int		i;
 
-	head = NULL;
 	i = -1;
+	head = NULL;
+	data->old_pwd = NULL;
+	data->current_pwd = NULL;
 	while (env[++i] != NULL)
-		add_back(&head, lstnew(ft_strdup(env[i])));
+	{
+		new = lstnew(ft_strdup(env[i]));
+		if (!strncmp(new->value, "PWD", 3))
+			data->current_pwd = &(new->value);
+		else if (!strncmp(new->value, "OLDPWD", 6))
+			data->old_pwd = &(new->value);
+		add_back(&head, new);
+	}
 	return (head);
 }

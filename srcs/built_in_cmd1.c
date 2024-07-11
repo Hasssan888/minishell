@@ -6,17 +6,32 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/11 11:05:35 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/11 16:07:45 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libraries/minishell.h"
+
+void get_old_current_pwd()
+{
+	if (data->old_pwd != NULL)
+	{
+		free(*(data->old_pwd));
+		*(data->old_pwd) = ft_strdup(*(data->current_pwd));
+	}
+	if (data->current_pwd != NULL)
+	{
+		free(*(data->current_pwd));
+		*(data->current_pwd) = ft_strjoin(ft_strdup("PWD"), getcwd(NULL, 0));	
+	}
+}
 
 int	change_dir(char *path)
 {
 	if (chdir(path))
 		return (0);
 	free(data->prompt);
+	get_old_current_pwd();
 	data->prompt = get_prompt();
 	return (1);
 }

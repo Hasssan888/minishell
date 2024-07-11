@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 16:19:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/11 15:23:25 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ typedef struct s_data
 	t_command			*_tokens_list;
 	char				**av;
 	int					exit_status;
+	char				**old_pwd;
+	char				**current_pwd;
 	char				*expanded;	
 	char				*trimed_line;
 	char 				*unquoted_line;

@@ -6,16 +6,22 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 17:09:59 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/11 14:26:12 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libraries/minishell.h"
 
-char	*get_exit_code(char *argument)
+char	*aziz(char *argument)
 {
+	char	*arg;
+
+	printf("%s\n", argument);
+	arg = NULL;
+	if (argument[1] && ft_isdigit(argument[1]) && ft_strlen(&argument[1]) > 2)
+		arg = ft_strjoin(data->expanded, ft_strdup(&argument[2]));
 	free(argument);
-	return (ft_strdup("$"));
+	return (arg);
 }
 
 char	*expand_vars(char *argument, int i)
@@ -26,15 +32,15 @@ char	*expand_vars(char *argument, int i)
 		if (argument[i] == '$')
 		{
 			if (!argument[i + 1])
-				return (get_exit_code(argument));
+				return (free(argument), ft_strdup("$"));
 			else if (argument[i + 1] == '?')
 			{
 				i += 2;
-				data->expanded = ft_strjoin(data->expanded, ft_strdup("$?"));
-				continue ;
+				data->expanded = ft_strjoin(data->expanded,
+						ft_itoa(data->exit_status));
 			}
 			else if (!get_expanded(argument, &i))
-				return (NULL);
+				return (aziz(argument));
 		}
 		else
 		{
