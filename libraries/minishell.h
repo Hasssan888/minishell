@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 13:28:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:19:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ typedef struct s_env
 typedef struct s_command
 {
 	int					type;
-	// char				*file;
 	int					in_file;
 	int					out_file;
 	int					quoted;
@@ -93,6 +92,7 @@ typedef struct s_data
 	t_command			*rdrct_head;
 	t_command			*_tokens_list;
 	char				**av;
+	int					exit_status;
 	char				*expanded;	
 	char				*trimed_line;
 	char 				*unquoted_line;
@@ -222,7 +222,7 @@ t_env					*creat_env(char **env);
 
 // parsing utiles
 
-// int 			ft_strisalnum(char *str);
+// int 					ft_strisalnum(char *str);
 int						exec_command(t_command *commands_list);
 char					*ft_strnstr_l(const char *big, const char *little,
 							size_t len);
