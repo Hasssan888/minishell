@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 09:13:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 11:09:22 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ int	get_token_type(char *token)
 {
 	if (token[0] == '|' && !token[1])
 		return (PIPE);
-	else if (token[0] == '|' && token[1] == '|' && !token[2])
-		return (OR_OP);
 	else if (token[0] == '>' && !token[1])
 		return (RED_OUT);
 	else if (token[0] == '<' && !token[1])
@@ -26,11 +24,7 @@ int	get_token_type(char *token)
 		return (APP);
 	else if (token[0] == '<' && token[1] == '<' && !token[2])
 		return (HER_DOC);
-	else if (token[0] == '&' && !token[1])
-		return (BACK);
-	else if (token[0] == '&' && token[1] == '&' && !token[2])
-		return (AND_OP);
-	else if (ft_strchr("<|&>", token[0]) && ft_strlen(token) > 2)
+	else if ((ft_strchr("|&", token[0]) && ft_strlen(token) > 1) || (ft_strchr("<>", token[0]) && ft_strlen(token) > 2))
 		return (-1);
 	else
 		return (TOKEN);
@@ -99,9 +93,9 @@ char	*get_token(char *command_line, int *i)
 t_command	*tokenzer_command(char *command_line)
 {
 	int			i;
-	t_command	*table;
-	char		*token;
 	int			type;
+	char		*token;
+	t_command	*table;
 	t_command	*node;
 
 	i = 0;
@@ -112,6 +106,14 @@ t_command	*tokenzer_command(char *command_line)
 	{
 		token = get_token(command_line, &i);
 		type = get_token_type(token);
+		if (type == -1)
+		{
+			free(token);
+			printf("syntax error\n");
+			free(command_line);
+			clear_list(&table);
+			return (NULL);
+		}
 		node = new_node(type, token);
 		node->args = NULL;
 		add_back_list(&table, node);

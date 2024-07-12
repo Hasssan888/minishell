@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 10:00:43 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 10:54:53 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,9 +194,7 @@ void					clear_list(t_command **lst);
 
 int						parse_command(char *command);
 int						get_args_size(t_command *list);
-t_command				*redirect_list(t_command **head,
-							t_command *list_command, t_command *_tokens_list,
-							t_command **redirect_head);
+t_command				*redirect_list(t_command **head, t_command **redirect_head);
 void					get_redirect_node(t_command *list_command);
 
 // tokenizer functions

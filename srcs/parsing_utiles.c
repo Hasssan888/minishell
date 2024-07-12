@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 09:56:52 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 10:54:35 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,48 +32,47 @@ int	get_args_size(t_command *list)
 	return (i);
 }
 
-t_command	*redirect_list(t_command **head, t_command *list_command,
-		t_command *_tokens_list, t_command **redirect_head)
+t_command	*redirect_list(t_command **head, t_command **redirect_head)
 {
 	t_command	*redirection_node;
 
-	redirection_node = new_node(_tokens_list->type,
-			ft_strdup(_tokens_list->value));
-	_tokens_list = free_node(_tokens_list);
-	if (!_tokens_list || _tokens_list->type != TOKEN)
+	redirection_node = new_node(data->_tokens_list->type,
+			ft_strdup(data->_tokens_list->value));
+	data->_tokens_list = free_node(data->_tokens_list);
+	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
 		printf("syntax error parser\n");
 		free_node(redirection_node);
-		free_array(list_command->args);
-		free_node(list_command);
-		free_node(_tokens_list);
+		free_array(data->list_command->args);
+		free_node(data->list_command);
+		free_node(data->_tokens_list);
 		clear_list(head);
 		data->syntax_error = 1;
 		return (NULL);
 	}
 	redirection_node->args = malloc(2 * sizeof(char *));
-	redirection_node->args[0] = ft_strdup(_tokens_list->value);
+	redirection_node->args[0] = ft_strdup(data->_tokens_list->value);
 	redirection_node->args[1] = NULL;
-	_tokens_list = free_node(_tokens_list);
+	data->_tokens_list = free_node(data->_tokens_list);
 	add_back_list(redirect_head, redirection_node);
-	return (_tokens_list);
+	return (data->_tokens_list);
 }
 
-void	get_redirect_node(t_command *list_command)
+void	get_redirect_node()
 {
 	data->_tokens_list = free_node(data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
 		printf("syntax error parser\n");
-		free_array(list_command->args);
-		free_node(list_command);
+		free_array(data->list_command->args);
+		free_node(data->list_command);
 		free_node(data->_tokens_list);
 		data->syntax_error = 1;
 		return ;
 	}
-	list_command->args = malloc(2 * sizeof(char *));
-	list_command->args[0] = ft_strdup(data->_tokens_list->value);
-	list_command->args[1] = NULL;
+	data->list_command->args = malloc(2 * sizeof(char *));
+	data->list_command->args[0] = ft_strdup(data->_tokens_list->value);
+	data->list_command->args[1] = NULL;
 	data->_tokens_list = free_node(data->_tokens_list);
 }
 

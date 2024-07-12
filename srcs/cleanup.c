@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 09:44:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 10:56:24 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,15 @@ void	clear_list(t_command **lst)
 	*lst = NULL;
 }
 
-t_command	*free_node(t_command *_tokens_list)
+t_command	*free_node()
 {
 	t_command	*ptr;
 
-	if (!_tokens_list)
+	if (!data->_tokens_list)
 		return (NULL);
-	ptr = _tokens_list->next;
-	free(_tokens_list->value);
-	free(_tokens_list);
-	_tokens_list = NULL;
+	ptr = data->_tokens_list->next;
+	free(data->_tokens_list->value);
+	free(data->_tokens_list);
+	data->_tokens_list = NULL;
 	return (ptr);
 }
