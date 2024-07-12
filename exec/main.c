@@ -8,15 +8,23 @@ void	handle_child_exit_status(int status)
 		data->exit_status = WEXITSTATUS(status);
 		if (data->exit_status != 0)
         {
-            printf("data->exit_status = %d\n", data->exit_status);
-			exit(data->exit_status);
+            printf("data->exit_status_1 = %d\n", data->exit_status);
+            pid_t p = fork();
+            if (p == 0)
+		        exit(data->exit_status);
+            else
+                wait(NULL);
         }
 	}
 	else
     {
         data->exit_status = EXIT_SUCCESS;
-        printf("data->exit_status = %d\n", data->exit_status);
-		exit(data->exit_status);
+        printf("data->exit_status_0 = %d\n", data->exit_status);
+        pid_t p = fork();
+        if (p == 0)
+		    exit(data->exit_status);
+        else
+            wait(NULL);
     }
 }
 
@@ -49,7 +57,10 @@ void    ft_pipe(t_command *node1, char **ev, t_pipex *p)
                 p->flag = 2;
             p->r = fork_pipe(cur, ev, p);
             if (ft_strcmp(cur->args[0], "cat") != 0)
+            {
                 waitpid(p->r, &p->status, 0);
+                wait(NULL);
+            }
             p->flag = 0;
             cur = cur->next;
         }
@@ -67,16 +78,12 @@ int func(t_command *list)
     ft_count_read_out(list, &pipex);
     ft_count_read_in(list, &pipex);
     ft_pipe(list, data->envirenment, &pipex);
-    while (pipex.i != -1)
-	{
-		pipex.i = waitpid(pipex.r, &pipex.status, 0);
-        pipex.i = wait(NULL);
-	}
-    pipex.pid1 = fork();
-    if (pipex.pid1 == 0)
-        handle_child_exit_status(pipex.status);
-    else
-        wait(NULL);
+    // while (pipex.i != -1)
+	// {
+	// 	pipex.i = waitpid(pipex.r, &pipex.status, 0);
+    //     //pipex.i = wait(NULL);
+	// }
+    handle_child_exit_status(pipex.status);
     unlink("file_here_doc.txt");
     return (0);
 }

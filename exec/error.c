@@ -46,12 +46,7 @@ void	ft_error(char **av)
 				free(str);
 			}
 				write(2, "\n", 1);
-				exit(127);
-			// pid_t pp = fork();
-			// if (pp == 0)
-			// // data->exit_status = 127;
-			// else
-			// 	wait(NULL);
+			exit(127);
 		}
 
 
