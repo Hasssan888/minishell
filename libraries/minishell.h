@@ -92,7 +92,6 @@ typedef struct s_data
 	t_command			*rdrct_head;
 	t_command			*_tokens_list;
 	char				**av;
-	int					exit_status;
 	char				*expanded;	
 	char				*trimed_line;
 	char 				*unquoted_line;
@@ -272,6 +271,7 @@ void					ft_pipe(t_command *node1, char **ev, t_pipex *p);
 int						ft_strcmp(char *s1, char *s2);
 int						func(t_command *list);
 char					*strjoin1(char *s1, char *s2);
+void					handle_child_exit_status(int status);
 
 
 int						exec_command(t_command *commands_list);

@@ -54,19 +54,20 @@ void	here_doc(t_command *node, t_pipex *pipex)
 {
 	char	*str;
 
-	write(1, "> ", 2);
-	pipex->line = get_next_line(0);
+	pipex->line = readline("> ");
+	pipex->line = strjoin1(pipex->line, "\n");
 	pipex->infile_here_doc = open("file_here_doc.txt", O_RDWR | O_CREAT | O_TRUNC , 0644);
 	if (pipex->line[0] == '\0')
 		here_doc_error(node->args);
-	str = strjoin1(node->args[0], ft_strdup("\n"));
+	str = strjoin1(node->args[0], "\n");
+	// printf("pipex->line = %s\n", pipex->line);
 	// printf("str = %s\n", str);
 	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
 	{
 		write(pipex->infile_here_doc, pipex->line, ft_strlen(pipex->line));
-		write(1, "> ", 2);
 		free(pipex->line);
-		pipex->line = get_next_line(0);
+		pipex->line = readline("> ");
+		pipex->line = strjoin1(pipex->line, "\n");
 		if (pipex->line[0] == '\0')
 			here_doc_error(node->args);
 	}
