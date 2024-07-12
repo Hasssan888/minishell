@@ -28,13 +28,13 @@ void	ft_error(char **av)
 		{
 			ft_putstr_fd("zsh: permission denied: ", 2);
 			write(2, "\n", 1);
-			// exit(126);
+			exit(126);
 		}
 		else if (ft_strcmp(av[0], ".") == 0)
 		{
 			ft_putstr_fd(".: not enough arguments", 2);
 			write(2, "\n", 1);
-			// exit(1);
+			exit(1);
 		}
 		else
 		{
@@ -46,7 +46,12 @@ void	ft_error(char **av)
 				free(str);
 			}
 				write(2, "\n", 1);
-			// exit(127);
+				exit(127);
+			// pid_t pp = fork();
+			// if (pp == 0)
+			// // data->exit_status = 127;
+			// else
+			// 	wait(NULL);
 		}
 
 

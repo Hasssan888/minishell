@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 09:57:13 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 10:00:43 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_data
 	int					i;
 	int					j;
 	int					ac;
+	int					exit_status;
 	t_env				*env;
 	t_command			*list;
 	t_command			*head;
@@ -93,7 +94,6 @@ typedef struct s_data
 	t_command			*rdrct_head;
 	t_command			*_tokens_list;
 	char				**av;
-	int					exit_status;
 	char				**old_pwd;
 	char				**current_pwd;
 	char				*expanded;	
@@ -265,7 +265,7 @@ char					*slash(char *mycmdargs);
 char					*without_slash(char **env, char *mycmdargs);
 char					*search_path(char *mycmdargs, char **env);
 void					ft_error(char **av);
-void					fork_pipe(t_command *node1, char **env, t_pipex *p);
+pid_t					fork_pipe(t_command *node1, char **env, t_pipex *p);
 void					open_here_doc(t_command *node, t_pipex *pipex);
 void					here_doc(t_command *node, t_pipex *pipex);
 void					ft_excute(char **av, char **env);
@@ -274,6 +274,7 @@ void					ft_pipe(t_command *node1, char **ev, t_pipex *p);
 int						ft_strcmp(char *s1, char *s2);
 int						func(t_command *list);
 char					*strjoin1(char *s1, char *s2);
+void					handle_child_exit_status(int status);
 
 
 int						exec_command(t_command *commands_list);
