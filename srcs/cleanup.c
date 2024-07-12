@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 10:56:24 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 16:09:29 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ void	free_array(char **array)
 {
 	int	i;
 
-	i = -1;
+	i = 0;
 	if (!array)
 		return ;
-	while (array != NULL && array[++i] != NULL && array[i][0] != '\0')
-		free(array[i]);
+	while (array[i] != NULL)
+		free(array[i++]);
 	free(array);
 }
 
@@ -32,7 +32,7 @@ void	clear_list(t_command **lst)
 	if (!lst)
 		return ;
 	node = *lst;
-	while (node)
+	while (node != NULL)
 	{
 		ptr = node->next;
 		if (node->value != NULL)

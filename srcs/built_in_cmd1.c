@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 11:21:00 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 16:45:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	check_errors(void)
 
 int	cd(char **args)
 {
+	if (!args[0])
+		return (0);
 	if (args[0] != NULL && args[1] != NULL)
 	{
 		ft_perror("cd: string not in pwd\n");
