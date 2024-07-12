@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/11 12:45:47 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 09:57:02 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ t_command	*get_command_with_args(t_command *list_command)
 
 void	init_parser_var(void)
 {
+	// if (!data->_tokens_list)
+	// 	return ;
 	data->list_command = new_node(data->_tokens_list->type,
 			ft_strdup(data->_tokens_list->value));
 	data->list_command->args = NULL;
@@ -55,10 +57,12 @@ void	init_parser_var(void)
 
 t_command	*parser_command(t_command *_tokens_list)
 {
-	data->_tokens_list = _tokens_list;
 	data->head = NULL;
+	data->_tokens_list = _tokens_list;
 	while (data->_tokens_list != NULL)
 	{
+		if (data->syntax_error)
+			return (NULL);
 		init_parser_var();
 		if (data->_tokens_list->type == TOKEN)
 		{
@@ -67,7 +71,7 @@ t_command	*parser_command(t_command *_tokens_list)
 				return (NULL);
 		}
 		else if (data->_tokens_list->type >= 2 && data->_tokens_list->type <= 5)
-			get_redirect_node(data->_tokens_list, data->list_command);
+			get_redirect_node(data->list_command);
 		else
 		{
 			data->_tokens_list = free_node(data->_tokens_list);
@@ -102,8 +106,8 @@ int	parse_command(char *line)
 	print_list(list);
 	printf("\n\n");
 	data->list = list;
-	exec_command(list);
-	// func(list);
+	// exec_command(list);
+	func(list);
 	clear_list(&list);
 	return (0);
 }

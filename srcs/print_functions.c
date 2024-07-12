@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:37:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/11 12:38:07 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 09:41:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	print_args(char **args)
 	while (args != NULL && *args)
 	{
 		printf("	┌───────────────────────────┐\n");
-		printf("	│ arg[%d]: --------- [%s]   │\n", i++, *args++);
+		printf("	│ arg[%d]: --------- [%s]   \n", i++, *args++);
 		printf("	└───────────────────────────┘\n");
 	}
 }
@@ -90,7 +90,7 @@ void	print_list(t_command *table)
 	while (table != NULL)
 	{
 		printf("┌───────────────────────────┐\n");
-		printf("│ token: ---------- [%s]    │\n", table->value);
+		printf("│ token: ---------- [%s]    \n", table->value);
 		print_type(table->type);
 		print_args(table->args);
 		table = table->next;

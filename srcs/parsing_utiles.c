@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 09:14:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 09:56:52 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,21 +59,22 @@ t_command	*redirect_list(t_command **head, t_command *list_command,
 	return (_tokens_list);
 }
 
-void	get_redirect_node(t_command *_tokens_list, t_command *list_command)
+void	get_redirect_node(t_command *list_command)
 {
-	_tokens_list = free_node(_tokens_list);
-	if (!_tokens_list || _tokens_list->type != TOKEN)
+	data->_tokens_list = free_node(data->_tokens_list);
+	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
 		printf("syntax error parser\n");
 		free_array(list_command->args);
 		free_node(list_command);
-		free_node(_tokens_list);
+		free_node(data->_tokens_list);
 		data->syntax_error = 1;
+		return ;
 	}
 	list_command->args = malloc(2 * sizeof(char *));
-	list_command->args[0] = ft_strdup(_tokens_list->value);
+	list_command->args[0] = ft_strdup(data->_tokens_list->value);
 	list_command->args[1] = NULL;
-	_tokens_list = free_node(_tokens_list);
+	data->_tokens_list = free_node(data->_tokens_list);
 }
 
 char	*duplicate_word(char *command_line, int *i, int j)

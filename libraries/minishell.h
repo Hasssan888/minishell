@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/11 15:23:25 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 09:57:13 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ typedef enum s_types
 typedef struct s_env
 {
 	char				*value;
+	// char				*env_key;
+	// char				*env_value;
 	struct s_env		*next;
 }						t_env;
 
@@ -195,8 +197,7 @@ int						get_args_size(t_command *list);
 t_command				*redirect_list(t_command **head,
 							t_command *list_command, t_command *_tokens_list,
 							t_command **redirect_head);
-void					get_redirect_node(t_command *_tokens_list,
-							t_command *list_command);
+void					get_redirect_node(t_command *list_command);
 
 // tokenizer functions
 t_command				*tokenzer_command(char *command_line);
