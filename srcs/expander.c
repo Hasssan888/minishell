@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 10:56:36 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 15:38:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@
 
 char	*aziz(char *argument)
 {
-	char	*arg;
-
-	printf("%s\n", argument);
-	arg = NULL;
 	if (argument[1] && ft_isdigit(argument[1]) && ft_strlen(&argument[1]) > 2)
-		arg = ft_strjoin(data->expanded, ft_strdup(&argument[2]));
+		data->expanded = ft_strjoin(data->expanded, ft_strdup(&argument[2]));
 	free(argument);
-	return (arg);
+	return (data->expanded);
 }
 
 char	*expand_vars(char *argument, int i)

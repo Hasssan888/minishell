@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 09:57:19 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 15:05:37 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,8 @@ char	*get_cmd_path(char *cmd_)
 	free(env_ele);
 	while (path[i])
 	{
-		cmd = ft_strjoin(ft_strdup("/"), cmd_);
-		cmd_path = ft_strjoin(path[i], cmd);
-		free(cmd);
+		cmd = ft_strjoin(ft_strdup("/"), ft_strdup(cmd_));
+		cmd_path = ft_strjoin(ft_strdup(path[i]), cmd);
 		if (access(cmd_path, X_OK) == 0)
 		{
 			free_array(path);
