@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 09:59:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/12 10:02:21 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ t_command	*get_command_with_args(t_command *list_command)
 
 void	init_parser_var(void)
 {
-	// if (!data->_tokens_list)
-	// 	return ;
 	data->list_command = new_node(data->_tokens_list->type,
 			ft_strdup(data->_tokens_list->value));
 	data->list_command->args = NULL;
