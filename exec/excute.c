@@ -88,5 +88,6 @@ void	ft_excute(char **av, char **env)
 			ft_error(av);
 		else
 			execve(path, mycmdargs, env);
+			
 	}
 }

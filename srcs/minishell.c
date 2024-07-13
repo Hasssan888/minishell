@@ -67,6 +67,7 @@ int	main(int ac, char **av, char **env)
 		pipex.save1 = dup(STDIN_FILENO);
 		add_history(command);
 		parse_command(command);
+		printf("+++++++++++++++++++++++++++++++++++\n");
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
 		command = readline(data->prompt);

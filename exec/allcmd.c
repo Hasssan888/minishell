@@ -22,7 +22,10 @@ int if_is_buil(t_command *command)
 void    excut_butlin(t_command *node1, char **env)
 {
     if (if_is_buil(node1))
+    {
+        printf("is_bul\n");
         is_builtin_cmd(node1);
+    }
     else
         ft_excute(node1->args, env);
 }
@@ -138,5 +141,10 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[1]);
 	close(p->end[0]);
+    if (ft_strcmp(node1->args[0] , "cat") != 0)
+    {
+        wait(&p->status);
+        data->exit_status  = WEXITSTATUS(p->status);
+    }
     return (p->pid);
 }
