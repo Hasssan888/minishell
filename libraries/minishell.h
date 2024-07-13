@@ -258,7 +258,6 @@ void					ft_count_read_out(t_command *node, t_pipex *p);
 void					ft_count_read_in(t_command *node, t_pipex *p);
 void					open_infile(t_command *node, t_pipex *p);
 void					open_outfile(t_command *node, t_pipex *p);
-void					ft_onecmd(t_command *node, char **ev, t_pipex *p);
 void					ft_count_here_doc(t_command *node, t_pipex *p);
 char					*function(char **env);
 char					*slash(char *mycmdargs);
@@ -274,7 +273,6 @@ void					ft_pipe(t_command *node1, char **ev, t_pipex *p);
 int						ft_strcmp(char *s1, char *s2);
 int						func(t_command *list);
 char					*strjoin1(char *s1, char *s2);
-void					handle_child_exit_status(int status);
 
 
 int						exec_command(t_command *commands_list);

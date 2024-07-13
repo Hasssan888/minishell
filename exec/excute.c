@@ -82,16 +82,12 @@ void	ft_excute(char **av, char **env)
 		}
 	else
 	{
-		mycmdargs = av;//ft_split(av, ' ');
+		mycmdargs = av;
 		path = search_path(mycmdargs[0], env);
 		if (!path)
-		{
 			ft_error(av);
-			while (mycmdargs[++i])
-				free(mycmdargs[i]);
-			free(mycmdargs);
-		}
-		if (execve(path, mycmdargs, env) == -1)
-			exit(127);
+		else
+			execve(path, mycmdargs, env);
+			
 	}
 }
