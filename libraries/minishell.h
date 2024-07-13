@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 15:13:10 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/13 19:48:35 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 // for wating child process to terminate execution
 # include <unistd.h> // for system calls
 // # include "../exec/main.h"
+
+# define DEFAULT_PATH "/usr/local/lib/bash:/usr/lib/bash:/opt/local/lib/bash:/usr/pkg/lib/bash:/opt/pkg/lib/bash:."
 
 typedef enum s_types
 {
