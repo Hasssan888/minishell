@@ -41,10 +41,20 @@ void    readout_append(t_command *node1, t_pipex *p)
         else
             p->outfile = open(node1->next->args[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
     }
+    if (p->outfile == -1)
+    {
+        printf("%s: Permission denied\n", node1->next->args[0]);
+        exit(1);
+    }
 }
 
 void    infile(t_command *node1, char **env,t_pipex *p)
 {
+    if (p->infile == -1)
+    {
+        perror("file infile");
+        exit(1);
+    }
     close(p->end[0]);
     dup2(p->infile, STDIN_FILENO);
     close(p->infile);
@@ -76,6 +86,11 @@ void    one_here_doc(t_command *node1, char **env, t_pipex *p)
 {
     close(p->end[0]);
     p->infile_here_doc = open("file_here_doc.txt", O_RDONLY, 0644);
+    if (p->infile_here_doc == -1)
+    {
+        perror("infile_here_doc");
+        exit(1);
+    }
     dup2(p->infile_here_doc, 0);
     close(p->infile_here_doc);
     excut_butlin(node1, env);
@@ -86,6 +101,11 @@ void    heredoc_readout_app(t_command *node1, char **env,t_pipex *p)
     close(p->end[0]);
     readout_append(node1, p);
     p->infile_here_doc = open("file_here_doc.txt", O_RDONLY, 0644);
+    if (p->infile_here_doc == -1)
+    {
+        perror("infile_here_doc");
+        exit(1);
+    }
     dup2(p->infile_here_doc, 0);
     close(p->infile_here_doc);
     dup2(p->outfile, 1);
@@ -97,6 +117,11 @@ void    pipe_heredoc(t_command *node1, char **env, t_pipex *p)
 {
     close(p->end[0]);
     p->infile_here_doc = open("file_here_doc.txt", O_RDONLY, 0644);
+    if (p->infile_here_doc == -1)
+    {
+        perror("infile_here_doc");
+        exit(1);
+    }
     dup2(p->infile_here_doc, 0);
     close(p->infile_here_doc);
     dup2(p->end[1], 1);

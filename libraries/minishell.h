@@ -273,6 +273,7 @@ void					ft_pipe(t_command *node1, char **ev, t_pipex *p);
 int						ft_strcmp(char *s1, char *s2);
 int						func(t_command *list);
 char					*strjoin1(char *s1, char *s2);
+t_command				*lstlast(t_command *lst);
 
 
 int						exec_command(t_command *commands_list);

@@ -25,7 +25,7 @@ void	ft_error(char **av)
 	char *str;
 	if (ft_strcmp(av[0], ".") == 0)
 	{
-		ft_putstr_fd("bash: .: filename argument required", 2);
+		ft_putstr_fd(".: filename argument required", 2);
 		write(2, "\n", 1);
 		ft_putstr_fd(".: usage: . filename [arguments]", 2);
 		write(2, "\n", 1);
