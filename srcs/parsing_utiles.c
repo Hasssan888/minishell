@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 10:54:35 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/13 20:29:22 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_command	*redirect_list(t_command **head, t_command **redirect_head)
 	data->_tokens_list = free_node(data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		printf("syntax error parser\n");
+		ft_perror("syntax error parser\n");
 		free_node(redirection_node);
 		free_array(data->list_command->args);
 		free_node(data->list_command);
@@ -58,12 +58,12 @@ t_command	*redirect_list(t_command **head, t_command **redirect_head)
 	return (data->_tokens_list);
 }
 
-void	get_redirect_node()
+void	get_redirect_node(void)
 {
 	data->_tokens_list = free_node(data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		printf("syntax error parser\n");
+		ft_perror("syntax error parser\n");
 		free_array(data->list_command->args);
 		free_node(data->list_command);
 		free_node(data->_tokens_list);

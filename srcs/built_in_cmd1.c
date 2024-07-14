@@ -6,13 +6,13 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 16:45:46 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/13 20:25:07 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libraries/minishell.h"
 
-void get_old_current_pwd()
+void	get_old_current_pwd(void)
 {
 	if (data->old_pwd != NULL)
 	{
@@ -22,7 +22,7 @@ void get_old_current_pwd()
 	if (data->current_pwd != NULL)
 	{
 		free(*(data->current_pwd));
-		*(data->current_pwd) = ft_strjoin(ft_strdup("PWD"), getcwd(NULL, 0));	
+		*(data->current_pwd) = ft_strjoin(ft_strdup("PWD"), getcwd(NULL, 0));
 	}
 }
 
@@ -99,8 +99,8 @@ int	echo(char **cmd)
 {
 	int		i;
 	bool	flag;
-	// char	*path;
 
+	// char	*path;
 	i = 0;
 	if (!cmd[0])
 		return (0);
@@ -147,5 +147,5 @@ int	is_builtin_cmd(t_command *command)
 		clear_list(&data->list);
 		exit(0);
 	}
-	return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/11 11:07:04 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/13 20:20:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ int	main(int ac, char **av, char **env)
 		pipex.save1 = dup(STDIN_FILENO);
 		add_history(command);
 		parse_command(command);
-		printf("+++++++++++++++++++++++++++++++++++\n");
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
 		command = readline(data->prompt);

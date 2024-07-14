@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 11:09:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/13 20:29:36 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	get_token_type(char *token)
 		return (APP);
 	else if (token[0] == '<' && token[1] == '<' && !token[2])
 		return (HER_DOC);
-	else if ((ft_strchr("|&", token[0]) && ft_strlen(token) > 1) || (ft_strchr("<>", token[0]) && ft_strlen(token) > 2))
+	else if ((ft_strchr("|&", token[0]) && ft_strlen(token) > 1)
+		|| (ft_strchr("<>", token[0]) && ft_strlen(token) > 2))
 		return (-1);
 	else
 		return (TOKEN);
@@ -109,7 +110,7 @@ t_command	*tokenzer_command(char *command_line)
 		if (type == -1)
 		{
 			free(token);
-			printf("syntax error\n");
+			ft_perror("syntax error\n");
 			free(command_line);
 			clear_list(&table);
 			return (NULL);

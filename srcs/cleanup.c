@@ -45,7 +45,7 @@ void	clear_list(t_command **lst)
 	*lst = NULL;
 }
 
-t_command	*free_node()
+t_command	*free_node(void)
 {
 	t_command	*ptr;
 

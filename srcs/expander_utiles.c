@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 15:36:59 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/14 20:07:09 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ char	*get_var(char *env_var, int *i)
 	k = 0;
 	if (!env_var || !env_var[0])
 		return (NULL);
-	while (env_var[k] && env_var[k] != ' ' && env_var[k] != '$'
-		&& env_var[k] != ')')
+	while (env_var[k] && ft_isalnum(env_var[k]))
 		k++;
 	*i += k;
 	env_val = malloc((k + 1) * sizeof(char));
@@ -33,7 +32,8 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 {
 	char	quote;
 	char	*argument;
-
+	(void) k;
+	(void) j;
 	argument = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
 	while (arg[j])
 	{
@@ -47,6 +47,8 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 		}
 		else
 			argument[k++] = arg[j++];
+		
+		// argument = ft_strtrim(arg, quote);
 		if (arg[0] == quote && quote == '\'')
 			list->quoted = 1;
 		else if (arg[0] == quote && quote == '"')
