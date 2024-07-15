@@ -40,11 +40,11 @@ void    readout_append(t_command *node1, t_pipex *p)
             p->outfile = open(node1->next->args[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
         else
             p->outfile = open(node1->next->args[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    }
-    if (p->outfile == -1)
-    {
-        printf("%s: Permission denied\n", node1->next->args[0]);
-        exit(1);
+        if (p->outfile == -1)
+        {
+            printf("%s: Permission denied\n", node1->next->args[0]);
+            exit(1);
+        }
     }
 }
 

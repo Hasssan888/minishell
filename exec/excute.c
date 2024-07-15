@@ -71,9 +71,7 @@ void	ft_excute(char **av, char **env)
 {
 	char	**mycmdargs;
 	char	*path;
-	int		i;
-
-	i = -1;
+	
 	if (ft_strcmp(av[0], "") == 0 || ft_strcmp(av[0], ".") == 0 || ft_strcmp(av[0], " ") == 0
 		/*|| ft_strcmp(av[ft_strlen(av[0]) - 1], " ") == 0*/)
 		{
