@@ -31,7 +31,7 @@ char	*expand_vars(char *argument, int i)
 	data->expanded = ft_strdup("");
 	while (argument[i])
 	{
-		if (argument[i] == '$')
+		if (argument[i] == '$' && (ft_isalnum(argument[i + 1]) || argument[i + 1] == '?'))
 		{
 			if (!argument[i + 1])
 				return (free(argument), ft_strdup("$"));
@@ -43,20 +43,22 @@ char	*expand_vars(char *argument, int i)
 			}
 			else if (!ft_isdigit(argument[i + 1]))
 			{
-				if (get_expanded(argument, &i))
-				{
-					free(data->expanded);
-					data->expanded = NULL;
-				}
+				get_expanded(argument, &i);
+				// {
+					// free(data->expanded);
+					// data->expanded = NULL;
+				// }
 			}
 			else if (ft_isdigit(argument[i + 1]))
 				aziz(argument, &i);
 		}
+		// else if ()
 		else
 		{
 			data->str1 = get_word(argument, &i);
 			data->expanded = ft_strjoin(data->expanded, data->str1);
 		}
+		// printf("%s\n", data->expanded);
 	}
 	free(argument);
 	return (data->expanded);

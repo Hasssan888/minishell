@@ -84,10 +84,13 @@ char	*get_word(char *argument, int *i)
 
 	str = NULL;
 	j = *i;
-	while (argument[*i] && argument[*i] != '$')
-		(*i)++;
-	str = malloc((*i - j + 1) * sizeof(char));
-	ft_strlcpy(str, &argument[j], (*i - j + 1));
+	if (argument[j] == '$')
+		j++;
+	while (argument[j] && argument[j] != '$')
+		j++;
+	str = malloc((j - *i + 1) * sizeof(char));
+	ft_strlcpy(str, &argument[*i], (j - *i + 1));
+	*i = j;
 	return (str);
 }
 
