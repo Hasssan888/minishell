@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/14 20:07:09 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/15 10:20:29 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 {
 	char	quote;
 	char	*argument;
-	(void) k;
-	(void) j;
 	argument = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
 	while (arg[j])
 	{

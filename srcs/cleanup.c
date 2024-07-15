@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 16:09:29 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/15 09:52:23 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ void	clear_list(t_command **lst)
 		ptr = node->next;
 		if (node->value != NULL)
 			free(node->value);
-		if (node->args != NULL)
-			free_array(node->args);
+		// if (node->args != NULL)
+		// 	free_array(node->args);
 		free(node);
 		node = ptr;
 	}

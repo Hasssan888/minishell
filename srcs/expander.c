@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/14 20:11:29 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/15 10:16:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,9 @@ char **ft_arr_join(char **arr1, char **arr2)
 
 int	expander_extended(t_command *list)
 {
-	// char **args = NULL;
-	// char **splited = NULL;
+	char **args = NULL;
+	char **splited = NULL;
 	list->value = unquote_arg(list, list->value, 0, 0);
-	list->value = expand_vars(list->value, 0);
-	// splited = ft_split(list->value, ' ');
-	// list->value = splited[0];
 	// list->args = ft_arr_join(list->args);
 	while (list->args != NULL && list->args[data->i] != NULL)
 	{
@@ -102,12 +99,21 @@ int	expander_extended(t_command *list)
 			data->syntax_error = 0;
 			return (0);
 		}
-		// if (splited[1] != NULL);
-		// args = ft_arr_join(args, splited);
 		data->i++;
 	}
-	// list->args = args;
-	list = list->next;
+	if (list->quoted != 1 && ft_strchr(list->value, '$'))
+	{
+		list->value = expand_vars(list->value, 0);
+		if (!list->quoted)
+		{
+			splited = ft_split(list->value, ' ');
+			list->value = splited[0];
+			if (splited[1] != NULL)
+				args = ft_arr_join(splited, &list->args[1]);	
+			list->args = args;
+		}	
+	}
+	// list = list->next;
 	return (1);
 }
 
