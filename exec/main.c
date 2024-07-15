@@ -15,12 +15,16 @@ void    ft_pipe(t_command *node1, char **ev, t_pipex *p)
         {
             if (cur->type == RED_IN)
             {
-                if (cur->next->type == RED_IN )
-                    open_infile(cur, p);
-                else
-                    p->infile = open(cur->args[0], O_RDONLY, 0644);
+                p->infile = open(cur->args[0], O_RDONLY, 0644);
+                if (p->infile == -1)
+                {
+                    printf("%s: Permission denied\n", cur->args[0]);
+                    p->indixe = 1;
+                }
                 p->flag = 1;
             }
+            if (cur->type == PIPE)
+                p->indixe = 0;
             cur = cur->next;
         }
         else if ((cur->type != RED_OUT  || cur->type != APP) && cur->type == CMD)

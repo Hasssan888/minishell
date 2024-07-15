@@ -50,11 +50,8 @@ void    readout_append(t_command *node1, t_pipex *p)
 
 void    infile(t_command *node1, char **env,t_pipex *p)
 {
-    if (p->infile == -1)
-    {
-        perror("file infile");
+    if (p->indixe == 1 && p->count_pipe == 0)
         exit(1);
-    }
     close(p->end[0]);
     dup2(p->infile, STDIN_FILENO);
     close(p->infile);
@@ -166,7 +163,7 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[1]);
 	close(p->end[0]);
-    if (ft_strcmp(node1->args[0] , "cat") != 0)
+    if (ft_strcmp(node1->args[0] , "cat") != 0 ||(ft_strcmp(node1->args[0] , "cat") == 0 && node1->next == NULL))
     {
         wait(&p->status);
         data->exit_status  = WEXITSTATUS(p->status);

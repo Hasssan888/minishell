@@ -53,8 +53,9 @@ void    open_infile(t_command *node, t_pipex *p)
             fd[i] = open(cur->args[0], O_RDONLY, 0644);
             if (fd[i] == -1)
             {
-                perror("infile");
-                exit(1);
+                printf("%s: Permission denied\n", cur->args[0]);
+                break;
+                // exit(1);
             }
             i++;
         }
@@ -84,7 +85,6 @@ void    open_outfile(t_command *node, t_pipex *p)
             fd[i] = open(cur->args[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
         if (fd[i] == -1)
         {
-            perror("outfile");
             printf("%s: Permission denied\n", cur->args[0]);
             exit(1);
         }
