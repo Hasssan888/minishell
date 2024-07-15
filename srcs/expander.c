@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/15 11:10:00 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/15 11:46:54 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,15 @@ char	*expand_vars(char *argument, int i)
 						ft_itoa(data->exit_status));
 			}
 			else if (!ft_isdigit(argument[i + 1]))
-				get_expanded(argument, &i);
+			{
+				if (get_expanded(argument, &i))
+				{
+					free(data->expanded);
+					data->expanded = NULL;
+				}
+			}
 			else if (ft_isdigit(argument[i + 1]))
 				aziz(argument, &i);
-			else
-			{
-				free(data->expanded);
-				data->expanded = NULL;
-			}
 		}
 		else
 		{
@@ -97,7 +98,7 @@ int	expander_extended(t_command *list)
 	char **args = NULL;
 	char **splited = NULL;
 	list->value = unquote_arg(list, list->value, 0, 0);
-	while (list->args != NULL && list->args[data->i] != NULL)
+	while (list->value != NULL && list->args != NULL && list->args[data->i] != NULL)
 	{
 		list->args[data->i] = unquote_arg(list, list->args[data->i], 0, 0);
 		if (list->quoted != 1 && list->type != HER_DOC)
@@ -116,7 +117,7 @@ int	expander_extended(t_command *list)
 	if (list->quoted != 1 && ft_strchr(list->value, '$'))
 	{
 		list->value = expand_vars(list->value, 0);
-		if (!list->quoted)
+		if (!list->quoted && list->value != NULL)
 		{
 			splited = ft_split_str(list->value, " \t\v");
 			list->value = splited[0];

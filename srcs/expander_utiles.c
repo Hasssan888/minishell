@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/15 10:22:37 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/15 11:47:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 {
 	char	quote;
 	char	*argument;
+	
+	if (!list || !arg)
+		return (NULL);
 	argument = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
 	while (arg[j])
 	{
@@ -93,8 +96,11 @@ int	get_expanded(char *argument, int *i)
 	data->str1 = get_var(&argument[++(*i)], i);
 	data->str2 = get_env_element(data->str1);
 	free(data->str1);
-	if (!data->str2)
+	if (!data->str2 || !data->str2[0])
+	{
+		free(data->str2);
 		return (1);
+	}
 	data->expanded = ft_strjoin(data->expanded, data->str2);
 	return (0);
 }
