@@ -124,8 +124,10 @@ int	expander_extended(t_command *list)
 			splited = ft_split_str(list->value, " \t\v");
 			list->value = splited[0];
 			if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+			{
 				args = ft_arr_join(splited, &list->args[1]);	
-			list->args = args;
+				list->args = args;
+			}
 		}	
 	}
 	// list = list->next;
