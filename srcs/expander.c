@@ -14,10 +14,12 @@
 
 char	*aziz(char *argument, int *i)
 {
-	if (argument[1] && ft_isdigit(argument[1]) && ft_strlen(&argument[1]) > 2)
+	if (argument[1] && ft_isdigit(argument[1])) // && ft_strlen(&argument[1]) > 2
 	{
 		*i += 2;
 		int j = *i;
+		if (!argument[j])
+			return (data->expanded);
 		while(argument[++j] && argument[j] != '$');
 		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument, i, j));
 		// *i += ft_strlen(&argument[2]);
@@ -119,7 +121,7 @@ int	expander_extended(t_command *list)
 	if (list->quoted != 1 && ft_strchr(list->value, '$'))
 	{
 		list->value = expand_vars(list->value, 0);
-		if (!list->quoted && list->value != NULL)
+		if (!list->quoted && list->value != NULL && list->value[0])
 		{
 			splited = ft_split_str(list->value, " \t\v");
 			list->value = splited[0];
