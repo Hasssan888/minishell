@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/15 11:46:54 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/15 18:19:04 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,26 @@ char **ft_arr_join(char **arr1, char **arr2)
 	return (joined);
 }
 
+int ambigous_red(char *red_file)
+{
+	int i = 0;
+	while (red_file != NULL && red_file[i] && ft_strchr(" \t", red_file[i]))
+		i++;
+	while(red_file != NULL && red_file[i])
+	{
+		char *str = ft_strchr(" \t", red_file[i]);
+		if (str != NULL)
+		{
+			while(red_file[i] && ft_strchr(" \t", red_file[i]))
+				i++;
+			if (red_file[i] && !ft_strchr(" \t", red_file[i]))		
+				return (1);
+		}
+		i++;
+	}
+	return 0;
+}
+
 int	expander_extended(t_command *list)
 {
 	char **args = NULL;
@@ -116,8 +136,6 @@ int	expander_extended(t_command *list)
 		}
 		data->i++;
 	}
-	// if (!list->value)
-	// 	return (0);
 	if (list->quoted != 1 && ft_strchr(list->value, '$'))
 	{
 		list->value = expand_vars(list->value, 0);
@@ -132,6 +150,16 @@ int	expander_extended(t_command *list)
 			}
 		}	
 	}
+	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
+		{
+			if (ambigous_red(list->args[0]))
+			{
+				clear_list(&data->head);
+				ft_perror("ambiguous redirect\n");
+				data->syntax_error = 0;
+				return (0);
+			}
+		}
 	// list = list->next;
 	return (1);
 }
