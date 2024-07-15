@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/15 10:20:29 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/15 10:22:37 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,7 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 		}
 		else
 			argument[k++] = arg[j++];
-		
-		// argument = ft_strtrim(arg, quote);
-		if (arg[0] == quote && quote == '\'')
+				if (arg[0] == quote && quote == '\'')
 			list->quoted = 1;
 		else if (arg[0] == quote && quote == '"')
 			list->quoted = 2;

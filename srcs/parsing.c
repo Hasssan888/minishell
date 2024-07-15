@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/15 09:13:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/15 10:41:39 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	parse_command(char *line)
 	// printf("\n\n");
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	data->list = list;
-	exec_command(list);
+	// exec_command(list);
 	// func(list);
 	clear_list(&list);
 	return (0);
