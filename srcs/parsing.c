@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/16 10:54:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:38:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_command	*syntax_error(t_command *list_command, t_command *head)
 {
 	printf("syntax error\n");
 	data->syntax_error = 1;
-	free_node(list_command);
+	free_node(&list_command);
 	clear_list(&head);
 	return (NULL);
 }
@@ -41,7 +41,7 @@ t_command	*get_command_with_args()
 	{
 		data->list_command->args[i++] = ft_strdup(data->_tokens_list->value);
 		data->list_command->args[i] = NULL;
-		data->_tokens_list = free_node(data->_tokens_list);
+		data->_tokens_list = free_node(&data->_tokens_list);
 		while (data->_tokens_list != NULL && (data->_tokens_list->type >= 2
 				&& data->_tokens_list->type <= 5))
 		{
@@ -94,7 +94,7 @@ t_command	*parser_command(t_command *_tokens_list)
 			get_redirect_node(data->list_command);
 		else
 		{
-			data->_tokens_list = free_node(data->_tokens_list);
+			data->_tokens_list = free_node(&data->_tokens_list);
 			if (!data->_tokens_list)
 				return (syntax_error(data->list_command, data->head));
 		}
@@ -107,8 +107,9 @@ t_command	*parser_command(t_command *_tokens_list)
 int	parse_command(char *line)
 {
 	t_command	*tokens_list;
-	t_command	*list;
+	// t_command	*list;
 
+	data->list = NULL;
 	printf("line befor lexer: %s\n", line);
 	data->syntax_error = 0;
 	printf("\n\n");
@@ -119,16 +120,15 @@ int	parse_command(char *line)
 	tokens_list = tokenzer_command(line);
 	print_list(tokens_list);
 	printf("\n\n");
-	list = parser_command(tokens_list);
-	print_list(list);
+	data->list = parser_command(tokens_list);
+	// print_list(list);
 	printf("\n\n");
-	list = expander_command(list);
-	print_list(list);
+	data->list = expander_command(data->list);
+	print_list(data->list);
 	// printf("\n\n");
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
-	data->list = list;
 	// exec_command(list);
 	// func(list);
-	clear_list(&list);
+	clear_list(&data->list);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/15 10:31:00 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:31:12 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,31 @@ void	init_minishell(int ac, char **av, char **env)
 	data->prompt = get_prompt();
 	data->new_command = NULL;
 }
+void clear_env(t_env **env)
+{
+	t_env	*node;
+	t_env	*ptr;
 
+	if (!env)
+		return ;
+	node = *env;
+	while (node != NULL)
+	{
+		ptr = node->next;
+		if (node->value != NULL)
+			free(node->value);
+		free(node);
+		node = ptr;
+	}
+	*env = NULL;
+}
+void clear_all()
+{
+	clear_env(&data->env);
+	free(data->new_command);
+	free(data->prompt);
+	free(data);
+}
 int	main(int ac, char **av, char **env)
 {
 	char	*command;
@@ -72,7 +96,6 @@ int	main(int ac, char **av, char **env)
 		command = readline(data->prompt);
 	}
 	clear_history();
-	free(data->new_command);
-	free(data->prompt);
+	clear_all();
 	return (0);
 }

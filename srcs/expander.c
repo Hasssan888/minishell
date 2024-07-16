@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/16 11:09:12 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:35:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,8 @@ int	expander_extended(t_command *list)
 t_command	*expander_command(t_command *list)
 {
 	data->head = list;
+	if (!list)
+		return (NULL);
 	if (list != NULL && list->type == PIPE)
 	{
 		ft_perror("syntax error\n");
