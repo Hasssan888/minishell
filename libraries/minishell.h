@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/15 10:29:21 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:07:35 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,7 @@ int						get_expanded(char *argument, int *i);
 char					**ft_split_str(const char *s, char *del);
 
 // clean functions
-t_command				*free_node();
+t_command				*free_node(t_command *node);
 void					clear_list(t_command **lst);
 void					free_array(char **array);
 

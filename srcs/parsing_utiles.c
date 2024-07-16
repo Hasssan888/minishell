@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/13 20:29:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:08:14 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	get_args_size(t_command *list)
 
 t_command	*redirect_list(t_command **head, t_command **redirect_head)
 {
+	(void) head;
 	t_command	*redirection_node;
 
 	redirection_node = new_node(data->_tokens_list->type,
@@ -46,7 +47,6 @@ t_command	*redirect_list(t_command **head, t_command **redirect_head)
 		free_array(data->list_command->args);
 		free_node(data->list_command);
 		free_node(data->_tokens_list);
-		clear_list(head);
 		data->syntax_error = 1;
 		return (NULL);
 	}
@@ -63,10 +63,11 @@ void	get_redirect_node(void)
 	data->_tokens_list = free_node(data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		ft_perror("syntax error parser\n");
+		ft_perror("syntax error parser asf\n");
 		free_array(data->list_command->args);
 		free_node(data->list_command);
 		free_node(data->_tokens_list);
+		
 		data->syntax_error = 1;
 		return ;
 	}

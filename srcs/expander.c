@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/15 18:19:04 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:09:12 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,12 +142,14 @@ int	expander_extended(t_command *list)
 		if (!list->quoted && list->value != NULL && list->value[0])
 		{
 			splited = ft_split_str(list->value, " \t\v");
-			list->value = splited[0];
+			list->value = ft_strdup(splited[0]);
 			if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
 			{
 				args = ft_arr_join(splited, &list->args[1]);	
 				list->args = args;
 			}
+			free_array(splited);
+			// free_array(splited);
 		}	
 	}
 	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
