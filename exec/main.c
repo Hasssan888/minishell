@@ -1,60 +1,121 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 12:45:04 by hbakrim           #+#    #+#             */
+/*   Updated: 2024/07/16 12:45:06 by hbakrim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libraries/minishell.h"
 
-void    ft_pipe(t_command *node1, char **ev, t_pipex *p)
+void	child_process(t_command *node1, char **env, t_pipex *p)
 {
-    t_command *cur;
-    
-    p->status = 0;
-    cur = node1;
-    p->flag = 0;
-    if (p->count_here_doc > 0)
-        open_here_doc(node1, p);
-    while (cur != NULL)
-    {
-        if (cur->type == PIPE || cur->type == RED_IN || cur->type == HER_DOC)
-        {
-            if (cur->type == RED_IN)
-            {
-                p->infile = open(cur->args[0], O_RDONLY, 0644);
-                if (p->infile == -1)
-                {
-                    printf("%s: Permission denied\n", cur->args[0]);
-                    p->indixe = 1;
-                }
-                p->flag = 1;
-            }
-            if (cur->type == PIPE)
-                p->indixe = 0;
-            cur = cur->next;
-        }
-        else if ((cur->type != RED_OUT  || cur->type != APP) && cur->type == CMD)
-        {
-            if (cur->next && cur->next->type == HER_DOC )
-                p->flag = 2;
-            p->r = fork_pipe(cur, ev, p);
-            p->flag = 0;
-            cur = cur->next;
-        }
-        else
-            cur = cur->next;
-    }
+	if (p->flag == 1)
+		infile(node1, env, p);
+	else if (p->flag == 2 && node1->next->type == HER_DOC
+		&& node1->next->next == NULL)
+		one_here_doc(node1, env, p);
+	else if (p->flag == 2 && node1->next->type == HER_DOC
+		&& (node1->next->next->type == RED_OUT
+			|| node1->next->next->type == APP))
+		heredoc_readout_app(node1, env, p);
+	else if (p->flag == 2)
+		pipe_heredoc(node1, env, p);
+	else if (node1->type == CMD && node1->next != NULL
+		&& (node1->next->type == RED_OUT || node1->next->type == APP))
+		outfile(node1, env, p);
+	else if (node1->type == CMD && node1->next == NULL)
+		excut_butlin(node1, env);
+	else
+	{
+		close(p->end[0]);
+		dup2(p->end[1], STDOUT_FILENO);
+		close(p->end[1]);
+		excut_butlin(node1, env);
+	}
 }
 
-int func(t_command *list)
+pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 {
-    t_pipex	pipex;
+	if (pipe(p->end) == -1)
+		ft_error_2();
+	p->pid = fork();
+	if (p->pid == -1)
+		ft_error_2();
+	else if (p->pid == 0)
+		child_process(node1, env, p);
+	dup2(p->end[0], STDIN_FILENO);
+	close(p->end[1]);
+	close(p->end[0]);
+	if (ft_strcmp(node1->args[0], "cat") != 0 || (ft_strcmp(node1->args[0],
+				"cat") == 0 && node1->next == NULL))
+	{
+		wait(&p->status);
+		data->exit_status = WEXITSTATUS(p->status);
+	}
+	return (p->pid);
+}
 
-    ft_count_here_doc(list, &pipex);
-    ft_count_pipe(list, &pipex);
-    ft_count_read_out(list, &pipex);
-    ft_count_read_in(list, &pipex);
-    ft_pipe(list, data->envirenment, &pipex);
-    while (pipex.i != -1)
+void	skip_prh(t_pipex *p)
+{
+	if (p->cur->type == RED_IN)
+	{
+		p->infile = open(p->cur->args[0], O_RDONLY, 0644);
+		if (p->infile == -1)
+		{
+			printf("%s: Permission denied\n", p->cur->args[0]);
+			p->indixe = 1;
+		}
+		p->flag = 1;
+	}
+	if (p->cur->type == PIPE)
+		p->indixe = 0;
+	p->cur = p->cur->next;
+}
+
+void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
+{
+	p->cur = node1;
+	p->flag = 0;
+	while (p->cur != NULL)
+	{
+		if (p->cur->type == PIPE || p->cur->type == RED_IN
+			|| p->cur->type == HER_DOC)
+			skip_prh(p);
+		else if ((p->cur->type != RED_OUT || p->cur->type != APP)
+			&& p->cur->type == CMD)
+		{
+			if (p->cur->next && p->cur->next->type == HER_DOC)
+				p->flag = 2;
+			p->r = fork_pipe(p->cur, ev, p);
+			p->flag = 0;
+			p->cur = p->cur->next;
+		}
+		else
+			p->cur = p->cur->next;
+	}
+}
+
+int	func(t_command *list)
+{
+	t_pipex	pipex;
+
+	ft_count_here_doc(list, &pipex);
+	ft_count_pipe(list, &pipex);
+	ft_count_read_out(list, &pipex);
+	ft_count_read_in(list, &pipex);
+	if (pipex.count_here_doc > 0)
+		open_here_doc(list, &pipex);
+	ft_pipe(list, data->envirenment, &pipex);
+	while (pipex.i != -1)
 	{
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
-        pipex.i = wait(NULL);
+		pipex.i = wait(NULL);
 	}
-    // handle_child_exit_status(pipex.status);
-    unlink("file_here_doc.txt");
-    return (0);
+	unlink("file_here_doc.txt");
+	return (0);
 }

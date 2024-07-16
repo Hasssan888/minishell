@@ -1,69 +1,64 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   one_cmd.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 12:46:01 by hbakrim           #+#    #+#             */
+/*   Updated: 2024/07/16 12:46:03 by hbakrim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libraries/minishell.h"
 
-// void    ft_onecmd(t_command *node, char **ev, t_pipex *p)
-// {
-//     char *buf[1025];
-//     ssize_t beyt_char;
-//     pid_t pid;
-//     // int status;
-//     int flag = 0;
-//     while (node)
-//     {
-//         if (node->type == RED_IN)
-//         {
-//             flag = 1;
-//             node = node->next;
-//         }
-//         else
-//             break;
-//     }
-//     pipe(p->end);
+int	if_is_buil(t_command *command)
+{
+	if (ft_strcmp(command->value, "echo") == 0)
+		return (1);
+	else if (ft_strcmp(command->value, "pwd") == 0)
+		return (1);
+	else if (ft_strcmp(command->value, "cd") == 0)
+		return (1);
+	else if (ft_strcmp(command->value, "env") == 0)
+		return (1);
+	else if (ft_strcmp(command->value, "export") == 0)
+		return (1);
+	else if (ft_strcmp(command->value, "unset") == 0)
+		return (1);
+	else if (ft_strcmp(command->value, "exit") == 0)
+		return (1);
+	return (0);
+}
 
-//     pid = fork();
-//     if (pid == 0)
-//     {
-//         if (p->count_here_doc > 0)
-//         {
-//             close(p->end[0]);
-//             p->infile_here_doc = open("file_here_doc.txt", O_RDONLY, 0644);
-//             dup2(p->infile_here_doc, STDIN_FILENO);
-//             close(p->infile_here_doc);
-//             dup2(p->end[1], STDOUT_FILENO);
-//             close(p->end[1]);
-//             ft_excute(node->args, ev);
-//             //execlp("/usr/bin/cat", "cat", NULL);
-//             printf("here_doc\n");
+void	excut_butlin(t_command *node1, char **env)
+{
+	if (if_is_buil(node1))
+	{
+		printf("is_bul\n");
+		is_builtin_cmd(node1);
+	}
+	else
+		ft_excute(node1->args, env);
+}
 
-//         }
-//         else if (flag == 1)
-//         {
-//             printf("flag == 1\n");
-//             close(p->end[0]);
-//             dup2(p->infile, STDIN_FILENO);
-//             close(p->infile);
-//             dup2(p->end[1], STDOUT_FILENO);
-//             close(p->end[1]);
-//             ft_excute(node->args, ev);
-//         }
-//         else
-//         {
-//             printf("flag == 0\n");
-//             close(p->end[0]);
-//             dup2(p->end[1], STDOUT_FILENO);
-//             close(p->end[1]);
-//             ft_excute(node->args, ev);
-//         }
-//     }
-//         close(p->end[1]);
-//         dup2(p->end[0], STDIN_FILENO);
-//         close(p->end[0]);
-//         printf("in outfile\n");
-//         open_outfile(node, p);
-//         printf("out outfile\n");
-//         while ((beyt_char = read(STDIN_FILENO, buf, sizeof(buf))) > 0)
-//             write(p->outfile, buf, beyt_char);
-//         dup2(p->outfile, STDOUT_FILENO);
-//         printf("outfile\n");
-//         // close(p->outfile);
-//         // waitpid(pid, &status, 0);
-// }
+void	readout_append(t_command *node1, t_pipex *p)
+{
+	if (node1->next->next && (node1->next->next->type == RED_OUT
+			|| node1->next->next->type == APP))
+		open_outfile(node1, p);
+	else
+	{
+		if (node1->next->type == APP)
+			p->outfile = open(node1->next->args[0],
+					O_WRONLY | O_CREAT | O_APPEND, 0644);
+		else
+			p->outfile = open(node1->next->args[0],
+					O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (p->outfile == -1)
+		{
+			printf("%s: Permission denied\n", node1->next->args[0]);
+			exit(1);
+		}
+	}
+}

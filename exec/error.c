@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 12:47:09 by hbakrim           #+#    #+#             */
+/*   Updated: 2024/07/16 12:47:12 by hbakrim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libraries/minishell.h"
 
 void	ft_putstr_fd(char *s, int fd)
@@ -20,9 +32,10 @@ void	ft_error_2(void)
 
 void	ft_error(char **av)
 {
+	int		i;
+	char	*str;
 
-	int i = -1;
-	char *str;
+	i = -1;
 	if (ft_strcmp(av[0], ".") == 0)
 	{
 		ft_putstr_fd(".: filename argument required", 2);
@@ -40,10 +53,9 @@ void	ft_error(char **av)
 			ft_putstr_fd(str, 2);
 			free(str);
 		}
-			write(2, "\n", 1);
+		write(2, "\n", 1);
 		exit(127);
 	}
-
 }
 
 char	*ft_strchr(const char *s, int c)

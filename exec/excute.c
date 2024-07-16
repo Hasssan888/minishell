@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   excute.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 12:45:29 by hbakrim           #+#    #+#             */
+/*   Updated: 2024/07/16 12:45:31 by hbakrim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libraries/minishell.h"
 
 char	*function(char **env)
@@ -45,7 +57,6 @@ char	*without_slash(char **env, char *mycmdargs)
 	{
 		path.part_path = strjoin1(path.mypaths[path.i], "/");
 		path.path = strjoin1(path.part_path, mycmdargs);
-		// printf("path.path = %s\n", path.path);
 		free(path.part_path);
 		if (access(path.path, F_OK) == 0)
 			return (path.path);
@@ -71,13 +82,13 @@ void	ft_excute(char **av, char **env)
 {
 	char	**mycmdargs;
 	char	*path;
-	
-	if (ft_strcmp(av[0], "") == 0 || ft_strcmp(av[0], ".") == 0 || ft_strcmp(av[0], " ") == 0
-		/*|| ft_strcmp(av[ft_strlen(av[0]) - 1], " ") == 0*/)
-		{
-			printf("1_error\n");
-			ft_error(av);
-		}
+
+	if (ft_strcmp(av[0], "") == 0 || ft_strcmp(av[0], ".") == 0
+		|| ft_strcmp(av[0], " ") == 0)
+	{
+		printf("1_error\n");
+		ft_error(av);
+	}
 	else
 	{
 		mycmdargs = av;
@@ -86,6 +97,5 @@ void	ft_excute(char **av, char **env)
 			ft_error(av);
 		else
 			execve(path, mycmdargs, env);
-			
 	}
 }
