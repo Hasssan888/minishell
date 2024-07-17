@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/17 15:27:35 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/17 15:39:30 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ int	echo(char **cmd)
 
 int	is_builtin_cmd(t_command *command)
 {
+	// printf("\n\n%s\n\n", command->value);
 	if (ft_strcmp(command->value, "echo") == 0)
 		echo(&command->args[1]);
 	else if (ft_strcmp(command->value, "pwd") == 0)
