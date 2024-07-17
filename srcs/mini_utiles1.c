@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/17 14:05:16 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/17 15:25:21 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,33 +85,33 @@ t_env *get_alternative_env()
 	new = lstnew(ft_strjoin(ft_strdup("OLDPWD="), ft_strdup(cwd)));
 	data->old_pwd = &(new->value);
 	add_back(&head, new);
-
+	free(cwd);
 	return (head);
 }
 
 t_env	*creat_env(char **env)
 {
-	// t_env	*head;
-	// t_env	*new;
-	// int		i;
-	(void) env;
-	// if (!env || !*env)
+	t_env	*head;
+	t_env	*new;
+	int		i;
+	// (void) env;
+	if (!env || !*env)
 		return (get_alternative_env());
-	// else
-	// {
-	// 	i = -1;
-	// 	head = NULL;
-	// 	data->old_pwd = NULL;
-	// 	data->current_pwd = NULL;
-	// 	while (env[++i] != NULL)
-	// 	{
-	// 		new = lstnew(ft_strdup(env[i]));
-	// 		if (!strncmp(new->value, "PWD", 3))
-	// 			data->current_pwd = &(new->value);
-	// 		else if (!strncmp(new->value, "OLDPWD", 6))
-	// 			data->old_pwd = &(new->value);
-	// 		add_back(&head, new);
-	// 	}	
-	// }
-	// return (head);
+	else
+	{
+		i = -1;
+		head = NULL;
+		data->old_pwd = NULL;
+		data->current_pwd = NULL;
+		while (env[++i] != NULL)
+		{
+			new = lstnew(ft_strdup(env[i]));
+			if (!strncmp(new->value, "PWD", 3))
+				data->current_pwd = &(new->value);
+			else if (!strncmp(new->value, "OLDPWD", 6))
+				data->old_pwd = &(new->value);
+			add_back(&head, new);
+		}	
+	}
+	return (head);
 }

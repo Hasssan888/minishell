@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/17 14:24:24 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/17 15:27:35 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,23 +50,22 @@ void	check_errors(void)
 		ft_perror("minishell: cd: No such file or directory\n");
 }
 
-char *getoldpwd(char **old_pwd_ptr)
+char *getenvval(char **env_ptr)
 {
 	char *old = NULL;
-	
-	if (old_pwd_ptr != NULL)
+	if (env_ptr != NULL)
 	{
-		old = *(old_pwd_ptr);
+		old = *(env_ptr);
 		old = ft_strchr(old, '=');
 		old = ft_strdup(&old[1]); 	
+		free(*env_ptr);
 	}
 	return (old);
 }
 
 int	cd(char **args)
 {
-	if (!args[0])
-		return (0);
+	char *path = NULL;
 	if (args[0] != NULL && args[1] != NULL)
 	{
 		ft_perror("cd: too many arguments\n");
@@ -74,20 +73,28 @@ int	cd(char **args)
 	}
 	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 	{
-		args[0] = getoldpwd(data->old_pwd);
-		if (args[0] != NULL)
+		path = getenvval(data->old_pwd);
+		if (path != NULL)
 		{
 			// printf("%s\n", *(data->old_pwd));
-			printf("%s\n", args[0]);
-			change_dir(args[0]);
+			printf("%s\n", path);
+			change_dir(path);
+			free(path);
 			// free(args[0]);
 		}
 		return (1);
 	}
 	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
 	{
-		args[0] = getenv("HOME");
-		change_dir(args[0]);
+		path = get_env_element("HOME");
+		printf("%s\n", path);
+		if (!path || !path[0])
+		{
+			free(path);
+			ft_perror("cd: HOME not set\n");
+			return (0);
+		}
+		change_dir(path);
 		return (1);
 	}
 	else if (args != NULL && change_dir(args[0]))

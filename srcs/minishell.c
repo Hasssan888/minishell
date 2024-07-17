@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/17 13:23:29 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:35:22 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ char	*get_prompt(void)
 
 void	init_minishell(int ac, char **av, char **env)
 {
+	data->list = NULL;
 	data->old_pwd = NULL;
 	data->current_pwd = NULL;
 	data->ac = ac;
