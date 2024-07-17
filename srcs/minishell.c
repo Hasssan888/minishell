@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/16 11:31:12 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/17 13:23:29 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ char	*get_prompt(void)
 
 void	init_minishell(int ac, char **av, char **env)
 {
+	data->old_pwd = NULL;
+	data->current_pwd = NULL;
 	data->ac = ac;
 	data->exit_status = 0;
 	data->env = creat_env(env);
@@ -82,7 +84,7 @@ int	main(int ac, char **av, char **env)
 
 	data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(ac, av, env);
-	print_minishell();
+	// print_minishell();
 	signal(SIGQUIT, sig_handler);
 	// signal(SIGINT, sig_handler);
 	command = readline(data->prompt);

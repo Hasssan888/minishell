@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/16 11:38:05 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/17 13:34:48 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,24 +110,24 @@ int	parse_command(char *line)
 	// t_command	*list;
 
 	data->list = NULL;
-	printf("line befor lexer: %s\n", line);
+	// printf("line befor lexer: %s\n", line);
 	data->syntax_error = 0;
-	printf("\n\n");
+	// printf("\n\n");
 	line = lexer_command(line, 0, 0);
-	if (line != NULL && line[0])
-		printf("line after lexer: %s\n", line);
-	printf("\n\n");
+	// if (line != NULL && line[0])
+	// 	printf("line after lexer: %s\n", line);
+	// printf("\n\n");
 	tokens_list = tokenzer_command(line);
-	print_list(tokens_list);
-	printf("\n\n");
+	// print_list(tokens_list);
+	// printf("\n\n");
 	data->list = parser_command(tokens_list);
 	// print_list(list);
-	printf("\n\n");
+	// printf("\n\n");
 	data->list = expander_command(data->list);
-	print_list(data->list);
+	// print_list(data->list);
 	// printf("\n\n");
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
-	// exec_command(list);
+	exec_command(data->list);
 	// func(list);
 	clear_list(&data->list);
 	return (0);

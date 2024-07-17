@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/13 20:25:07 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:01:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 
 void	get_old_current_pwd(void)
 {
+	char *old;
 	if (data->old_pwd != NULL)
 	{
-		free(*(data->old_pwd));
-		*(data->old_pwd) = ft_strdup(*(data->current_pwd));
+		if (!*(data->old_pwd))
+			free(*(data->old_pwd));
+		old = *(data->current_pwd);
+		*(data->old_pwd) = old;
 	}
 	if (data->current_pwd != NULL)
 	{
-		free(*(data->current_pwd));
-		*(data->current_pwd) = ft_strjoin(ft_strdup("PWD"), getcwd(NULL, 0));
+		if (!*(data->current_pwd))
+			free(*(data->current_pwd));
+		*(data->current_pwd) = ft_strjoin(ft_strdup("PWD="), getcwd(NULL, 0));
 	}
 }
 
@@ -52,14 +56,24 @@ int	cd(char **args)
 		return (0);
 	if (args[0] != NULL && args[1] != NULL)
 	{
-		ft_perror("cd: string not in pwd\n");
+		ft_perror("cd: too many arguments\n");
 		return (0);
 	}
 	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 	{
-		args[0] = getenv("OLDPWD");
-		printf("%s\n", args[0]);
-		change_dir(args[0]);
+		printf("%s\n", *(data->old_pwd));
+		printf("%s\n", *(data->current_pwd));
+		if (data->old_pwd != NULL)
+		{
+			printf("%s\n", *(data->old_pwd));
+			if (!*(data->old_pwd))
+			{
+				args[0] = *(data->old_pwd);
+				printf("%s\n", args[0]);
+				change_dir(args[0]);
+			}
+			
+		}
 		return (1);
 	}
 	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
