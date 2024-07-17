@@ -1,86 +1,97 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   open_file.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
+/*   Updated: 2024/07/16 14:26:03 by hbakrim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libraries/minishell.h"
 
-void    ft_count_pipe(t_command *list, t_pipex *p)
+void	ft_count_pipe(t_command *list, t_pipex *p)
 {
-    t_command *cur = list;
-    p->count_pipe = 0;
-    while (cur)
-    {
-        if (cur->type == PIPE)
-            p->count_pipe++;
-        cur = cur->next;
-    }
+	t_command	*cur;
+
+	cur = list;
+	p->count_pipe = 0;
+	while (cur)
+	{
+		if (cur->type == PIPE)
+			p->count_pipe++;
+		cur = cur->next;
+	}
 }
 
-void    ft_count_read_out(t_command *node, t_pipex *p)
+void	ft_count_read_out(t_command *node, t_pipex *p)
 {
-    t_command *cur = node;
-    p->count_read_out = 0;
+	t_command	*cur;
 
-    while (cur)
-    {
-        if (cur->type == RED_OUT || cur->type == APP)
-            p->count_read_out++;
-        cur = cur->next;
-    }
-}
-void    ft_count_read_in(t_command *node, t_pipex *p)
-{
-    t_command *cur = node;
-    p->count_read_in = 0;
-
-    while (cur)
-    {
-        if (cur->type == RED_IN)
-            p->count_read_in++;
-        cur = cur->next;
-    }
+	cur = node;
+	p->count_read_out = 0;
+	while (cur)
+	{
+		if (cur->type == RED_OUT || cur->type == APP)
+			p->count_read_out++;
+		cur = cur->next;
+	}
 }
 
-void    open_infile(t_command *node, t_pipex *p)
+void	ft_count_read_in(t_command *node, t_pipex *p)
 {
-    
-    int *fd  = malloc(sizeof(int) * p->count_read_in);
-    int i = 0;
-    t_command *cur = node;
-    printf("count_read_in = %d\n", p->count_read_in);
-    while (cur && i < p->count_read_in)
-    {
-        if (cur->type == PIPE || cur->type == CMD)
-            break;
-        else if (cur->type == RED_IN)
-        {
-            fd[i] = open(cur->args[0], O_RDONLY, 0644);
-            i++;
-        }
-        cur = cur->next;
-    }
-    // p->infile = fd[i];
-    p->infile = fd[i - 1];
-    printf("finsh while\n");
+	t_command	*cur;
+
+	cur = node;
+	p->count_read_in = 0;
+	while (cur)
+	{
+		if (cur->type == RED_IN)
+			p->count_read_in++;
+		cur = cur->next;
+	}
 }
-void    open_outfile(t_command *node, t_pipex *p)
+
+void	ft_loop(t_command *cur, t_pipex *p)
 {
-    
-    int *fd  = malloc(sizeof(int) * p->count_read_out);
-    int i = 0;
-    t_command *cur = node;
-    printf("count_read_out + appand = %d\n", p->count_read_out);
-    while (cur && i < p->count_read_out)
-    {
-        if (cur->type == PIPE)
-            break;
-        else if (cur->type == RED_OUT )
-        {
-            fd[i] = open(cur->args[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            i++;
-        }
-        else if (cur->type == APP)
-        {
-            fd[i] = open(cur->args[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
-            i++;
-        }
-        cur = cur->next;
-    }
-    p->outfile = fd[i - 1];
+	while (cur && p->i < p->count_read_out)
+	{
+		if (cur->type == PIPE)
+			break ;
+		else if (cur->type == RED_OUT || cur->type == APP)
+		{
+			if (cur->type == RED_OUT)
+				p->fd[p->i] = open(cur->args[0], O_WRONLY | O_CREAT | O_TRUNC,
+						0644);
+			else
+				p->fd[p->i] = open(cur->args[0], O_WRONLY | O_CREAT | O_APPEND,
+						0644);
+			if (p->fd[p->i] == -1)
+			{
+				printf("%s: Permission denied\n", cur->args[0]);
+				exit(1);
+			}
+			p->i++;
+		}
+		cur = cur->next;
+	}
+}
+
+void	open_outfile(t_command *node, t_pipex *p)
+{
+	t_command	*cur;
+
+	p->fd = malloc(sizeof(int) * p->count_read_out);
+	if (p->fd == NULL)
+	{
+		perror("malloc");
+		exit(1);
+	}
+	p->i = 0;
+	cur = node;
+	ft_loop(cur, p);
+	p->outfile = p->fd[p->i - 1];
+	free(p->fd);
 }
