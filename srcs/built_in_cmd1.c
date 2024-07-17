@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/17 14:01:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:24:24 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,19 @@ void	check_errors(void)
 		ft_perror("minishell: cd: No such file or directory\n");
 }
 
+char *getoldpwd(char **old_pwd_ptr)
+{
+	char *old = NULL;
+	
+	if (old_pwd_ptr != NULL)
+	{
+		old = *(old_pwd_ptr);
+		old = ft_strchr(old, '=');
+		old = ft_strdup(&old[1]); 	
+	}
+	return (old);
+}
+
 int	cd(char **args)
 {
 	if (!args[0])
@@ -61,18 +74,13 @@ int	cd(char **args)
 	}
 	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 	{
-		printf("%s\n", *(data->old_pwd));
-		printf("%s\n", *(data->current_pwd));
-		if (data->old_pwd != NULL)
+		args[0] = getoldpwd(data->old_pwd);
+		if (args[0] != NULL)
 		{
-			printf("%s\n", *(data->old_pwd));
-			if (!*(data->old_pwd))
-			{
-				args[0] = *(data->old_pwd);
-				printf("%s\n", args[0]);
-				change_dir(args[0]);
-			}
-			
+			// printf("%s\n", *(data->old_pwd));
+			printf("%s\n", args[0]);
+			change_dir(args[0]);
+			// free(args[0]);
 		}
 		return (1);
 	}
