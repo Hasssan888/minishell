@@ -6,13 +6,13 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/16 11:35:59 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 08:46:23 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libraries/minishell.h"
 
-char	*aziz(char *argument, int *i)
+char	*expand_digits(char *argument, int *i)
 {
 	if (argument[1] && ft_isdigit(argument[1])) // && ft_strlen(&argument[1]) > 2
 	{
@@ -22,6 +22,7 @@ char	*aziz(char *argument, int *i)
 			return (data->expanded);
 		while(argument[++j] && argument[j] != '$');
 		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument, i, j));
+		*i = j;
 		// *i += ft_strlen(&argument[2]);
 	}
 	// free(argument);
@@ -46,21 +47,15 @@ char	*expand_vars(char *argument, int i)
 			else if (!ft_isdigit(argument[i + 1]))
 			{
 				get_expanded(argument, &i);
-				// {
-					// free(data->expanded);
-					// data->expanded = NULL;
-				// }
 			}
 			else if (ft_isdigit(argument[i + 1]))
-				aziz(argument, &i);
+				data->expanded = expand_digits(argument, &i);
 		}
-		// else if ()
 		else
 		{
 			data->str1 = get_word(argument, &i);
 			data->expanded = ft_strjoin(data->expanded, data->str1);
 		}
-		// printf("%s\n", data->expanded);
 	}
 	free(argument);
 	return (data->expanded);
@@ -142,6 +137,7 @@ int	expander_extended(t_command *list)
 		if (!list->quoted && list->value != NULL && list->value[0])
 		{
 			splited = ft_split_str(list->value, " \t\v");
+			free(list->value);
 			list->value = ft_strdup(splited[0]);
 			if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
 			{
