@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:45:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/18 12:24:41 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 12:30:06 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ int	exec_command(t_command *commands_list)
 					// else if (commands_list->next != NULL
 					// 	&& (commands_list->next->type == RED_IN))
 					// 	dup2(fd_out, STDIN_FILENO);
-						
 					execve(cmd_path, commands_list->args, data->envirenment);
 					ft_perror("execve");
 					exit(1);
