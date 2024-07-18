@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/17 15:39:30 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 11:44:55 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,5 +177,7 @@ int	is_builtin_cmd(t_command *command)
 		clear_list(&data->list);
 		exit(0);
 	}
-	return (0);
+	else
+		return (0);
+	return (1);
 }
