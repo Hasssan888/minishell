@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/13 20:29:36 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 09:13:54 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ t_command	*tokenzer_command(char *command_line)
 	t_command	*node;
 
 	i = 0;
+	node = NULL;
 	table = NULL;
 	if (!command_line)
 		return (NULL);
@@ -107,16 +108,24 @@ t_command	*tokenzer_command(char *command_line)
 	{
 		token = get_token(command_line, &i);
 		type = get_token_type(token);
+		// table->args = NULL;
+		// node->args = NULL;
 		if (type == -1)
 		{
+			// if (node != NULL)
+			// 	clear_list(&node);
+			if (node != NULL)
+			{
+				free(node->value);
+				free(node);
+			}
 			free(token);
-			ft_perror("syntax error\n");
 			free(command_line);
 			clear_list(&table);
+			ft_perror("syntax error\n");
 			return (NULL);
 		}
 		node = new_node(type, token);
-		node->args = NULL;
 		add_back_list(&table, node);
 	}
 	free(command_line);

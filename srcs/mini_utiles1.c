@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/17 15:25:21 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 09:07:36 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ t_command	*new_node(int type, char *value)
 		return (NULL);
 	new_node->type = type;
 	new_node->value = value;
+	new_node->args = NULL;
 	new_node->next = NULL;
 	return (new_node);
 }

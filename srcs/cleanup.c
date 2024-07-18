@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/16 11:37:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 09:09:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	clear_list(t_command **lst)
 	t_command	*node;
 	t_command	*ptr;
 
-	if (!lst)
+	if (!lst || !*lst)
 		return ;
 	node = *lst;
 	while (node != NULL)

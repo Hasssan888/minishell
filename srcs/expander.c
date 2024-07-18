@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/18 08:46:23 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 08:47:25 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ int	expander_extended(t_command *list)
 				list->args = args;
 			}
 			free_array(splited);
-			// free_array(splited);
 		}	
 	}
 	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
