@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/18 08:41:10 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:07:06 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ void	init_minishell(int ac, char **av, char **env)
 	data->list = NULL;
 	data->old_pwd = NULL;
 	data->current_pwd = NULL;
+	data->av = av;
 	data->ac = ac;
 	data->exit_status = 0;
 	data->env = creat_env(env);
 	data->envirenment = env;
-	data->av = av;
 	data->syntax_error = false;
 	data->prompt = get_prompt();
 	data->new_command = NULL;

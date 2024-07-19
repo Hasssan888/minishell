@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/17 15:35:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:09:31 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # include <unistd.h> // for system calls
 // # include "../exec/main.h"
 
-# define DEFAULT_PATH "/usr/local/lib/bash:/usr/lib/bash:/opt/local/lib/bash:/usr/pkg/lib/bash:/opt/pkg/lib/bash:."
+# define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
 
 typedef enum s_types
 {
@@ -101,6 +101,7 @@ typedef struct s_data
 	char				**av;
 	char				**old_pwd;
 	char				**current_pwd;
+	char				**shell_lvl;
 	char				*expanded;	
 	char				*trimed_line;
 	char 				*unquoted_line;
@@ -110,7 +111,7 @@ typedef struct s_data
 	char				*new_command;
 	char				*special_chars;
 	char				**envirenment;
-	bool syntax_error; // boolean variable for syntax_error
+	bool 				syntax_error; // boolean variable for syntax_error
 }						t_data;
 
 typedef struct s_token

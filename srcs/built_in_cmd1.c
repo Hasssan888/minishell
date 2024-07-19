@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/18 11:44:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:14:47 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	cd(char **args)
 	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
 	{
 		path = get_env_element("HOME");
-		printf("%s\n", path);
+		// printf("%s\n", path);
 		if (!path || !path[0])
 		{
 			free(path);
@@ -108,7 +108,8 @@ int	env(t_env *env)
 {
 	while (env != NULL)
 	{
-		printf("%s\n", env->value);
+		if (ft_strchr(env->value, '='))
+			printf("%s\n", env->value);
 		env = env->next;
 	}
 	return (0);

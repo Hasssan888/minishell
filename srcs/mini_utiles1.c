@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/18 09:07:36 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:08:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ t_env	*creat_env(char **env)
 				data->current_pwd = &(new->value);
 			else if (!strncmp(new->value, "OLDPWD", 6))
 				data->old_pwd = &(new->value);
+			else if (!strncmp(new->value, "SHLVL", 5))
+				data->shell_lvl = &(new->value);
 			add_back(&head, new);
 		}	
 	}
