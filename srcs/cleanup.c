@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 16:09:29 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 09:09:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	free_array(char **array)
 	while (array[i] != NULL)
 		free(array[i++]);
 	free(array);
+	array = NULL;
 }
 
 void	clear_list(t_command **lst)
@@ -29,7 +30,7 @@ void	clear_list(t_command **lst)
 	t_command	*node;
 	t_command	*ptr;
 
-	if (!lst)
+	if (!lst || !*lst)
 		return ;
 	node = *lst;
 	while (node != NULL)
@@ -45,15 +46,15 @@ void	clear_list(t_command **lst)
 	*lst = NULL;
 }
 
-t_command	*free_node()
+t_command	*free_node(t_command **node)
 {
 	t_command	*ptr;
 
-	if (!data->_tokens_list)
+	if (!*node)
 		return (NULL);
-	ptr = data->_tokens_list->next;
-	free(data->_tokens_list->value);
-	free(data->_tokens_list);
-	data->_tokens_list = NULL;
+	ptr = (*node)->next;
+	free((*node)->value);
+	free(*node);
+	*node = NULL;
 	return (ptr);
 }

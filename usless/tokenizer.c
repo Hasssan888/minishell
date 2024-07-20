@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 20:30:46 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 09:09:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/13 20:29:44 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,7 @@ t_command *parser_command(t_command *tokens)
 		{
 			if (!ptr->next || ptr->next->type != FLE)
 			{
-				printf("syntax error\n");
+				ft_perror("syntax error\n");
 				return NULL;
 			}
 			ptr2->args = malloc((2) * sizeof(char *)); // why + 2 one for the name of the command and ther other for NULL ptr

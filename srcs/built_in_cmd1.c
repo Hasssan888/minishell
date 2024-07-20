@@ -6,23 +6,27 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 16:45:46 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:14:47 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libraries/minishell.h"
 
-void get_old_current_pwd()
+void	get_old_current_pwd(void)
 {
+	char *old;
 	if (data->old_pwd != NULL)
 	{
-		free(*(data->old_pwd));
-		*(data->old_pwd) = ft_strdup(*(data->current_pwd));
+		if (!*(data->old_pwd))
+			free(*(data->old_pwd));
+		old = *(data->current_pwd);
+		*(data->old_pwd) = old;
 	}
 	if (data->current_pwd != NULL)
 	{
-		free(*(data->current_pwd));
-		*(data->current_pwd) = ft_strjoin(ft_strdup("PWD"), getcwd(NULL, 0));	
+		if (!*(data->current_pwd))
+			free(*(data->current_pwd));
+		*(data->current_pwd) = ft_strjoin(ft_strdup("PWD="), getcwd(NULL, 0));
 	}
 }
 
@@ -46,26 +50,51 @@ void	check_errors(void)
 		ft_perror("minishell: cd: No such file or directory\n");
 }
 
+char *getenvval(char **env_ptr)
+{
+	char *old = NULL;
+	if (env_ptr != NULL)
+	{
+		old = *(env_ptr);
+		old = ft_strchr(old, '=');
+		old = ft_strdup(&old[1]); 	
+		free(*env_ptr);
+	}
+	return (old);
+}
+
 int	cd(char **args)
 {
-	if (!args[0])
-		return (0);
+	char *path = NULL;
 	if (args[0] != NULL && args[1] != NULL)
 	{
-		ft_perror("cd: string not in pwd\n");
+		ft_perror("cd: too many arguments\n");
 		return (0);
 	}
 	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 	{
-		args[0] = getenv("OLDPWD");
-		printf("%s\n", args[0]);
-		change_dir(args[0]);
+		path = getenvval(data->old_pwd);
+		if (path != NULL)
+		{
+			// printf("%s\n", *(data->old_pwd));
+			printf("%s\n", path);
+			change_dir(path);
+			free(path);
+			// free(args[0]);
+		}
 		return (1);
 	}
 	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
 	{
-		args[0] = getenv("HOME");
-		change_dir(args[0]);
+		path = get_env_element("HOME");
+		// printf("%s\n", path);
+		if (!path || !path[0])
+		{
+			free(path);
+			ft_perror("cd: HOME not set\n");
+			return (0);
+		}
+		change_dir(path);
 		return (1);
 	}
 	else if (args != NULL && change_dir(args[0]))
@@ -79,7 +108,8 @@ int	env(t_env *env)
 {
 	while (env != NULL)
 	{
-		printf("%s\n", env->value);
+		if (ft_strchr(env->value, '='))
+			printf("%s\n", env->value);
 		env = env->next;
 	}
 	return (0);
@@ -99,8 +129,8 @@ int	echo(char **cmd)
 {
 	int		i;
 	bool	flag;
-	// char	*path;
 
+	// char	*path;
 	i = 0;
 	if (!cmd[0])
 		return (0);
@@ -129,6 +159,7 @@ int	echo(char **cmd)
 
 int	is_builtin_cmd(t_command *command)
 {
+	// printf("\n\n%s\n\n", command->value);
 	if (ft_strcmp(command->value, "echo") == 0)
 		echo(&command->args[1]);
 	else if (ft_strcmp(command->value, "pwd") == 0)
@@ -147,5 +178,7 @@ int	is_builtin_cmd(t_command *command)
 		clear_list(&data->list);
 		exit(0);
 	}
+	else
+		return (0);
 	return (1);
 }

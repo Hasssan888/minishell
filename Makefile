@@ -6,7 +6,7 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/07/10 13:30:07 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/07/18 11:23:22 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC = 	$(SRCDIR)/minishell.c \
 		$(SRCDIR)/lexer.c \
 		$(SRCDIR)/expander_utiles.c \
 		$(SRCDIR)/execution.c \
+		$(SRCDIR)/ft_split_str.c \
 		$(SRCDIR)/built_in_utiles.c \
 		$(SRCDIR)/print_functions.c \
 		$(EXECDIR)/allcmd.c\

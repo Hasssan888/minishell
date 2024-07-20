@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 16:46:37 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:03:13 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,56 @@ t_command	*syntax_error(t_command *list_command, t_command *head)
 {
 	printf("syntax error\n");
 	data->syntax_error = 1;
-	free_node(list_command);
+	free_node(&list_command);
 	clear_list(&head);
 	return (NULL);
 }
 
-t_command	*get_command_with_args(t_command *list_command)
+void free_command(t_command *cmd)
+{
+	free(cmd->value);
+	free_array(cmd->args);
+	free(cmd);
+}
+
+t_command	*get_command_with_args()
 {
 	int	i;
 
 	i = 0;
-	list_command->args = malloc((get_args_size(data->_tokens_list) + 2)
-			* sizeof(char *));
+	int args_size = get_args_size(data->_tokens_list);
+	data->list_command->args = malloc((args_size + 2) * sizeof(char *));
+	if (!data->list_command)
+		return (NULL);
 	while (data->_tokens_list != NULL && data->_tokens_list->type != PIPE)
 	{
-		list_command->args[i++] = ft_strdup(data->_tokens_list->value);
-		list_command->args[i] = NULL;
-		data->_tokens_list = free_node(data->_tokens_list);
+		data->list_command->args[i++] = ft_strdup(data->_tokens_list->value);
+		data->list_command->args[i] = NULL;
+		data->_tokens_list = free_node(&data->_tokens_list);
 		while (data->_tokens_list != NULL && (data->_tokens_list->type >= 2
 				&& data->_tokens_list->type <= 5))
 		{
 			data->_tokens_list = redirect_list(&data->head, &data->rdrct_head);
 			if (data->syntax_error)
+			{
+				// free(data->_tokens_list);
+				// syntax_error(data->_tokens_list, data->head);
+				// free_command(data->_tokens_list);
+				clear_list(&data->rdrct_head);
+				clear_list(&data->head);
 				return (NULL);
+			}
 		}
 	}
-	return (list_command);
+	return (data->list_command);
 }
 
 void	init_parser_var(void)
 {
 	data->list_command = new_node(data->_tokens_list->type,
 			ft_strdup(data->_tokens_list->value));
+	if (!data->list_command)
+		return ;
 	data->list_command->args = NULL;
 	data->rdrct_head = NULL;
 }
@@ -61,9 +79,14 @@ t_command	*parser_command(t_command *_tokens_list)
 		if (data->syntax_error)
 			return (NULL);
 		init_parser_var();
+		if (!data->list_command)
+		{
+			clear_list(&data->head);
+			return (NULL);
+		}
 		if (data->_tokens_list->type == TOKEN)
 		{
-			data->list_command = get_command_with_args(data->list_command);
+			data->list_command = get_command_with_args();
 			if (!data->list_command)
 				return (NULL);
 		}
@@ -71,7 +94,7 @@ t_command	*parser_command(t_command *_tokens_list)
 			get_redirect_node(data->list_command);
 		else
 		{
-			data->_tokens_list = free_node(data->_tokens_list);
+			data->_tokens_list = free_node(&data->_tokens_list);
 			if (!data->_tokens_list)
 				return (syntax_error(data->list_command, data->head));
 		}
@@ -84,27 +107,30 @@ t_command	*parser_command(t_command *_tokens_list)
 int	parse_command(char *line)
 {
 	t_command	*tokens_list;
-	t_command	*list;
+	// t_command	*list;
 
-	// printf("line befor lexer: %s\n", line);
+	data->list = NULL;
+	printf("line befor lexer: %s\n", line);
 	data->syntax_error = 0;
-	// printf("\n\n");
+	printf("\n\n");
 	line = lexer_command(line, 0, 0);
-	// if (line != NULL && line[0])
-	// 	printf("line after lexer: %s\n", line);
-	// printf("\n\n");
+	if (line != NULL && line[0])
+		printf("line after lexer: %s\n", line);
+	printf("\n\n");
 	tokens_list = tokenzer_command(line);
 	print_list(tokens_list);
 	printf("\n\n");
-	list = parser_command(tokens_list);
-	print_list(list);
+	data->list = parser_command(tokens_list);
+	print_list(data->list);
 	printf("\n\n");
-	list = expander_command(list);
-	print_list(list);
-	// printf("\n\n");
-	data->list = list;
-	exec_command(list);
-	// func(list);
-	clear_list(&list);
+	data->list = expander_command(data->list);
+	print_list(data->list);
+	printf("\n\n");
+	printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
+	printf("\n\n");
+	exec_command(data->list);
+	printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
+	// func(data->list);
+	clear_list(&data->list);
 	return (0);
 }

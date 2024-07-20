@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/11 11:07:04 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:07:06 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,44 @@ char	*get_prompt(void)
 
 void	init_minishell(int ac, char **av, char **env)
 {
+	data->expanded = NULL;
+	data->list = NULL;
+	data->old_pwd = NULL;
+	data->current_pwd = NULL;
+	data->av = av;
 	data->ac = ac;
 	data->exit_status = 0;
 	data->env = creat_env(env);
 	data->envirenment = env;
-	data->av = av;
 	data->syntax_error = false;
 	data->prompt = get_prompt();
 	data->new_command = NULL;
 }
+void clear_env(t_env **env)
+{
+	t_env	*node;
+	t_env	*ptr;
 
+	if (!env)
+		return ;
+	node = *env;
+	while (node != NULL)
+	{
+		ptr = node->next;
+		if (node->value != NULL)
+			free(node->value);
+		free(node);
+		node = ptr;
+	}
+	*env = NULL;
+}
+void clear_all()
+{
+	clear_env(&data->env);
+	free(data->new_command);
+	free(data->prompt);
+	free(data);
+}
 int	main(int ac, char **av, char **env)
 {
 	char	*command;
@@ -58,7 +86,7 @@ int	main(int ac, char **av, char **env)
 
 	data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(ac, av, env);
-	print_minishell();
+	// print_minishell();
 	signal(SIGQUIT, sig_handler);
 	// signal(SIGINT, sig_handler);
 	command = readline(data->prompt);
@@ -72,7 +100,6 @@ int	main(int ac, char **av, char **env)
 		command = readline(data->prompt);
 	}
 	clear_history();
-	free(data->new_command);
-	free(data->prompt);
+	clear_all();
 	return (0);
 }

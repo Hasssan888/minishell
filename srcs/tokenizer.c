@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 11:09:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 10:42:54 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	get_token_type(char *token)
 		return (APP);
 	else if (token[0] == '<' && token[1] == '<' && !token[2])
 		return (HER_DOC);
-	else if ((ft_strchr("|&", token[0]) && ft_strlen(token) > 1) || (ft_strchr("<>", token[0]) && ft_strlen(token) > 2))
+	else if ((ft_strchr("|&", token[0]) && ft_strlen(token) > 1)
+		|| (ft_strchr("<>", token[0]) && ft_strlen(token) > 2))
 		return (-1);
 	else
 		return (TOKEN);
@@ -99,23 +100,36 @@ t_command	*tokenzer_command(char *command_line)
 	t_command	*node;
 
 	i = 0;
+	node = NULL;
 	table = NULL;
 	if (!command_line)
 		return (NULL);
+	else if (!command_line[0])
+	{
+		free(command_line);
+		node = new_node(TOKEN, ft_strdup(""));
+		return (node);
+	}
 	while (command_line[i])
 	{
 		token = get_token(command_line, &i);
 		type = get_token_type(token);
 		if (type == -1)
 		{
+			// if (node != NULL)
+			// 	clear_list(&node);
+			if (node != NULL)
+			{
+				free(node->value);
+				free(node);
+			}
 			free(token);
-			printf("syntax error\n");
 			free(command_line);
 			clear_list(&table);
+			ft_perror("syntax error\n");
 			return (NULL);
 		}
 		node = new_node(type, token);
-		node->args = NULL;
 		add_back_list(&table, node);
 	}
 	free(command_line);

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 15:13:10 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:09:31 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,13 @@
 # include <stdlib.h>            // for malloc and free
 # include <sys/types.h>         //
 # include <sys/wait.h>
+#include <time.h>
+#include <string.h>
 // for wating child process to terminate execution
 # include <unistd.h> // for system calls
 // # include "../exec/main.h"
+
+# define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
 
 typedef enum s_types
 {
@@ -55,12 +59,13 @@ typedef enum s_types
 // # define AND_OP 			9
 // # define FLE				10
 
-# define TOKEN				0
-# define PIPE				1
-# define RED_OUT			2
-# define RED_IN				3
-# define APP				4
-# define HER_DOC			5
+# define TOKEN 0
+# define PIPE 1
+# define RED_OUT 2
+# define RED_IN 3
+# define APP 4
+# define HER_DOC 5
+#define RANDOM_STRING_LENGTH 10
 
 typedef struct s_env
 {
@@ -96,6 +101,7 @@ typedef struct s_data
 	char				**av;
 	char				**old_pwd;
 	char				**current_pwd;
+	char				**shell_lvl;
 	char				*expanded;	
 	char				*trimed_line;
 	char 				*unquoted_line;
@@ -105,7 +111,7 @@ typedef struct s_data
 	char				*new_command;
 	char				*special_chars;
 	char				**envirenment;
-	bool syntax_error; // boolean variable for syntax_error
+	bool 				syntax_error; // boolean variable for syntax_error
 }						t_data;
 
 typedef struct s_token
@@ -121,9 +127,11 @@ typedef struct s_token
 typedef struct s_pipex
 {
 	int					end[2];
+	t_command			*cur;
 	int					status;
 	int					status_1;
 	int					i;
+	int					j;
 	int					indixe;
 	int					outfile;
 	int					infile;
@@ -133,7 +141,7 @@ typedef struct s_pipex
 	pid_t				a[2];
 	char				*line;
 	pid_t				pid;
-	int					fd;
+	int					*fd;
 	int					save1;
 	pid_t				r;
 	int					count_read_out;
@@ -243,9 +251,10 @@ char					*get_word(char *argument, int *i);
 char					*expand_vars(char *argument, int i);
 t_command				*expander_command(t_command *list);
 int						get_expanded(char *argument, int *i);
+char					**ft_split_str(const char *s, char *del);
 
 // clean functions
-t_command				*free_node();
+t_command				*free_node(t_command **node);
 void					clear_list(t_command **lst);
 void					free_array(char **array);
 
@@ -256,7 +265,6 @@ void					ft_count_read_out(t_command *node, t_pipex *p);
 void					ft_count_read_in(t_command *node, t_pipex *p);
 void					open_infile(t_command *node, t_pipex *p);
 void					open_outfile(t_command *node, t_pipex *p);
-void					ft_onecmd(t_command *node, char **ev, t_pipex *p);
 void					ft_count_here_doc(t_command *node, t_pipex *p);
 char					*function(char **env);
 char					*slash(char *mycmdargs);
@@ -272,9 +280,14 @@ void					ft_pipe(t_command *node1, char **ev, t_pipex *p);
 int						ft_strcmp(char *s1, char *s2);
 int						func(t_command *list);
 char					*strjoin1(char *s1, char *s2);
-void					handle_child_exit_status(int status);
-
-
+t_command				*lstlast(t_command *lst);
+void   					infile(t_command *node1, char **env,t_pipex *p);
+void					outfile(t_command *node1, char **env,t_pipex *p);
+void    				one_here_doc(t_command *node1, char **env, t_pipex *p);
+void    				heredoc_readout_app(t_command *node1, char **env,t_pipex *p);
+void					pipe_heredoc(t_command *node1, char **env, t_pipex *p);
 int						exec_command(t_command *commands_list);
-
+int						if_is_buil(t_command *command);
+void    				readout_append(t_command *node1, t_pipex *p);
+void    				excut_butlin(t_command *node1, char **env);
 #endif

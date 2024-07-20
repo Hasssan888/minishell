@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 10:54:35 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 09:00:18 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,46 +34,47 @@ int	get_args_size(t_command *list)
 
 t_command	*redirect_list(t_command **head, t_command **redirect_head)
 {
+	(void) head;
 	t_command	*redirection_node;
 
 	redirection_node = new_node(data->_tokens_list->type,
 			ft_strdup(data->_tokens_list->value));
-	data->_tokens_list = free_node(data->_tokens_list);
+	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		printf("syntax error parser\n");
-		free_node(redirection_node);
+		ft_perror("syntax error parser aziz\n");
+		free_node(&redirection_node);
 		free_array(data->list_command->args);
-		free_node(data->list_command);
-		free_node(data->_tokens_list);
-		clear_list(head);
+		free_node(&data->list_command);
+		clear_list(&data->_tokens_list);
 		data->syntax_error = 1;
 		return (NULL);
 	}
 	redirection_node->args = malloc(2 * sizeof(char *));
 	redirection_node->args[0] = ft_strdup(data->_tokens_list->value);
 	redirection_node->args[1] = NULL;
-	data->_tokens_list = free_node(data->_tokens_list);
+	data->_tokens_list = free_node(&data->_tokens_list);
 	add_back_list(redirect_head, redirection_node);
 	return (data->_tokens_list);
 }
 
-void	get_redirect_node()
+void	get_redirect_node(void)
 {
-	data->_tokens_list = free_node(data->_tokens_list);
+	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		printf("syntax error parser\n");
+		ft_perror("syntax error parser asf\n");
 		free_array(data->list_command->args);
-		free_node(data->list_command);
-		free_node(data->_tokens_list);
+		free_node(&data->list_command);
+		clear_list(&data->_tokens_list);
 		data->syntax_error = 1;
+		data->list = NULL;
 		return ;
 	}
 	data->list_command->args = malloc(2 * sizeof(char *));
 	data->list_command->args[0] = ft_strdup(data->_tokens_list->value);
 	data->list_command->args[1] = NULL;
-	data->_tokens_list = free_node(data->_tokens_list);
+	data->_tokens_list = free_node(&data->_tokens_list);
 }
 
 char	*duplicate_word(char *command_line, int *i, int j)

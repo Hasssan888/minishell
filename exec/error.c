@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 12:47:09 by hbakrim           #+#    #+#             */
+/*   Updated: 2024/07/16 12:47:12 by hbakrim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libraries/minishell.h"
 
 void	ft_putstr_fd(char *s, int fd)
@@ -20,59 +32,30 @@ void	ft_error_2(void)
 
 void	ft_error(char **av)
 {
+	int		i;
+	char	*str;
 
-	int i = -1;
-	char *str;
-
-		if (ft_strcmp(av[0], "") == 0)
+	i = -1;
+	if (ft_strcmp(av[0], ".") == 0)
+	{
+		ft_putstr_fd(".: filename argument required", 2);
+		write(2, "\n", 1);
+		ft_putstr_fd(".: usage: . filename [arguments]", 2);
+		write(2, "\n", 1);
+		exit(2);
+	}
+	else
+	{
+		ft_putstr_fd("Command not found: ", 2);
+		while (av[++i])
 		{
-			ft_putstr_fd("zsh: permission denied: ", 2);
-			write(2, "\n", 1);
-			exit(126);
+			str = strjoin1(av[i], " ");
+			ft_putstr_fd(str, 2);
+			free(str);
 		}
-		else if (ft_strcmp(av[0], ".") == 0)
-		{
-			ft_putstr_fd(".: not enough arguments", 2);
-			write(2, "\n", 1);
-			exit(1);
-		}
-		else
-		{
-			ft_putstr_fd("zsh: command not found: ", 2);
-			while (av[++i])
-			{
-				str = strjoin1(av[i], " ");
-				ft_putstr_fd(str, 2);
-				free(str);
-			}
-				write(2, "\n", 1);
-				exit(127);
-			// pid_t pp = fork();
-			// if (pp == 0)
-			// // data->exit_status = 127;
-			// else
-			// 	wait(NULL);
-		}
-
-
-	
-	// if (ft_strcmp(av, "") == 0)
-	// {
-	// 	ft_putstr_fd("zsh: permission denied: ", 2);
-	// 	write(2, "\n", 1);
-	// }
-	// else if (ft_strcmp(av, ".") == 0)
-	// {
-	// 	ft_putstr_fd(".: not enough arguments", 2);
-	// 	write(2, "\n", 1);
-	// }
-	// else
-	// {
-	// 	ft_putstr_fd("zsh: command not found: ", 2);
-	// 	ft_putstr_fd(av, 2);
-	// 	write(2, "\n", 1);
-	// 	exit(127);
-	// }
+		write(2, "\n", 1);
+		exit(127);
+	}
 }
 
 char	*ft_strchr(const char *s, int c)
