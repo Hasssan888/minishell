@@ -128,9 +128,9 @@ int	parse_command(char *line)
 	printf("\n\n");
 	printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	printf("\n\n");
-	exec_command(data->list);
+	// exec_command(data->list);
+	func(data->list);
 	printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
-	// func(data->list);
 	clear_list(&data->list);
 	return (0);
 }

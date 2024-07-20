@@ -34,9 +34,9 @@ int	export(t_command *cmd, t_env *envir)
 		word = get_word_(cmd->args[1], "+=");
 		env_var = get_env_ele_ptr(word);
 		free(word);
-		if (!data->str1)
-			return (0);
-		else if (env_var != NULL && data->str1[0] == '='
+		// if (!data->str1)
+		// 	return (0);
+		if (env_var != NULL && data->str1[0] == '='
 			&& data->str1[-1] != '+')
 		{
 			if (env_var->value != NULL)

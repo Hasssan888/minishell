@@ -130,27 +130,16 @@ int	echo(char **cmd)
 	int		i;
 	bool	flag;
 
-	// char	*path;
 	i = 0;
 	if (!cmd[0])
 		return (0);
 	flag = false;
-	if (!ft_strncmp("-n", cmd[i], ft_strlen(cmd[i])))
+	// if (!ft_strncmp("-n", cmd[i], ft_strlen(cmd[i])))
+	if (cmd[0][0] == '-' && cmd[0][1] == 'n')
 	{
 		flag = true;
 		++i;
 	}
-	// if (cmd[i][0] == '$' && cmd[i][1] != ' ')
-	// {
-	// 	path = getenv(&cmd[i][1]);
-	// 	if (!path)
-	// 	{
-	// 		printf("\n");
-	// 		return (0);
-	// 	}
-	// 	printf("%s\n", path);
-	// 	return (0);
-	// }
 	echo_it(cmd, i);
 	if (!flag)
 		printf("\n");
