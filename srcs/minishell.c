@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/19 16:07:06 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/20 18:34:04 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,10 @@ void clear_env(t_env **env)
 	while (node != NULL)
 	{
 		ptr = node->next;
-		if (node->value != NULL)
-			free(node->value);
+		if (node->env_value != NULL)
+			free(node->env_value);
+		if (node->env_key != NULL)
+			free(node->env_key);
 		free(node);
 		node = ptr;
 	}

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/20 13:46:34 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/20 18:58:31 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,9 @@ int	env(t_env *env)
 {
 	while (env != NULL)
 	{
-		if (ft_strchr(env->value, '='))
-			printf("%s\n", env->value);
+		// if (ft_strchr(env->value, '='))
+		if (env->env_key != NULL)
+			printf("%s=%s\n", env->env_value, env->env_key);
 		env = env->next;
 	}
 	return (0);

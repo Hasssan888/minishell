@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/18 11:55:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/20 18:37:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*get_env_element(char *env_var)
 		return (NULL);
 	while (env != NULL)
 	{
-		str = ft_strnstr_l(env->value, env_var, ft_strlen(env_var));
+		str = ft_strnstr_l(env->env_value, env_var, ft_strlen(env_var));
 		if (str != NULL)
 			return (ft_strdup(&str[1]));
 		env = env->next;

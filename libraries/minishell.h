@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/19 16:09:31 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/20 18:59:16 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ typedef enum s_types
 
 typedef struct s_env
 {
-	char				*value;
-	// char				*env_key;
-	// char				*env_value;
+	// char				*value;
+	char				*env_key;
+	char				*env_value;
 	struct s_env		*next;
 }						t_env;
 
@@ -179,14 +179,15 @@ char					*get_prompt(void);
 void					pwd(void);
 int						env(t_env *env);
 int						echo(char **cmd);
-int						export(t_command *cmd, t_env *envir);
+// int						export(t_command *cmd, t_env *envir);
 int						is_builtin_cmd(t_command *command);
 char					*get_cmd_path(char *cmd_);
 char					*get_word_(char *line, char *del);
 t_env					*get_env_ele_ptr(char *env_val);
 void					print_array(char **array);
 t_env					*sort_list(t_env *env);
-
+int						export(t_command *cmd, t_env *env);
+int						unset(char *env_var, t_env *envirenement);
 
 // general purpose utiles
 
@@ -215,17 +216,11 @@ void					print_minishell(void);
 void					print_prompt(void);
 void					ft_perror(char *message);
 
-// Built in commands
-
-int						env(t_env *env);
-int						export(t_command *cmd, t_env *envir);
-int						unset(char *env_var, t_env *envirenement);
-char					*get_env_element(char *env_var);
 
 // envirenement utiles
 
 void					add_back(t_env **lst, t_env *new);
-t_env					*lstnew(char *content);
+t_env					*lstnew(char *env_value, char *env_key);
 t_env					*creat_env(char **env);
 
 // parsing utiles

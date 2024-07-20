@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/19 16:08:59 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/20 19:38:55 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,16 @@ void	add_back(t_env **lst, t_env *new)
 	}
 }
 
-t_env	*lstnew(char *content)
+t_env	*lstnew(char *env_value, char *env_key)
 {
 	t_env	*new_node;
 
 	new_node = (t_env *)malloc(sizeof(t_env));
 	if (!new_node)
 		return (NULL);
-	new_node->value = content;
+	new_node->env_value = env_value;
+	new_node->env_key = env_key;
+	
 	new_node->next = NULL;
 	return (new_node);
 }
@@ -76,15 +78,15 @@ t_env *get_alternative_env()
 {
 	t_env	*head = NULL;
 	t_env	*new = NULL;
-	new = lstnew(ft_strjoin(ft_strdup("PATH="), ft_strdup(DEFAULT_PATH)));
+	new = lstnew(ft_strdup("PATH"), ft_strdup(DEFAULT_PATH));
 	add_back(&head, new);
 	char *cwd = getcwd(NULL, 0);
-	new = lstnew(ft_strjoin(ft_strdup("PWD="), ft_strdup(cwd)));
-	data->current_pwd = &(new->value);
+	new = lstnew(ft_strdup("PWD"), ft_strdup(cwd));
+	data->current_pwd = &(new->env_value);
 	add_back(&head, new);
 
-	new = lstnew(ft_strjoin(ft_strdup("OLDPWD="), ft_strdup(cwd)));
-	data->old_pwd = &(new->value);
+	new = lstnew(ft_strdup("OLDPWD"), ft_strdup(cwd));
+	data->old_pwd = &(new->env_value);
 	add_back(&head, new);
 	free(cwd);
 	return (head);
@@ -106,13 +108,19 @@ t_env	*creat_env(char **env)
 		data->current_pwd = NULL;
 		while (env[++i] != NULL)
 		{
-			new = lstnew(ft_strdup(env[i]));
-			if (!strncmp(new->value, "PWD", 3))
-				data->current_pwd = &(new->value);
-			else if (!strncmp(new->value, "OLDPWD", 6))
-				data->old_pwd = &(new->value);
-			else if (!strncmp(new->value, "SHLVL", 5))
-				data->shell_lvl = &(new->value);
+			char **splited = ft_split(env[i], '=');
+			if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+				new = lstnew(ft_strdup(splited[0]), ft_strdup(splited[1]));
+			else if (splited != NULL && splited[0] != NULL && !splited[1])
+				new = lstnew(ft_strdup(splited[0]), NULL);
+							
+			free_array(splited);
+			// if (!strncmp(new->env_value, "PWD", 3))
+			// 	data->current_pwd = &(new->value);
+			// else if (!strncmp(new->value, "OLDPWD", 6))
+			// 	data->old_pwd = &(new->value);
+			// else if (!strncmp(new->value, "SHLVL", 5))
+			// 	data->shell_lvl = &(new->value);
 			add_back(&head, new);
 		}	
 	}
