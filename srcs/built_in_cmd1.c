@@ -148,7 +148,6 @@ int	echo(char **cmd)
 
 int	is_builtin_cmd(t_command *command)
 {
-	// printf("\n\n%s\n\n", command->value);
 	if (ft_strcmp(command->value, "echo") == 0)
 		echo(&command->args[1]);
 	else if (ft_strcmp(command->value, "pwd") == 0)
