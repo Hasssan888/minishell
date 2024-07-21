@@ -150,6 +150,8 @@ int	echo(char **cmd)
 
 int	is_builtin_cmd(t_command *command)
 {
+	if (!command)
+		return 0;
 	if (ft_strcmp(command->value, "echo") == 0)
 		echo(&command->args[1]);
 	else if (ft_strcmp(command->value, "pwd") == 0)
