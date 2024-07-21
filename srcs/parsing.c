@@ -108,7 +108,7 @@ int	parse_command(char *line)
 {
 	t_command	*tokens_list;
 	// t_command	*list;
-
+	printf("\n++++++++++++++++++ parsing is started +++++++++++++++++\n");
 	data->list = NULL;
 	printf("line befor lexer: %s\n", line);
 	data->syntax_error = 0;
@@ -127,9 +127,12 @@ int	parse_command(char *line)
 	print_list(data->list);
 	printf("\n\n");
 	printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
-	printf("\n\n");
+	// printf("\n\n");
+	printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
+
+	is_builtin_cmd(data->list);
 	// exec_command(data->list);
-	func(data->list);
+	// func(data->list);
 	printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
 	clear_list(&data->list);
 	return (0);
