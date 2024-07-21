@@ -43,15 +43,20 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 		{
 			quote = arg[j++];
 			while (arg[j] && arg[j] != quote)
+			{
+				if (arg[j] == '$')
+				{
+					if (arg[0] == quote && quote == '\'')
+						list->quoted = 1;
+					else if (arg[0] == quote && quote == '"')
+						list->quoted = 2;
+				}
 				argument[k++] = arg[j++];
+			}
 			j++;
 		}
 		else
 			argument[k++] = arg[j++];
-				if (arg[0] == quote && quote == '\'')
-			list->quoted = 1;
-		else if (arg[0] == quote && quote == '"')
-			list->quoted = 2;
 	}
 	free(arg);
 	return (argument);

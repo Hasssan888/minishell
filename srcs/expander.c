@@ -119,9 +119,9 @@ int	expander_extended(t_command *list)
 	list->value = unquote_arg(list, list->value, 0, 0);
 	while (list->value != NULL && list->args != NULL && list->args[data->i] != NULL)
 	{
-		list->args[data->i] = unquote_arg(list, list->args[data->i], 0, 0);
 		if (list->quoted != 1 && list->type != HER_DOC)
 			list->args[data->i] = expand_vars(list->args[data->i], 0);
+		list->args[data->i] = unquote_arg(list, list->args[data->i], 0, 0);
 		if (data->syntax_error)
 		{
 			clear_list(&data->head);
