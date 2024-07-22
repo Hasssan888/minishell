@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/22 15:24:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/22 19:16:20 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char *expand_vars__(char *argument)
 	int i = 0;
 	while(argument[i])
 	{
-		if (argument[i] == '$' && (ft_isalnum(argument[i + 1]) || argument[i + 1] == '?'))
+		if (argument[i] == '$' && (ft_isalnum(argument[i + 1]) || ft_strchr("?_", argument[i + 1])))
 		{
 			if (!argument[i + 1])
 				return (free(argument), ft_strdup("$"));
@@ -70,11 +70,11 @@ char *_get_quoted___word(char *arg, int *i)
 	if (arg[j] == '$' && (arg[j + 1] == '\'' || arg[j + 1] == '"'))
 		*i += 1;
 	if (arg[j] == '\'' || arg[j] == '"')
-	{
-		quote = arg[j];
-		j++;
-	}
-	printf("quote: %c", quote);
+	// {
+		quote = arg[j++];
+		// j++;
+	// }
+	// printf("quote: %c", quote);
 	while(arg[j] && arg[j] != quote)
 		j++;
 	if (arg[j] && arg[j] == quote)

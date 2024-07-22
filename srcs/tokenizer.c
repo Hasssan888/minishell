@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/21 20:36:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/22 20:44:06 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,13 @@ t_command	*tokenzer_command(char *command_line)
 		if (type == -1)
 		{
 			// if (node != NULL)
-			// 	clear_list(&node);
-			if (node != NULL)
-			{
-				free(node->value);
-				free(node);
-			}
+				// clear_list(&node);
+			// if (node != NULL)
+			// {
+			// 	free(node->value);
+			// 	free(node);
+			// 	node = NULL;
+			// }
 			free(token);
 			free(command_line);
 			clear_list(&table);
