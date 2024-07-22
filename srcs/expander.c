@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/18 08:47:25 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/22 12:03:22 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ char	*expand_digits(char *argument, int *i)
 	return (data->expanded);
 }
 
-char	*expand_vars(char *argument, int i)
+char *expand_vars__(char *argument)
 {
-	data->expanded = ft_strdup("");
-	while (argument[i])
+	int i = 0;
+	while(argument[i])
 	{
 		if (argument[i] == '$' && (ft_isalnum(argument[i + 1]) || argument[i + 1] == '?'))
 		{
@@ -55,6 +55,49 @@ char	*expand_vars(char *argument, int i)
 		{
 			data->str1 = get_word(argument, &i);
 			data->expanded = ft_strjoin(data->expanded, data->str1);
+		}
+	}
+	return (data->expanded);
+}
+
+char *_get_quoted___word(char *arg, int *i)
+{
+	int j = *i;
+	char *_quoted_word = NULL;
+	char quote = 0;
+	if (arg[j] == '\'' || arg[j] == '"')
+	{
+		quote = arg[j];
+		j++;
+	}
+	printf("quote: %c", quote);
+	while(arg[j] && arg[j] != quote)
+		j++;
+	if (arg[j] && arg[j] == quote)
+		j++;
+	_quoted_word = ft_calloc(j - *i + 1, sizeof(char));
+	ft_strlcpy(_quoted_word, &arg[*i], j - *i + 1);
+	*i = j;
+	return (_quoted_word);
+}
+
+char	*expand_vars(char *argument, int i)
+{
+	data->expanded = ft_strdup("");
+	while (argument[i])
+	{
+		char *word = _get_quoted___word(argument, &i);
+		printf("word: %s %d\n", word, i);
+		if (word != NULL && word[0] != '\'')
+		{
+			expand_vars__(word);
+			free(word);
+
+		}
+		else
+		{
+			// data->str1 = get_word(argument, &i);
+			data->expanded = ft_strjoin(data->expanded, word);
 		}
 	}
 	free(argument);
@@ -95,6 +138,8 @@ char **ft_arr_join(char **arr1, char **arr2)
 int ambigous_red(char *red_file)
 {
 	int i = 0;
+	if (!red_file || !red_file[0])
+		return (1);
 	while (red_file != NULL && red_file[i] && ft_strchr(" \t", red_file[i]))
 		i++;
 	while(red_file != NULL && red_file[i])
@@ -112,11 +157,43 @@ int ambigous_red(char *red_file)
 	return 0;
 }
 
-int	expander_extended(t_command *list)
+int _expander__extended(t_command *list)
 {
 	char **args = NULL;
 	char **splited = NULL;
-	list->value = unquote_arg(list, list->value, 0, 0);
+
+	// if (ft_strchr(list->value, '$'))
+	// {
+		list->value = expand_vars(list->value, 0);
+		list->value = unquote_arg(list, list->value, 0, 0);
+		if (!list->quoted && list->value != NULL && list->value[0])
+		{
+			splited = ft_split_str(list->value, " \t\v");
+			free(list->value);
+			list->value = ft_strdup(splited[0]);
+			if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+			{
+				args = ft_arr_join(splited, &list->args[1]);	
+				list->args = args;
+			}
+			free_array(splited);
+		}	
+	// }
+	if (list->type == RED_OUT || list->type == RED_IN)
+	{
+		if (ambigous_red(list->args[0]))
+		{
+			clear_list(&data->head);
+			ft_perror("ambiguous redirect\n");
+			data->syntax_error = 0;
+			return (0);
+		}
+	}
+	return (1);
+}
+
+int	expander_extended(t_command *list)
+{
 	while (list->value != NULL && list->args != NULL && list->args[data->i] != NULL)
 	{
 		if (list->quoted != 1 && list->type != HER_DOC)
@@ -131,35 +208,12 @@ int	expander_extended(t_command *list)
 		}
 		data->i++;
 	}
-	if (list->quoted != 1 && ft_strchr(list->value, '$'))
-	{
-		list->value = expand_vars(list->value, 0);
-		if (!list->quoted && list->value != NULL && list->value[0])
-		{
-			splited = ft_split_str(list->value, " \t\v");
-			free(list->value);
-			list->value = ft_strdup(splited[0]);
-			if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
-			{
-				args = ft_arr_join(splited, &list->args[1]);	
-				list->args = args;
-			}
-			free_array(splited);
-		}	
-	}
-	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
-		{
-			if (ambigous_red(list->args[0]))
-			{
-				clear_list(&data->head);
-				ft_perror("ambiguous redirect\n");
-				data->syntax_error = 0;
-				return (0);
-			}
-		}
+	if (!_expander__extended(list))
+		return (0);
 	// list = list->next;
 	return (1);
 }
+
 
 t_command	*expander_command(t_command *list)
 {
