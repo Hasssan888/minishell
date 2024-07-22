@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/20 18:34:04 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:32:10 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ char	*get_prompt(void)
 
 void	init_minishell(int ac, char **av, char **env)
 {
+	data->redirect = 0;
 	data->expanded = NULL;
 	data->list = NULL;
 	data->old_pwd = NULL;
@@ -54,6 +55,7 @@ void	init_minishell(int ac, char **av, char **env)
 	data->prompt = get_prompt();
 	data->new_command = NULL;
 }
+
 void clear_env(t_env **env)
 {
 	t_env	*node;

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/22 12:03:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:24:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ char *expand_vars__(char *argument)
 		{
 			if (!argument[i + 1])
 				return (free(argument), ft_strdup("$"));
+			// else if (argument[i + 1] == '"' || argument[i + 1] == '\'')
+			// 	i++;
 			else if (argument[i + 1] == '?')
 			{
 				i += 2;
@@ -65,6 +67,8 @@ char *_get_quoted___word(char *arg, int *i)
 	int j = *i;
 	char *_quoted_word = NULL;
 	char quote = 0;
+	if (arg[j] == '$' && (arg[j + 1] == '\'' || arg[j + 1] == '"'))
+		*i += 1;
 	if (arg[j] == '\'' || arg[j] == '"')
 	{
 		quote = arg[j];
@@ -179,8 +183,9 @@ int _expander__extended(t_command *list)
 			free_array(splited);
 		}	
 	// }
-	if (list->type == RED_OUT || list->type == RED_IN)
+	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
 	{
+		printf("%s\n", list->args[0]);
 		if (ambigous_red(list->args[0]))
 		{
 			clear_list(&data->head);

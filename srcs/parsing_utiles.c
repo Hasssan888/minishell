@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/18 09:00:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:50:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_command	*redirect_list(t_command **head, t_command **redirect_head)
 	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		ft_perror("syntax error parser aziz\n");
+		ft_perror("syntax error\n");
 		free_node(&redirection_node);
 		free_array(data->list_command->args);
 		free_node(&data->list_command);
@@ -58,12 +58,29 @@ t_command	*redirect_list(t_command **head, t_command **redirect_head)
 	return (data->_tokens_list);
 }
 
+void fake_here_doc__()
+{
+	data->str1 = readline("> ");
+	while(data->str1 != NULL)
+	{
+		int len = ft_strlen(data->str1) > ft_strlen(data->str2) ? ft_strlen(data->str1): ft_strlen(data->str2); 
+		if(ft_strncmp(data->str2, data->str1, len) == 0)
+			break;
+		free(data->str1);
+		data->str1 = readline("> ");
+	}
+	free(data->str1);
+}
+
 void	get_redirect_node(void)
 {
+	int i = 0;
 	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		ft_perror("syntax error parser asf\n");
+		if (data->redirect)
+			fake_here_doc__();
+		ft_perror("syntax error\n");
 		free_array(data->list_command->args);
 		free_node(&data->list_command);
 		clear_list(&data->_tokens_list);
@@ -74,6 +91,11 @@ void	get_redirect_node(void)
 	data->list_command->args = malloc(2 * sizeof(char *));
 	data->list_command->args[0] = ft_strdup(data->_tokens_list->value);
 	data->list_command->args[1] = NULL;
+	if (!i)
+	{
+		data->redirect = 1;
+		data->str2 = data->list_command->args[0];
+	}
 	data->_tokens_list = free_node(&data->_tokens_list);
 }
 
