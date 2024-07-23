@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/20 19:48:21 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:56:16 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,9 +122,24 @@ void	echo_it(char **cmd, int i)
 	while (cmd[i] != NULL)
 	{
 		printf("%s", cmd[i]);
-		printf(" ");
+		if (cmd[i + 1] != NULL)
+			printf(" ");
 		i++;
 	}
+}
+
+bool check_echo_options(char *cmd)
+{
+	int j = 1;
+	bool flag = false;
+	if (!cmd)
+		return (flag);
+	if (cmd[0] == '-')
+	while(cmd!= NULL && cmd[j] == 'n')
+		j++;
+	if (!cmd[j])
+		flag = true;
+	return (flag);
 }
 
 int	echo(char **cmd)
@@ -136,11 +151,10 @@ int	echo(char **cmd)
 	if (!cmd[0])
 		return (0);
 	flag = false;
-	// if (!ft_strncmp("-n", cmd[i], ft_strlen(cmd[i])))
-	if (cmd[0][0] == '-' && cmd[0][1] == 'n')
+	if (check_echo_options(cmd[i]))
 	{
 		flag = true;
-		++i;
+		while(check_echo_options(cmd[++i]));
 	}
 	echo_it(cmd, i);
 	if (!flag)

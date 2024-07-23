@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/22 19:16:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:26:11 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*expand_digits(char *argument, int *i)
 {
-	if (argument[1] && ft_isdigit(argument[1])) // && ft_strlen(&argument[1]) > 2
+	if (argument[*i + 1] && ft_isdigit(argument[*i + 1])) // && ft_strlen(&argument[1]) > 2
 	{
 		*i += 2;
 		int j = *i;

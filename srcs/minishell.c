@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/22 16:08:31 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:22:47 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	main(int ac, char **av, char **env)
 	init_minishell(ac, av, env);
 	// print_minishell();
 	signal(SIGQUIT, sig_handler);
-	signal(SIGINT, sig_handler);
+	// signal(SIGINT, sig_handler);
 	command = readline(data->prompt);
 	while (command != NULL)
 	{

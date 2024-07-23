@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/21 20:22:53 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:29:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	parse_command(char *line)
 	// printf("\n\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
 
-	// is_builtin_cmd(data->list);
+	is_builtin_cmd(data->list);
 	// exec_command(data->list);
 	// func(data->list);
 	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");

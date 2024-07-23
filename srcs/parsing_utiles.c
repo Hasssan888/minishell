@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/22 15:50:38 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:29:48 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,12 @@ void fake_here_doc__()
 
 void	get_redirect_node(void)
 {
-	int i = 0;
+	// int i = 0;
 	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		if (data->redirect)
-			fake_here_doc__();
+		// if (data->redirect)
+		// 	fake_here_doc__();
 		ft_perror("syntax error\n");
 		free_array(data->list_command->args);
 		free_node(&data->list_command);
@@ -91,11 +91,11 @@ void	get_redirect_node(void)
 	data->list_command->args = malloc(2 * sizeof(char *));
 	data->list_command->args[0] = ft_strdup(data->_tokens_list->value);
 	data->list_command->args[1] = NULL;
-	if (!i)
-	{
-		data->redirect = 1;
-		data->str2 = data->list_command->args[0];
-	}
+	// if (!i)
+	// {
+	// 	data->redirect = 1;
+	// 	data->str2 = data->list_command->args[0];
+	// }
 	data->_tokens_list = free_node(&data->_tokens_list);
 }
 
