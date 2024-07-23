@@ -26,8 +26,6 @@
 # include <stdlib.h>            // for malloc and free
 # include <sys/types.h>         //
 # include <sys/wait.h>
-#include <time.h>
-#include <string.h>
 // for wating child process to terminate execution
 # include <unistd.h> // for system calls
 // # include "../exec/main.h"
@@ -65,7 +63,6 @@ typedef enum s_types
 # define RED_IN 3
 # define APP 4
 # define HER_DOC 5
-#define RANDOM_STRING_LENGTH 10
 
 typedef struct s_env
 {

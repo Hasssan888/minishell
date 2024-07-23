@@ -35,8 +35,8 @@ void	excut_butlin(t_command *node1, char **env)
 {
 	if (if_is_buil(node1))
 	{
-		printf("is_bul\n");
 		is_builtin_cmd(node1);
+		exit(0);
 	}
 	else
 		ft_excute(node1->args, env);

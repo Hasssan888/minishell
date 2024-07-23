@@ -37,6 +37,7 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 		close(p->end[1]);
 		excut_butlin(node1, env);
 	}
+
 }
 
 pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
@@ -44,12 +45,14 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	if (pipe(p->end) == -1)
 		ft_error_2();
 	p->pid = fork();
+	// if (p->pid != 0)
+	// 	int last_pid = p->pid; 
 	if (p->pid == -1)
 		ft_error_2();
 	else if (p->pid == 0)
 		child_process(node1, env, p);
-	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[1]);
+	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[0]);
 	if (ft_strcmp(node1->args[0], "cat") != 0 || (ft_strcmp(node1->args[0],
 				"cat") == 0 && node1->next == NULL))
@@ -57,6 +60,20 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		wait(&p->status);
 		data->exit_status = WEXITSTATUS(p->status);
 	}
+
+	/*
+		int last;
+		int temp;
+		while (1)
+		{
+			last = wait(&tmp);
+			if (last == last_pid)
+			{
+				dta->exit_sttaus  = WEXITSTATUS(tmp);
+			}
+		}
+	
+	 */
 	return (p->pid);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:45:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/19 16:19:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:53:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	exec_command(t_command *commands_list)
 					while(ptr != NULL && (ptr->type == RED_OUT || ptr->type == RED_IN))
 					{
 						if (ptr->type == RED_OUT)
-							fd_out = open(ptr->args[0], O_CREAT | O_RDWR, 0744);
+							fd_out = open(ptr->args[0], O_TRUNC | O_CREAT | O_RDWR, 0744);
 						if (ptr->type == RED_IN)
 							prev_fd = open(ptr->args[0], O_RDONLY);
 						ptr = ptr->next;

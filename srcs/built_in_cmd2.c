@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/20 19:42:00 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:14:23 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@ int	export(t_command *cmd, t_env *env)
 				printf("%s=\n", env->env_value);
 			env = env->next;	
 		}
+		return (0);
+	}
+	else if (ft_isdigit(cmd->args[1][0]) || cmd->args[2] != NULL)
+	{
+		ft_perror ("minishell: export: not a valid identifier\n");
+		data->exit_status = 1;
 		return (0);
 	}
 		// sort_list(envir);

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/22 19:14:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 14:16:43 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*get_var(char *env_var, int *i)
 	k = 0;
 	if (!env_var || !env_var[0])
 		return (NULL);
-	while (env_var[k] && ft_isalnum(env_var[k]))
+	while (env_var[k] && (ft_isalnum(env_var[k]) || env_var[k] == '_'))
 		k++;
 	*i += k;
 	env_val = malloc((k + 1) * sizeof(char));
