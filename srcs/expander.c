@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 09:26:11 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:30:58 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,8 @@ int	expander_extended(t_command *list)
 	{
 		if (list->quoted != 1 && list->type != HER_DOC)
 			list->args[data->i] = expand_vars(list->args[data->i], 0);
-		list->args[data->i] = unquote_arg(list, list->args[data->i], 0, 0);
+		if (list->type != HER_DOC)
+			list->args[data->i] = unquote_arg(list, list->args[data->i], 0, 0);
 		if (data->syntax_error)
 		{
 			clear_list(&data->head);
