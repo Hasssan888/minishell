@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 15:14:23 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 19:30:19 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,99 @@ void	pwd(void)
 	printf("%s\n", cwd);
 	free(cwd);
 }
+int ft_env_lenght(t_env *env)
+{
+	int env_len = 0;
+	while (env != NULL)
+	{
+		env_len++;
+		env = env->next;
+	}
+	return (env_len);
+}
+
+char **env_to_array_(t_env *env, int *len)
+{
+	// env_ptr1 = env;
+	int i = 0;
+	int env_len = ft_env_lenght(env);
+	char **array = malloc((env_len + 1) *sizeof(char *));
+	if (!array || !env)
+		return NULL;
+	// env_ptr1 = env;
+	while (env != NULL)
+	{
+		array[i++] = ft_strjoin(ft_strjoin(ft_strdup(env->env_value), ft_strdup("=")), ft_strdup(env->env_key));
+		env = env->next;
+	}
+	array[i] = NULL;
+	*len = env_len;
+	return (array);
+}
+
+char **sort_array(char **array, int arr_len)
+{
+	int i = 0;
+	int j = 0;
+	
+	while (i < arr_len - 1)
+	{
+		j = 0;
+		while (j < arr_len - i - 1)
+		{
+			if (ft_strcmp(array[j], array[j + 1]) > 0)
+			{
+				char *temp = array[j];
+				array[j] = array[j + 1];
+				array[j + 1] = temp;
+			}
+			j++;
+		}
+		i++;
+	}
+	array[arr_len] = NULL;
+	return (array);
+}
+
+void print_export_env(t_env *env)
+{
+	if (!env)
+		return ;
+	while(env != NULL)
+	{
+		if (env->env_key != NULL)
+			printf("%s=\"%s\"\n", env->env_value, env->env_key);
+		else
+			printf("%s\n", env->env_value);
+		env = env->next;
+	}
+}
+
+void print_sorted_env(t_env *env)
+{
+	int env_len = 0;
+
+	char **sorted_arr = env_to_array_(env, &env_len);
+	sorted_arr = sort_array(sorted_arr, env_len);
+	env = creat_env(sorted_arr);
+	if (data != NULL && data->envirenment != NULL)
+	{
+		free_array(data->envirenment);
+		data->envirenment = NULL;
+	}
+		// free_array(sort_array);
+	data->envirenment = sorted_arr;
+	print_export_env(env);
+}
 
 int	export(t_command *cmd, t_env *env)
 {
 	// char	*word;
 	// t_env	*env_var;
-
+	
 	if (!cmd->args[1])
 	{
-		while(env != NULL)
-		{
-			if (env->env_key != NULL)
-				printf("%s=\"%s\"\n", env->env_value, env->env_key);
-			else
-				printf("%s=\n", env->env_value);
-			env = env->next;	
-		}
+		print_sorted_env(env);
 		return (0);
 	}
 	else if (ft_isdigit(cmd->args[1][0]) || cmd->args[2] != NULL)
@@ -44,7 +121,6 @@ int	export(t_command *cmd, t_env *env)
 		data->exit_status = 1;
 		return (0);
 	}
-		// sort_list(envir);
 	// else
 	// {
 		// word = get_word_(cmd->args[1], "+=");
@@ -57,7 +133,15 @@ int	export(t_command *cmd, t_env *env)
 		char *trimed = ft_strtrim(splited[0], "+");
 		t_env *env_ptr = get_env_ele_ptr(trimed);
 		free(trimed);
-		if (env_ptr != NULL && splited != NULL && splited[0] != NULL)
+		
+		if (data->str1 != NULL && data->str1[1] == '=')
+		{
+			if (env_ptr != NULL)
+				env_ptr->env_key = ft_strdup(&data->str1[1]);
+			else
+				add_back(&data->env, lstnew(ft_strdup(splited[0]), ft_strdup(&data->str1[1])));
+		}
+		else if (env_ptr != NULL && splited != NULL && splited[0] != NULL)
 		{
 			// if (env_ptr != NULL)
 			// printf("value %s %c\n", splited[0], splited[0][ft_strlen(splited[0]) -1]);
@@ -83,10 +167,8 @@ int	export(t_command *cmd, t_env *env)
 		}
 			// if (splited[0][ft_strlen(splited[0])] == '+' && env_ptr != NULL)
 		else
-		{
-			printf("%s\n", cmd->args[1]);
 			add_back(&data->env, lstnew(ft_strdup(cmd->args[1]), NULL));
-		}
+			// printf("%s\n", cmd->args[1]);
 		free_array(splited);
 	// }
 	return (0);

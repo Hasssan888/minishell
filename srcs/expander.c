@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 15:30:58 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 16:05:22 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,28 +161,8 @@ int ambigous_red(char *red_file)
 	return 0;
 }
 
-int _expander__extended(t_command *list)
+int is_ambigous(t_command *list)
 {
-	char **args = NULL;
-	char **splited = NULL;
-
-	// if (ft_strchr(list->value, '$'))
-	// {
-		list->value = expand_vars(list->value, 0);
-		list->value = unquote_arg(list, list->value, 0, 0);
-		if (!list->quoted && list->value != NULL && list->value[0])
-		{
-			splited = ft_split_str(list->value, " \t\v");
-			free(list->value);
-			list->value = ft_strdup(splited[0]);
-			if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
-			{
-				args = ft_arr_join(splited, &list->args[1]);	
-				list->args = args;
-			}
-			free_array(splited);
-		}	
-	// }
 	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
 	{
 		printf("%s\n", list->args[0]);
@@ -194,6 +174,33 @@ int _expander__extended(t_command *list)
 			return (0);
 		}
 	}
+	return (1);
+}
+
+int _expander__extended(t_command *list)
+{
+	char **args = NULL;
+	char **splited = NULL;
+
+	// if (ft_strchr(list->value, '$'))
+	// {
+	list->value = expand_vars(list->value, 0);
+	list->value = unquote_arg(list, list->value, 0, 0);
+	if (!list->quoted && list->value != NULL && list->value[0])
+	{
+		splited = ft_split_str(list->value, " \t\v");
+		free(list->value);
+		list->value = ft_strdup(splited[0]);
+		if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+		{
+			args = ft_arr_join(splited, &list->args[1]);	
+			list->args = args;
+		}
+		free_array(splited);
+	}	
+	// }
+	if (!is_ambigous(list))
+		return (0);
 	return (1);
 }
 

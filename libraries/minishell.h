@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/22 15:32:28 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 19:06:18 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include <unistd.h> // for system calls
 // # include "../exec/main.h"
 
+#define COLOR BBLU
 # define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
 
 typedef enum s_types
@@ -57,12 +58,12 @@ typedef enum s_types
 // # define AND_OP 			9
 // # define FLE				10
 
-# define TOKEN 0
-# define PIPE 1
-# define RED_OUT 2
-# define RED_IN 3
-# define APP 4
-# define HER_DOC 5
+# define TOKEN 			0
+# define PIPE 			1
+# define RED_OUT 		2
+# define RED_IN 		3
+# define APP 			4
+# define HER_DOC 		5
 
 typedef struct s_env
 {
@@ -91,75 +92,74 @@ typedef struct s_data
 	int 				redirect;
 	int					exit_status;
 	t_env				*env;
-	t_command			*list;
-	t_command			*head;
-	t_command			*list_command;
-	t_command			*rdrct_head;
-	t_command			*_tokens_list;
 	char				**av;
-	char				**old_pwd;
-	char				**current_pwd;
-	char				**shell_lvl;
-	char				*expanded;	
-	char				*trimed_line;
-	char 				*unquoted_line;
 	char				*str1;
 	char				*str2;
+	t_command			*list;
+	t_command			*head;
 	char				*prompt;
+	char				*expanded;	
+	char				**old_pwd;
+	char				**shell_lvl;
 	char				*new_command;
+	char				*trimed_line;
+	char				**current_pwd;
+	char 				*unquoted_line;
 	char				*special_chars;
 	char				**envirenment;
-	bool 				syntax_error; // boolean variable for syntax_error
+	t_command			*list_command;
+	t_command			*_tokens_list;
+	t_command			*rdrct_head;
+	bool 				syntax_error; 	// boolean variable for syntax_error
 }						t_data;
 
 typedef struct s_token
 {
-	int					i;
-	// just a normal index for reading the input character by character
-	int prev_type; // this variable for tracking the type of the previous node
-	int index;     // to point to the location of the next token
-	int type;      // for the type of the token PIPE REDER ...
-	char *value;   // token value if it's a pipe the value is "|"
+	int					i;				// just a normal index for reading the input character by character
+	int 				prev_type; 		// this variable for tracking the type of the previous node
+	int 				index;     		// to point to the location of the next token
+	int 				type;      		// for the type of the token PIPE REDER ...
+	char 				*value;   		// token value if it's a pipe the value is "|"
 }						t_token;
 
 typedef struct s_pipex
 {
-	int					end[2];
-	t_command			*cur;
-	int					status;
-	int					status_1;
 	int					i;
 	int					j;
+	pid_t				r;
+	pid_t				pid1;
+	pid_t				pid2;
+	pid_t				a[2];
+	pid_t				pid;
+	int					*fd;
+	int					end[2];
+	int					status;
+	int					status_1;
 	int					indixe;
 	int					outfile;
 	int					infile;
 	int					infile_here_doc;
-	pid_t				pid1;
-	pid_t				pid2;
-	pid_t				a[2];
-	char				*line;
-	pid_t				pid;
-	int					*fd;
 	int					save1;
-	pid_t				r;
-	int					count_read_out;
-	int					count_read_in;
 	int					count_pipe;
+	int					count_read_in;
+	int					count_read_out;
 	int					count_here_doc;
 	int					flag;
+	char				*line;
+	t_command			*cur;
 }						t_pipex;
 
 typedef struct s_path
 {
-	char				*path_from_envp;
+	int					i;
+	char				*path;
 	char				**mypaths;
 	char				*part_path;
-	char				*path;
-	int					i;
+	char				*path_from_envp;
 }						t_path;
 
 extern t_data *data; // for use this global var from all files
-// data = NULL;
+
 
 // # include <termios.h>
 // # include <sys/stat.h>
@@ -220,7 +220,7 @@ void					ft_perror(char *message);
 void					add_back(t_env **lst, t_env *new);
 t_env					*lstnew(char *env_value, char *env_key);
 t_env					*creat_env(char **env);
-
+char					**env_to_array_(t_env *env, int *len);
 // parsing utiles
 
 // int 					ft_strisalnum(char *str);
