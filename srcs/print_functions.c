@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:37:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 09:41:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/16 11:33:01 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,12 @@ void	print_list(t_command *table)
 	while (table != NULL)
 	{
 		printf("┌───────────────────────────┐\n");
-		printf("│ token: ---------- [%s]    \n", table->value);
-		print_type(table->type);
-		print_args(table->args);
+		if (table->value != NULL)
+		{
+			printf("│ token: ---------- [%s]    \n", table->value);
+			print_type(table->type);
+			print_args(table->args);
+		}
 		table = table->next;
 	}
 }

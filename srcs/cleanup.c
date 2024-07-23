@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 09:44:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/18 09:09:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@ void	free_array(char **array)
 {
 	int	i;
 
-	i = -1;
+	i = 0;
 	if (!array)
 		return ;
-	while (array != NULL && array[++i] != NULL && array[i][0] != '\0')
-		free(array[i]);
+	while (array[i] != NULL)
+		free(array[i++]);
 	free(array);
+	array = NULL;
 }
 
 void	clear_list(t_command **lst)
@@ -29,10 +30,10 @@ void	clear_list(t_command **lst)
 	t_command	*node;
 	t_command	*ptr;
 
-	if (!lst)
+	if (!lst || !*lst)
 		return ;
 	node = *lst;
-	while (node)
+	while (node != NULL)
 	{
 		ptr = node->next;
 		if (node->value != NULL)
@@ -45,15 +46,15 @@ void	clear_list(t_command **lst)
 	*lst = NULL;
 }
 
-t_command	*free_node(t_command *_tokens_list)
+t_command	*free_node(t_command **node)
 {
 	t_command	*ptr;
 
-	if (!_tokens_list)
+	if (!*node)
 		return (NULL);
-	ptr = _tokens_list->next;
-	free(_tokens_list->value);
-	free(_tokens_list);
-	_tokens_list = NULL;
+	ptr = (*node)->next;
+	free((*node)->value);
+	free(*node);
+	*node = NULL;
 	return (ptr);
 }

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/12 10:00:43 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:32:28 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 // for wating child process to terminate execution
 # include <unistd.h> // for system calls
 // # include "../exec/main.h"
+
+# define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
 
 typedef enum s_types
 {
@@ -64,9 +66,9 @@ typedef enum s_types
 
 typedef struct s_env
 {
-	char				*value;
-	// char				*env_key;
-	// char				*env_value;
+	// char				*value;
+	char				*env_key;
+	char				*env_value;
 	struct s_env		*next;
 }						t_env;
 
@@ -86,6 +88,7 @@ typedef struct s_data
 	int					i;
 	int					j;
 	int					ac;
+	int 				redirect;
 	int					exit_status;
 	t_env				*env;
 	t_command			*list;
@@ -96,6 +99,7 @@ typedef struct s_data
 	char				**av;
 	char				**old_pwd;
 	char				**current_pwd;
+	char				**shell_lvl;
 	char				*expanded;	
 	char				*trimed_line;
 	char 				*unquoted_line;
@@ -105,7 +109,7 @@ typedef struct s_data
 	char				*new_command;
 	char				*special_chars;
 	char				**envirenment;
-	bool syntax_error; // boolean variable for syntax_error
+	bool 				syntax_error; // boolean variable for syntax_error
 }						t_data;
 
 typedef struct s_token
@@ -173,14 +177,15 @@ char					*get_prompt(void);
 void					pwd(void);
 int						env(t_env *env);
 int						echo(char **cmd);
-int						export(t_command *cmd, t_env *envir);
+// int						export(t_command *cmd, t_env *envir);
 int						is_builtin_cmd(t_command *command);
 char					*get_cmd_path(char *cmd_);
 char					*get_word_(char *line, char *del);
 t_env					*get_env_ele_ptr(char *env_val);
 void					print_array(char **array);
 t_env					*sort_list(t_env *env);
-
+int						export(t_command *cmd, t_env *env);
+int						unset(char *env_var, t_env *envirenement);
 
 // general purpose utiles
 
@@ -196,10 +201,8 @@ void					clear_list(t_command **lst);
 
 int						parse_command(char *command);
 int						get_args_size(t_command *list);
-t_command				*redirect_list(t_command **head,
-							t_command *list_command, t_command *_tokens_list,
-							t_command **redirect_head);
-void					get_redirect_node(t_command *list_command);
+t_command				*redirect_list(t_command **head, t_command **redirect_head);
+void					get_redirect_node();
 
 // tokenizer functions
 t_command				*tokenzer_command(char *command_line);
@@ -211,17 +214,11 @@ void					print_minishell(void);
 void					print_prompt(void);
 void					ft_perror(char *message);
 
-// Built in commands
-
-int						env(t_env *env);
-int						export(t_command *cmd, t_env *envir);
-int						unset(char *env_var, t_env *envirenement);
-char					*get_env_element(char *env_var);
 
 // envirenement utiles
 
 void					add_back(t_env **lst, t_env *new);
-t_env					*lstnew(char *content);
+t_env					*lstnew(char *env_value, char *env_key);
 t_env					*creat_env(char **env);
 
 // parsing utiles
@@ -247,9 +244,10 @@ char					*get_word(char *argument, int *i);
 char					*expand_vars(char *argument, int i);
 t_command				*expander_command(t_command *list);
 int						get_expanded(char *argument, int *i);
+char					**ft_split_str(const char *s, char *del);
 
 // clean functions
-t_command				*free_node(t_command *_tokens_list);
+t_command				*free_node(t_command **node);
 void					clear_list(t_command **lst);
 void					free_array(char **array);
 

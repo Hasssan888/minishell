@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 10:32:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/20 19:42:00 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,34 +21,68 @@ void	pwd(void)
 	free(cwd);
 }
 
-int	export(t_command *cmd, t_env *envir)
+int	export(t_command *cmd, t_env *env)
 {
-	char	*word;
-	t_env	*env_var;
+	// char	*word;
+	// t_env	*env_var;
 
 	if (!cmd->args[1])
-		sort_list(envir);
-	else
 	{
-		data->str1 = ft_strchr(cmd->args[1], '=');
-		word = get_word_(cmd->args[1], "+=");
-		env_var = get_env_ele_ptr(word);
-		free(word);
-		if (!data->str1)
-			return (0);
-		else if (env_var != NULL && data->str1[0] == '='
-			&& data->str1[-1] != '+')
+		while(env != NULL)
 		{
-			if (env_var->value != NULL)
-				free(env_var->value);
-			env_var->value = ft_strdup(cmd->args[1]);
+			if (env->env_key != NULL)
+				printf("%s=\"%s\"\n", env->env_value, env->env_key);
+			else
+				printf("%s=\n", env->env_value);
+			env = env->next;	
 		}
-		else if (env_var != NULL && data->str1[-1] == '+')
-			env_var->value = ft_strjoin(env_var->value,
-					ft_strdup(&data->str1[1]));
-		else
-			add_back(&data->env, lstnew(ft_strdup(cmd->args[1])));
+		return (0);
 	}
+		// sort_list(envir);
+	// else
+	// {
+		// word = get_word_(cmd->args[1], "+=");
+		// env_var = get_env_ele_ptr(word);
+		data->str1 = ft_strchr(cmd->args[1], '=');
+		char **splited = ft_split(cmd->args[1], '=');
+		// free(word);
+		// if (!data->str1)
+		// 	return (0);
+		char *trimed = ft_strtrim(splited[0], "+");
+		t_env *env_ptr = get_env_ele_ptr(trimed);
+		free(trimed);
+		if (env_ptr != NULL && splited != NULL && splited[0] != NULL)
+		{
+			// if (env_ptr != NULL)
+			// printf("value %s %c\n", splited[0], splited[0][ft_strlen(splited[0]) -1]);
+			if (splited[0][ft_strlen(splited[0]) - 1] == '+' && env_ptr != NULL)
+				env_ptr->env_key = ft_strjoin(env_ptr->env_key, ft_strdup(splited[1]));
+			else
+			{
+				if (env_ptr->env_key != NULL)
+					free(env_ptr->env_key);
+				if (splited[1] != NULL)
+					env_ptr->env_key = ft_strdup(splited[1]);
+				else if (data->str1 != NULL)
+					env_ptr->env_key = ft_strdup("");
+				else
+					env_ptr->env_key = NULL;
+			}
+			// if (env_var->env_value != NULL)
+			// 	free(env_var->env_value);
+			// env_var->env_value = ft_strdup(cmd->args[1]);
+			// else if (env_var != NULL && data->str1[-1] == '+')
+			// 	env_var->env_value = ft_strjoin(env_var->env_key,
+			// 			ft_strdup(&data->str1[1]));
+		}
+			// if (splited[0][ft_strlen(splited[0])] == '+' && env_ptr != NULL)
+		else
+		{
+			printf("%s\n", cmd->args[1]);
+			add_back(&data->env, lstnew(ft_strdup(cmd->args[1]), NULL));
+		}
+		free_array(splited);
+	// }
 	return (0);
 }
 
@@ -57,7 +91,7 @@ void	del_one(t_env **env, t_env *env_var)
 	t_env	*current;
 
 	current = env_var->next;
-	free(env_var->value);
+	free(env_var->env_value);
 	free(env_var);
 	*env = current;
 }
@@ -81,7 +115,7 @@ void	del_node(t_env **env, t_env *env_var)
 		if (current == env_var)
 		{
 			previous->next = current->next;
-			free(current->value);
+			free(current->env_value);
 			free(current);
 			return ;
 		}
