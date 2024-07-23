@@ -13,27 +13,41 @@
 
 #include "../libraries/minishell.h"
 
-void	get_old_current_pwd(void)
+void	get_old_current_pwd()
 {
-	char *old;
-	if (data->old_pwd != NULL)
-	{
-		if (!*(data->old_pwd))
-			free(*(data->old_pwd));
-		old = *(data->current_pwd);
-		*(data->old_pwd) = old;
-	}
-	if (data->current_pwd != NULL)
-	{
-		if (!*(data->current_pwd))
-			free(*(data->current_pwd));
-		*(data->current_pwd) = ft_strjoin(ft_strdup("PWD="), getcwd(NULL, 0));
-	}
+	t_env *old_pwd = get_env_ele_ptr("OLDPWD");
+	t_env *pwd = get_env_ele_ptr("OLDPWD");
+
+	if (old_pwd != NULL && old_pwd->env_key != NULL)
+		free(old_pwd->env_key);
+	old_pwd->env_key = ft_strdup(pwd->env_key);
+	if (pwd != NULL && pwd->env_key != NULL)
+		free(pwd->env_key);
+	pwd->env_key = getcwd(NULL, 0);
+
+	printf("pwd: %s\nold pwd: %s\n", pwd->env_key, old_pwd->env_key);
+
+	// char *old;
+	// if (data->pwd != NULL)
+	// {
+	// 	if (!*(data->old_pwd))
+	// 		free(*(data->old_pwd));
+	// 	old = *(data->current_pwd);
+	// 	*(data->old_pwd) = old;
+	// }
+	// if (data->current_pwd != NULL)
+	// {
+	// 	if (!*(data->current_pwd))
+	// 		free(*(data->current_pwd));
+	// 	*(data->current_pwd) = ft_strjoin(ft_strdup("PWD="), getcwd(NULL, 0));
+	// }
 }
 
-int	change_dir(char *path)
+int	change_dir(t_env *env, char *path)
 {
-	if (chdir(path))
+	if (path != NULL)
+		chdir(path);
+	else if (env != NULL && chdir(env->env_key))
 		return (0);
 	free(data->prompt);
 	get_old_current_pwd();
@@ -51,22 +65,25 @@ void	check_errors(void)
 		ft_perror("minishell: cd: No such file or directory\n");
 }
 
-char *getenvval(char **env_ptr)
-{
-	char *old = NULL;
-	if (env_ptr != NULL)
-	{
-		old = *(env_ptr);
-		old = ft_strchr(old, '=');
-		old = ft_strdup(&old[1]); 	
-		free(*env_ptr);
-	}
-	return (old);
-}
+// char *getenvval(char **env_ptr)
+// {
+// 	char *old = NULL;
+// 	if (env_ptr != NULL)
+// 	{
+// 		old = *(env_ptr);
+// 		printf("old pwd: %s\n", old);
+// 		old = ft_strchr(old, '=');
+// 		old = ft_strdup(&old[1]); 	
+// 		free(*env_ptr);
+// 	}
+// 	return (old);
+// }
 
 int	cd(char **args)
 {
-	char *path = NULL;
+	t_env *env = NULL;
+	// char *path = NULL;
+
 	if (args[0] != NULL && args[1] != NULL)
 	{
 		ft_perror("cd: too many arguments\n");
@@ -74,31 +91,33 @@ int	cd(char **args)
 	}
 	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 	{
-		path = getenvval(data->old_pwd);
-		if (path != NULL)
+		env = get_env_ele_ptr("OLDPWD");
+		printf("path: %s\n", env->env_key);
+		if (env != NULL && env->env_key != NULL)
 		{
 			// printf("%s\n", *(data->old_pwd));
-			printf("%s\n", path);
-			change_dir(path);
-			free(path);
+			printf("%s\n", env->env_key);
+			change_dir(env, NULL);
+			// free(env->env_key);
 			// free(args[0]);
 		}
 		return (1);
 	}
 	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
 	{
-		path = get_env_element("HOME");
+		// path = get_env_element("HOME");
+		env = get_env_ele_ptr("HOME");
 		// printf("%s\n", path);
-		if (!path || !path[0])
+		if (!env || !env->env_key)
 		{
-			free(path);
+			// free(path);
 			ft_perror("cd: HOME not set\n");
 			return (0);
 		}
-		change_dir(path);
+		change_dir(env, NULL);
 		return (1);
 	}
-	else if (args != NULL && change_dir(args[0]))
+	else if (args != NULL && change_dir(NULL, args[0]))
 		return (1);
 	else
 		check_errors();
