@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 09:29:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:07:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int	parse_command(char *line)
 	// printf("\n++++++++++++++++++ parsing is started +++++++++++++++++\n");
 	data->list = NULL;
 	// printf("line befor lexer: %s\n", line);
+	data->ignore_sig = 0;
 	data->syntax_error = 0;
 	// printf("\n\n");
 	line = lexer_command(line, 0, 0);
@@ -121,13 +122,13 @@ int	parse_command(char *line)
 	// print_list(tokens_list);
 	// printf("\n\n");
 	data->list = parser_command(tokens_list);
-	print_list(data->list);
-	printf("\n\n");
-	data->list = expander_command(data->list);
-	print_list(data->list);
-	printf("\n\n");
-	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
+	// print_list(data->list);
 	// printf("\n\n");
+	data->list = expander_command(data->list);
+	// print_list(data->list);
+	// printf("\n\n");
+	// printf("\n\n");
+	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
 
 	// is_builtin_cmd(data->list);
