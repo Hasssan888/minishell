@@ -18,25 +18,22 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 		infile(node1, env, p);
 	else if (p->flag == 2 && node1->next == NULL)
 		one_here_doc(node1, env, p);
+	else if (p->flag == 2 && node1->next && 
+			(node1->next->type == RED_OUT || node1->next->type == APP))
+	{
+		p->b = 0;
+		heredoc_readout_app(node1, env, p);
+	}
 	else if (p->flag == 2 && node1->next->type == HER_DOC
 		&& node1->next->next == NULL)
 		one_here_doc(node1, env, p);
-	else if (p->flag == 2 && (node1->next->type == RED_OUT
-			|| node1->next->type == APP))
-			{
-				printf("here 1\n");
-				p->b = 0;
-				printf("p->b = %d\n", p->b);
-				heredoc_readout_app(node1, env, p);
-			}
 	else if (p->flag == 2 && node1->next->type == HER_DOC
 		&& (node1->next->next->type == RED_OUT
 			|| node1->next->next->type == APP))
-			{
-				p->b = 1;
-				printf("p->b = %d\n", p->b);
-				heredoc_readout_app(node1, env, p);
-			}
+	{
+		p->b = 1;
+		heredoc_readout_app(node1, env, p);
+	}
 	else if (p->flag == 2)
 		pipe_heredoc(node1, env, p);
 	else if (node1->type == CMD && node1->next != NULL
@@ -72,12 +69,12 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[0]);
-	// if (ft_strcmp(node1->args[0], "cat") != 0 || (ft_strcmp(node1->args[0],
-	// 			"cat") == 0 && node1->next == NULL))
-	// {
+	if (ft_strcmp(node1->args[0], "cat") != 0 || (ft_strcmp(node1->args[0],
+				"cat") == 0 && node1->next == NULL))
+	{
 		wait(&p->status);
 		data->exit_status = WEXITSTATUS(p->status);
-	// }
+	}
 
 
 		// while (1)
@@ -106,14 +103,11 @@ void	skip_prh(t_pipex *p)
 	}
 	if (p->cur->type == PIPE)
 		p->indixe = 0;
-	// if (p->cur->type == HER_DOC && p->cur->next && p->cur->next->type == RED_OUT)
-	// {
-	// 	printf("this\n");
-	// 	open_outfile(p->cur, p);
-	// }
 	if (p->cur->type == HER_DOC)
+	{
+		here_doc(p->cur, p);
 		p->flag = 2;
-	printf("p->flag == %d\n", p->flag);
+	}
 	p->cur = p->cur->next;
 }
 
@@ -152,8 +146,8 @@ int	func(t_command *list)
 	ft_count_read_in(list, &pipex);
 	// if (ft_count_read_out > 0)
 	// 	open_outfile(list, &pipex);
-	if (pipex.count_here_doc > 0)
-		open_here_doc(list, &pipex);
+	// if (pipex.count_here_doc > 0)
+	// 	open_here_doc(list, &pipex);
 	ft_pipe(list, data->envirenment, &pipex);
 	while (pipex.i != -1)
 	{

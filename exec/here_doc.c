@@ -39,13 +39,13 @@ void	here_doc_error(char **av)
 void	here_doc(t_command *node, t_pipex *pipex)
 {
 	char	*str;
-	int 	status = 0;
+	// int 	status = 0;
 
-	int pid = fork();
-	if (pid == 0)
-	{
-		signal(SIGQUIT, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
+	// int pid = fork();
+	// if (pid == 0)
+	// {
+	// 	signal(SIGQUIT, SIG_DFL);
+	// 	signal(SIGINT, SIG_DFL);
 		pipex->line = readline("> ");
 		if (pipex->line == NULL)
 			here_doc_error(node->args);
@@ -69,16 +69,16 @@ void	here_doc(t_command *node, t_pipex *pipex)
 		}
 		free(pipex->line);
 		free(str);
-	}
-	else
-		waitpid(pid , &status, 0);
-	if(WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == SIGINT)
-			data->exit_status = 130;
-	}
-	else
-		data->exit_status = 2;
+	// }
+	// else
+	// 	waitpid(pid , &status, 0);
+	// if(WIFSIGNALED(status))
+	// {
+	// 	if (WTERMSIG(status) == SIGINT)
+	// 		data->exit_status = 130;
+	// }
+	// else
+	// 	data->exit_status = 2;
 }
 
 void	open_here_doc(t_command *node, t_pipex *pipex)
@@ -90,6 +90,8 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 	{
 		if (cur->type == HER_DOC)
 			here_doc(cur, pipex);
+		if (cur->type == PIPE)
+			break;
 		cur = cur->next;
 	}
 }

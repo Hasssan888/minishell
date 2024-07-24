@@ -61,9 +61,10 @@ void	one_here_doc(t_command *node1, char **env, t_pipex *p)
 void	heredoc_readout_app(t_command *node1, char **env, t_pipex *p)
 {
 	close(p->end[0]);
-	readout_append_2(node1, p);
-	printf("node1->args[0] = %s\n", node1->args[0]);
-	printf("p->outfile = %d\n", p->outfile);
+	if (p->b == 0)
+		readout_append_2(node1, p);
+	else if (p->b == 1)
+		readout_append(node1, p);
 	p->infile_here_doc = open("file_here_doc.txt", O_RDONLY, 0644);
 	if (p->infile_here_doc == -1)
 	{

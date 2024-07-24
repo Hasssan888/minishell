@@ -65,30 +65,23 @@ void	readout_append(t_command *node1, t_pipex *p)
 
 void	readout_append_2(t_command *node1, t_pipex *p)
 {
-	t_command * c = node1;
-	while (c)
-	{
-		if (c->type == RED_OUT)
-			break;
-		c = c->next;
-	}
-	printf("c->arg[0] = %s\n", c->args[0]);
-	if (c->next && (c->next->type == RED_OUT
-			|| c->next->type == APP))
-		open_outfile(c, p);
+	printf("node1->arg[0] = %s\n", node1->args[0]);
+	if (node1->next && (node1->next->type == RED_OUT
+			|| node1->next->type == APP))
+		open_outfile(node1, p);
 	else
 	{
 		printf("outfile\n");
-		if (c->type == APP)
-			p->outfile = open(c->args[0],
+		if (node1->type == APP)
+			p->outfile = open(node1->args[0],
 					O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
-			p->outfile = open(c->args[0],
+			p->outfile = open(node1->args[0],
 					O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		printf("p->outfile = %d\n", p->outfile);
 		if (p->outfile == -1)
 		{
-			printf("%s: Permission denied\n", c->args[0]);
+			printf("%s: Permission denied\n", node1->args[0]);
 			exit(1);
 		}
 
