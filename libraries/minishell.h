@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 19:06:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/24 13:19:58 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct s_data
 	t_command			*list_command;
 	t_command			*_tokens_list;
 	t_command			*rdrct_head;
+	bool				ignore_sig;
 	bool 				syntax_error; 	// boolean variable for syntax_error
 }						t_data;
 
@@ -217,16 +218,17 @@ void					ft_perror(char *message);
 
 // envirenement utiles
 
+void 					clear_env(t_env **env);
+t_env					*creat_env(char **env);
 void					add_back(t_env **lst, t_env *new);
 t_env					*lstnew(char *env_value, char *env_key);
-t_env					*creat_env(char **env);
 char					**env_to_array_(t_env *env, int *len);
 // parsing utiles
 
 // int 					ft_strisalnum(char *str);
 int						exec_command(t_command *commands_list);
-char					*ft_strnstr_l(const char *big, const char *little,
-							size_t len);
+// char					*ft_strnstr_l(const char *big, const char *little,
+// 							size_t len);
 char					*get_env_element(char *env_var);
 
 // lexer functions

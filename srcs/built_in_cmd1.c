@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 10:59:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/24 11:16:51 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,13 +153,15 @@ void	echo_it(char **cmd, int i)
 
 bool check_echo_options(char *cmd)
 {
-	int j = 1;
+	int j = 0;
 	bool flag = false;
 	if (!cmd)
 		return (flag);
-	if (cmd[0] == '-')
-	while(cmd!= NULL && cmd[j] == 'n')
-		j++;
+	if (cmd[j] == '-')
+	{
+		while(cmd[++j] == 'n');
+			// j++;
+	}
 	if (!cmd[j])
 		flag = true;
 	return (flag);
@@ -182,6 +184,7 @@ int	echo(char **cmd)
 	echo_it(cmd, i);
 	if (!flag)
 		printf("\n");
+	data->exit_status = 0;
 	return (0);
 }
 

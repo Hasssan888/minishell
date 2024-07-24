@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 16:05:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/24 13:05:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,13 +161,27 @@ int ambigous_red(char *red_file)
 	return 0;
 }
 
+// void open_files(t_command *heredoc)
+// {
+// 	while(heredoc != NULL)
+// 	{
+// 		if (heredoc->args[0] != NULL)
+// 		{
+// 			printf("%s\n", heredoc->args[0]);
+// 			open(heredoc->args[0], O_TRUNC | O_CREAT | O_RDWR, 0744);
+// 		}
+// 		heredoc = heredoc->next;
+// 	}
+// }
+
 int is_ambigous(t_command *list)
 {
 	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
 	{
-		printf("%s\n", list->args[0]);
+		// printf("%s\n", list->args[0]);
 		if (ambigous_red(list->args[0]))
 		{
+			// open_files(data->head);
 			clear_list(&data->head);
 			ft_perror("ambiguous redirect\n");
 			data->syntax_error = 0;
