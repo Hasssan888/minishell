@@ -102,10 +102,24 @@ void	skip_prh(t_pipex *p)
 		p->flag = 1;
 	}
 	if (p->cur->type == PIPE)
+	{
 		p->indixe = 0;
+		// printf("d5al lhna\n");
+		if (p->cur->next && p->cur->next->type == HER_DOC)
+			p->k++;
+		printf("p->k = %d\n", p->k);
+		// 	ft_count_here_doc(p->cur, p);
+		// 	printf("p->count_here_doc = %d\n", p->count_here_doc);
+		// 	if (p->count_here_doc > 0)
+		// 	{
+		// 		printf("l9a here_doc\n");
+		// 		open_here_doc(p->cur->next, p);
+		// 	}
+		// }
+	}
 	if (p->cur->type == HER_DOC)
 	{
-		here_doc(p->cur, p);
+		// here_doc(p->cur, p);
 		p->flag = 2;
 	}
 	p->cur = p->cur->next;
@@ -115,6 +129,7 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 {
 	p->cur = node1;
 	p->flag = 0;
+	p->k = 0;
 	while (p->cur != NULL)
 	{
 		if (p->cur->type == PIPE || p->cur->type == RED_IN
@@ -125,7 +140,10 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 		{
 			printf("cmd\n");
 			if (p->cur->next && p->cur->next->type == HER_DOC)
+			{
+				// here_doc(p->cur, p);
 				p->flag = 2;
+			}
 			printf("flag == %d\n", p->flag);
 			p->r = fork_pipe(p->cur, ev, p);
 			p->flag = 0;
@@ -146,14 +164,24 @@ int	func(t_command *list)
 	ft_count_read_in(list, &pipex);
 	// if (ft_count_read_out > 0)
 	// 	open_outfile(list, &pipex);
-	// if (pipex.count_here_doc > 0)
-	// 	open_here_doc(list, &pipex);
+	printf("pipex.count_here_doc = %d\n", pipex.count_here_doc );
+	if (pipex.count_here_doc > 0)
+		open_here_doc(list, &pipex);
 	ft_pipe(list, data->envirenment, &pipex);
 	while (pipex.i != -1)
 	{
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
 		pipex.i = wait(NULL);
 	}
-	unlink("file_here_doc.txt");
+	pipex.i = 0;
+	while (pipex.strs[pipex.i])
+	{
+		unlink(pipex.strs[pipex.i]);
+		free(pipex.strs[pipex.i]);
+		pipex.i++;
+	}
+	free(pipex.strs);
+	
+	// unlink("file_here_doc.txt");
 	return (0);
 }

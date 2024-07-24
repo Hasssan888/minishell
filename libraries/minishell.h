@@ -127,12 +127,17 @@ typedef struct s_pipex
 {
 	int					i;
 	int					j;
+	int					k;
+	int					q;
 	pid_t				r;
 	pid_t				pid1;
 	pid_t				pid2;
 	pid_t				a[2];
 	pid_t				pid;
 	int					*fd;
+	int					*tb;
+	char				**strs;
+	int					arr[1025];
 	int					end[2];
 	int					status;
 	int					status_1;
