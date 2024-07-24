@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/16 12:45:46 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/07/23 15:45:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,11 @@ void	here_doc(t_command *node, t_pipex *pipex)
 	pipex->infile_here_doc = open("file_here_doc.txt",
 			O_RDWR | O_CREAT | O_TRUNC, 0644);
 	str = strjoin1(node->args[0], "\n");
+	str = unquote_arg(node, str, 0, 0);
 	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
 	{
+		if (pipex->line[0] == '$' && !node->quoted)
+			pipex->line = expand_vars(pipex->line, 0);
 		write(pipex->infile_here_doc, pipex->line, ft_strlen(pipex->line));
 		free(pipex->line);
 		pipex->line = readline("> ");

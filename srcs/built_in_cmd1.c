@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 09:56:16 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/24 11:16:51 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 void	get_old_current_pwd()
 {
 	t_env *old_pwd = get_env_ele_ptr("OLDPWD");
-	t_env *pwd = get_env_ele_ptr("OLDPWD");
+	t_env *pwd = get_env_ele_ptr("PWD");
 
 	if (old_pwd != NULL && old_pwd->env_key != NULL)
 		free(old_pwd->env_key);
@@ -24,9 +24,7 @@ void	get_old_current_pwd()
 	if (pwd != NULL && pwd->env_key != NULL)
 		free(pwd->env_key);
 	pwd->env_key = getcwd(NULL, 0);
-
-	printf("pwd: %s\nold pwd: %s\n", pwd->env_key, old_pwd->env_key);
-
+	
 	// char *old;
 	// if (data->pwd != NULL)
 	// {
@@ -46,9 +44,15 @@ void	get_old_current_pwd()
 int	change_dir(t_env *env, char *path)
 {
 	if (path != NULL)
-		chdir(path);
-	else if (env != NULL && chdir(env->env_key))
-		return (0);
+	{
+		if (chdir(path) != 0)
+			return 0;	
+	}
+	else if (env != NULL)
+	{
+		if (chdir(env->env_key) != 0)
+			return 0;
+	}
 	free(data->prompt);
 	get_old_current_pwd();
 	data->prompt = get_prompt();
@@ -149,13 +153,15 @@ void	echo_it(char **cmd, int i)
 
 bool check_echo_options(char *cmd)
 {
-	int j = 1;
+	int j = 0;
 	bool flag = false;
 	if (!cmd)
 		return (flag);
-	if (cmd[0] == '-')
-	while(cmd!= NULL && cmd[j] == 'n')
-		j++;
+	if (cmd[j] == '-')
+	{
+		while(cmd[++j] == 'n');
+			// j++;
+	}
 	if (!cmd[j])
 		flag = true;
 	return (flag);
@@ -178,6 +184,7 @@ int	echo(char **cmd)
 	echo_it(cmd, i);
 	if (!flag)
 		printf("\n");
+	data->exit_status = 0;
 	return (0);
 }
 

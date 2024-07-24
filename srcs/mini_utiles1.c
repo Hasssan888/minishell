@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/20 19:38:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/23 19:29:00 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,18 +94,17 @@ t_env *get_alternative_env()
 
 t_env	*creat_env(char **env)
 {
+	int		i = 0;
 	t_env	*head;
 	t_env	*new;
-	int		i;
-	// (void) env;
 	if (!env || !*env)
 		return (get_alternative_env());
 	else
 	{
 		i = -1;
 		head = NULL;
-		data->old_pwd = NULL;
-		data->current_pwd = NULL;
+		// data->old_pwd = NULL;
+		// data->current_pwd = NULL;
 		while (env[++i] != NULL)
 		{
 			char **splited = ft_split(env[i], '=');
@@ -113,16 +112,9 @@ t_env	*creat_env(char **env)
 				new = lstnew(ft_strdup(splited[0]), ft_strdup(splited[1]));
 			else if (splited != NULL && splited[0] != NULL && !splited[1])
 				new = lstnew(ft_strdup(splited[0]), NULL);
-							
 			free_array(splited);
-			// if (!strncmp(new->env_value, "PWD", 3))
-			// 	data->current_pwd = &(new->value);
-			// else if (!strncmp(new->value, "OLDPWD", 6))
-			// 	data->old_pwd = &(new->value);
-			// else if (!strncmp(new->value, "SHLVL", 5))
-			// 	data->shell_lvl = &(new->value);
 			add_back(&head, new);
-		}	
+		}
 	}
 	return (head);
 }

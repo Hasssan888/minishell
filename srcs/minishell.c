@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 09:22:47 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:19:11 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,18 @@ void	sig_handler(int signal)
 	char	*prompt;
 
 	prompt = get_prompt();
-	if (signal == SIGQUIT)
-		return ;
-	if (signal == SIGINT)
-		printf("\n%s", prompt);
+	if (data->ignore_sig == 0)
+	{	
+		if (signal == SIGQUIT)
+			return ;
+		if (signal == SIGINT)
+		{
+			printf("\n%s", prompt);
+			data->exit_status = 130;
+		}
+	}
+	else
+		data->ignore_sig = 0;
 	free(prompt);
 }
 
@@ -41,16 +49,20 @@ char	*get_prompt(void)
 
 void	init_minishell(int ac, char **av, char **env)
 {
-	data->redirect = 0;
-	data->expanded = NULL;
-	data->list = NULL;
-	data->old_pwd = NULL;
-	data->current_pwd = NULL;
+	int len;
 	data->av = av;
 	data->ac = ac;
+	data->redirect = 0;
+	data->ignore_sig = 0;
+	data->list = NULL;
+	data->expanded = NULL;
+	data->old_pwd = NULL;
+	data->current_pwd = NULL;
+	data->envirenment = NULL;
 	data->exit_status = 0;
 	data->env = creat_env(env);
-	data->envirenment = env;
+	data->envirenment = env_to_array_(data->env, &len);
+	// data->envirenment = env;
 	data->syntax_error = false;
 	data->prompt = get_prompt();
 	data->new_command = NULL;
@@ -76,13 +88,17 @@ void clear_env(t_env **env)
 	}
 	*env = NULL;
 }
+
 void clear_all()
 {
-	clear_env(&data->env);
 	free(data->prompt);
 	free(data->new_command);
+	if (data->envirenment != NULL)
+		free_array(data->envirenment);
+	clear_env(&data->env);
 	free(data);
 }
+
 int	main(int ac, char **av, char **env)
 {
 	char	*command;
@@ -92,8 +108,9 @@ int	main(int ac, char **av, char **env)
 	init_minishell(ac, av, env);
 	// print_minishell();
 	signal(SIGQUIT, sig_handler);
-	// signal(SIGINT, sig_handler);
+	signal(SIGINT, SIG_IGN);
 	command = readline(data->prompt);
+	signal(SIGINT, SIG_IGN);
 	while (command != NULL)
 	{
 		pipex.save1 = dup(STDIN_FILENO);
@@ -101,8 +118,11 @@ int	main(int ac, char **av, char **env)
 		parse_command(command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
+		signal(SIGINT, sig_handler);
 		command = readline(data->prompt);
+		signal(SIGINT, SIG_IGN);
 	}
+	printf("exit\n");
 	clear_history();
 	clear_all();
 	return (0);
