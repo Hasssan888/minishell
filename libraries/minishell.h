@@ -147,6 +147,7 @@ typedef struct s_pipex
 	int					count_pipe;
 	int					count_here_doc;
 	int					flag;
+	int					b;
 }						t_pipex;
 
 typedef struct s_path
@@ -256,7 +257,6 @@ void					free_array(char **array);
 void					ft_count_pipe(t_command *list, t_pipex *p);
 void					ft_count_read_out(t_command *node, t_pipex *p);
 void					ft_count_read_in(t_command *node, t_pipex *p);
-void					open_infile(t_command *node, t_pipex *p);
 void					open_outfile(t_command *node, t_pipex *p);
 void					ft_count_here_doc(t_command *node, t_pipex *p);
 char					*function(char **env);
@@ -282,5 +282,6 @@ void					pipe_heredoc(t_command *node1, char **env, t_pipex *p);
 int						exec_command(t_command *commands_list);
 int						if_is_buil(t_command *command);
 void    				readout_append(t_command *node1, t_pipex *p);
+void    				readout_append_2(t_command *node1, t_pipex *p);
 void    				excut_butlin(t_command *node1, char **env);
 #endif

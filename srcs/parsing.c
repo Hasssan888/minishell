@@ -130,9 +130,9 @@ int	parse_command(char *line)
 	// printf("\n\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
 
-	is_builtin_cmd(data->list);
+	// is_builtin_cmd(data->list);
 	// exec_command(data->list);
-	// func(data->list);
+	func(data->list);
 	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
 	clear_list(&data->list);
 	return (0);
