@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/24 14:19:11 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/25 10:48:10 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	sig_handler(int signal)
 	prompt = get_prompt();
 	if (data->ignore_sig == 0)
 	{	
-		if (signal == SIGQUIT)
-			return ;
+		// if (signal == SIGQUIT)
+		// 	return ;
 		if (signal == SIGINT)
 		{
 			printf("\n%s", prompt);
@@ -107,8 +107,8 @@ int	main(int ac, char **av, char **env)
 	data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(ac, av, env);
 	// print_minishell();
-	signal(SIGQUIT, sig_handler);
-	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sig_handler);
 	command = readline(data->prompt);
 	signal(SIGINT, SIG_IGN);
 	while (command != NULL)

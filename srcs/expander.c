@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/24 13:05:05 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/25 09:36:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ char *expand_vars__(char *argument)
 			data->str1 = get_word(argument, &i);
 			data->expanded = ft_strjoin(data->expanded, data->str1);
 		}
+	}
+	if (!data->expanded[0])
+	{
+		free(data->expanded);
+		data->expanded = NULL;
 	}
 	return (data->expanded);
 }
@@ -142,7 +147,7 @@ char **ft_arr_join(char **arr1, char **arr2)
 int ambigous_red(char *red_file)
 {
 	int i = 0;
-	if (!red_file || !red_file[0])
+	if (!red_file) // || !red_file[0]
 		return (1);
 	while (red_file != NULL && red_file[i] && ft_strchr(" \t", red_file[i]))
 		i++;

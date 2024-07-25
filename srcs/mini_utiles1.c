@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 19:29:00 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/25 09:53:13 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,14 +107,19 @@ t_env	*creat_env(char **env)
 		// data->current_pwd = NULL;
 		while (env[++i] != NULL)
 		{
+			// printf("%s\n", env[i]);
 			char **splited = ft_split(env[i], '=');
 			if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
 				new = lstnew(ft_strdup(splited[0]), ft_strdup(splited[1]));
-			else if (splited != NULL && splited[0] != NULL && !splited[1])
+			else if (splited != NULL && splited[0] != NULL && !splited[1] && ft_strchr(env[i], '='))
+				new = lstnew((ft_strdup(splited[0])), ft_strdup(""));
+			else
 				new = lstnew(ft_strdup(splited[0]), NULL);
 			free_array(splited);
 			add_back(&head, new);
 		}
 	}
+
+	// printf("\n\n==========================\n\n");
 	return (head);
 }

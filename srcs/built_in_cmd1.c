@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/24 11:16:51 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/25 09:30:25 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,38 @@ int	echo(char **cmd)
 	return (0);
 }
 
+int ft_is_str_digit(char *str)
+{
+	int i = -1;
+	while(str[++i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+	}
+	return (1);
+}
+
+void exit_(t_command *command)
+{
+	if (command->args[1] != NULL && !ft_is_str_digit(command->args[1]))
+	{
+		printf("exit\n");
+		ft_perror("minishell: exit: numeric argument required\n");
+		exit(2);
+	}
+	else if (command->args[1] != NULL && command->args[2] != NULL)
+	{
+		ft_perror("minishell: exit: too many arguments\n");
+		data->exit_status = 1;
+		return ;
+	}
+	else if (command->args[1] != NULL)
+		exit(ft_atoi(command->args[1]) % 256);
+	printf("exit\n");
+	clear_list(&data->list);
+	exit(0);
+}
+
 int	is_builtin_cmd(t_command *command)
 {
 	if (!command)
@@ -205,11 +237,7 @@ int	is_builtin_cmd(t_command *command)
 	else if (ft_strcmp(command->value, "unset") == 0)
 		unset(command->args[1], data->env);
 	else if (ft_strcmp(command->value, "exit") == 0)
-	{
-		printf("exit\n");
-		clear_list(&data->list);
-		exit(0);
-	}
+		exit_(command);
 	else
 		return (0);
 	return (1);

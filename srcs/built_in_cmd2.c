@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/24 12:16:54 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/25 11:04:56 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char **env_to_array_(t_env *env, int *len)
 		if (!env->env_key)
 			array[i++] = ft_strjoin(ft_strdup(env->env_value), ft_strdup(""));
 		else if (!env->env_key[0])
-			array[i++] = ft_strjoin(ft_strjoin(ft_strdup(env->env_value), ft_strdup("=")), ft_strdup(""));
+			array[i++] = ft_strjoin(ft_strdup(env->env_value), ft_strdup("="));
 		else
 			array[i++] = ft_strjoin(ft_strjoin(ft_strdup(env->env_value), ft_strdup("=")), ft_strdup(env->env_key));
 		env = env->next;
@@ -87,10 +87,10 @@ void print_export_env(t_env *env)
 	{
 		if (!env->env_key)
 			printf("%s\n", env->env_value);
-		else if (env->env_key[0])
+		else if (env->env_key != NULL)
 			printf("%s=\"%s\"\n", env->env_value, env->env_key);
-		else if (!env->env_key[0])
-			printf("%s=""\n", env->env_value);
+		// else if (!env->env_key[0])
+		// 	printf("%s=""\n", env->env_value);
 		env = env->next;
 	}
 }
@@ -98,22 +98,22 @@ void print_export_env(t_env *env)
 void print_sorted_env(t_env *env)
 {
 	int env_len = 0;
-
+	t_env *env__ = NULL;
 	char **sorted_arr = env_to_array_(env, &env_len);
-	sorted_arr = sort_array(sorted_arr, env_len);
-	if (env != NULL)
-		clear_env(&env);
-	env = creat_env(sorted_arr);
-	data->env = env;
 	if (data != NULL && data->envirenment != NULL)
 	{
 		free_array(data->envirenment);
 		data->envirenment = NULL;
 	}
-	print_array(sorted_arr);
-		// free_array(sort_array);
 	data->envirenment = sorted_arr;
-	// print_export_env(env);
+	sorted_arr = sort_array(sorted_arr, env_len);
+	env__ = creat_env(sorted_arr);
+	print_export_env(env__);
+	if (env__ != NULL)
+		clear_env(&env__);
+	// data->env = env;
+	// print_array(sorted_arr);
+		// free_array(sort_array);
 }
 
 int	export(t_command *cmd, t_env *env)
@@ -126,7 +126,7 @@ int	export(t_command *cmd, t_env *env)
 		print_sorted_env(env);
 		return (0);
 	}
-	else if (ft_isdigit(cmd->args[1][0]) || cmd->args[2] != NULL)
+	else if (!ft_isalpha(cmd->args[1][0]) || cmd->args[2] != NULL)
 	{
 		ft_perror ("minishell: export: not a valid identifier\n");
 		data->exit_status = 1;
