@@ -47,29 +47,32 @@ void	outfile(t_command *node1, char **env, t_pipex *p)
 void	one_here_doc(t_command *node1, char **env, t_pipex *p)
 {
 	close(p->end[0]);
-	p->infile_here_doc = open("file_here_doc.txt", O_RDONLY, 0644);
-	if (p->infile_here_doc == -1)
+	p->tb[p->k] = open(p->strs[p->k], O_RDONLY, 0644);
+	if (p->tb[p->k] == -1)
 	{
 		perror("infile_here_doc");
 		exit(1);
 	}
-	dup2(p->infile_here_doc, 0);
-	close(p->infile_here_doc);
+	dup2(p->tb[p->k], 0);
+	close(p->tb[p->k]);
 	excut_butlin(node1, env);
 }
 
 void	heredoc_readout_app(t_command *node1, char **env, t_pipex *p)
 {
 	close(p->end[0]);
-	readout_append(node1, p);
-	p->infile_here_doc = open("file_here_doc.txt", O_RDONLY, 0644);
-	if (p->infile_here_doc == -1)
+	if (p->b == 0)
+		readout_append_2(node1, p);
+	else if (p->b == 1)
+		readout_append(node1, p);
+	p->tb[p->k] = open(p->strs[p->k], O_RDONLY, 0644);
+	if (p->tb[p->k] == -1)
 	{
 		perror("infile_here_doc");
 		exit(1);
 	}
-	dup2(p->infile_here_doc, 0);
-	close(p->infile_here_doc);
+	dup2(p->tb[p->k], 0);
+	close(p->tb[p->k]);
 	dup2(p->outfile, 1);
 	close(p->outfile);
 	excut_butlin(node1, env);
@@ -78,14 +81,14 @@ void	heredoc_readout_app(t_command *node1, char **env, t_pipex *p)
 void	pipe_heredoc(t_command *node1, char **env, t_pipex *p)
 {
 	close(p->end[0]);
-	p->infile_here_doc = open("file_here_doc.txt", O_RDONLY, 0644);
-	if (p->infile_here_doc == -1)
+	p->tb[p->k] = open(p->strs[p->k], O_RDONLY, 0644);
+	if (p->tb[p->k] == -1)
 	{
 		perror("infile_here_doc");
 		exit(1);
 	}
-	dup2(p->infile_here_doc, 0);
-	close(p->infile_here_doc);
+	dup2(p->tb[p->k], 0);
+	close(p->tb[p->k]);
 	dup2(p->end[1], 1);
 	close(p->end[1]);
 	excut_butlin(node1, env);

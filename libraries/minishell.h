@@ -127,12 +127,17 @@ typedef struct s_pipex
 {
 	int					i;
 	int					j;
+	int					k;
+	int					q;
 	pid_t				r;
 	pid_t				pid1;
 	pid_t				pid2;
 	pid_t				a[2];
 	pid_t				pid;
 	int					*fd;
+	int					*tb;
+	char				**strs;
+	int					arr[1025];
 	int					end[2];
 	int					status;
 	int					status_1;
@@ -146,6 +151,7 @@ typedef struct s_pipex
 	int					count_read_out;
 	int					count_here_doc;
 	int					flag;
+	int					b;
 	char				*line;
 	t_command			*cur;
 }						t_pipex;
@@ -258,7 +264,6 @@ void					free_array(char **array);
 void					ft_count_pipe(t_command *list, t_pipex *p);
 void					ft_count_read_out(t_command *node, t_pipex *p);
 void					ft_count_read_in(t_command *node, t_pipex *p);
-void					open_infile(t_command *node, t_pipex *p);
 void					open_outfile(t_command *node, t_pipex *p);
 void					ft_count_here_doc(t_command *node, t_pipex *p);
 char					*function(char **env);
@@ -284,5 +289,6 @@ void					pipe_heredoc(t_command *node1, char **env, t_pipex *p);
 int						exec_command(t_command *commands_list);
 int						if_is_buil(t_command *command);
 void    				readout_append(t_command *node1, t_pipex *p);
+void    				readout_append_2(t_command *node1, t_pipex *p);
 void    				excut_butlin(t_command *node1, char **env);
 #endif
