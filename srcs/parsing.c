@@ -125,7 +125,7 @@ int	parse_command(char *line)
 	// print_list(data->list);
 	// printf("\n\n");
 	data->list = expander_command(data->list);
-	// print_list(data->list);
+	print_list(data->list);
 	// printf("\n\n");
 	// printf("\n\n");
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");

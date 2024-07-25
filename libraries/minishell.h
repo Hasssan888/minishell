@@ -265,6 +265,7 @@ void					ft_count_pipe(t_command *list, t_pipex *p);
 void					ft_count_read_out(t_command *node, t_pipex *p);
 void					ft_count_read_in(t_command *node, t_pipex *p);
 void					open_outfile(t_command *node, t_pipex *p);
+void					open_infile(t_command *node, t_pipex *p);
 void					ft_count_here_doc(t_command *node, t_pipex *p);
 char					*function(char **env);
 char					*slash(char *mycmdargs);

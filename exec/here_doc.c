@@ -54,13 +54,13 @@ void	here_doc(t_command *node, t_pipex *pipex)
 {
 	printf("d5al here_doc\n");
 	char	*str;
-	// int 	status = 0;
+	int 	status = 0;
 
-	// int pid = fork();
-	// if (pid == 0)
-	// {
-	// 	signal(SIGQUIT, SIG_DFL);
-	// 	signal(SIGINT, SIG_DFL);
+	int pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
 		
 		pipex->tb = malloc(sizeof(int) * pipex->count_here_doc);
 		pipex->line = readline("> ");
@@ -92,16 +92,16 @@ void	here_doc(t_command *node, t_pipex *pipex)
 		}
 		free(pipex->line);
 		free(str);
-	// }
-	// else
-	// 	waitpid(pid , &status, 0);
-	// if(WIFSIGNALED(status))
-	// {
-	// 	if (WTERMSIG(status) == SIGINT)
-	// 		data->exit_status = 130;
-	// }
-	// else
-	// 	data->exit_status = 2;
+	}
+	else
+		waitpid(pid , &status, 0);
+	if(WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			data->exit_status = 130;
+	}
+	else
+		data->exit_status = 2;
 }
 
 void	open_here_doc(t_command *node, t_pipex *pipex)
@@ -140,11 +140,11 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 		cur = cur->next;
 	}
 	pipex->strs[pipex->j + 1] = NULL;
-	pipex->j = 0;
-	while (pipex->strs[pipex->j])
-	{
-		printf("pipex->strs[%d] = %s\n", pipex->j ,pipex->strs[pipex->j]);
-		pipex->j++;
-	}
+	// pipex->j = 0;
+	// while (pipex->strs[pipex->j])
+	// {
+	// 	printf("pipex->strs[%d] = %s\n", pipex->j ,pipex->strs[pipex->j]);
+	// 	pipex->j++;
+	// }
 	
 }
