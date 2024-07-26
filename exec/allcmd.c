@@ -14,20 +14,33 @@
 
 void	infile(t_command *node1, char **env, t_pipex *p)
 {
+	t_command *cur = node1;
+	while (cur->next)
+	{
+		if (cur->next->type && (cur->next->type == PIPE || cur->next->type == RED_OUT))
+			break;
+		cur = cur->next;
+	}
+	printf("d5al infile\n");
+	if (node1->next)
+		printf("node1->next->value = %s\n", node1->next->args[0]);
 	if (p->indixe == 1 && p->count_pipe == 0)
+	{
 		exit(1);
+	}
 	close(p->end[0]);
 	dup2(p->infile, STDIN_FILENO);
 	close(p->infile);
-	if (node1->next && node1->next->type == PIPE)
+	if (cur->next && cur->next->type == PIPE)
 	{
+		printf("dup2 end[1]\n");
 		dup2(p->end[1], STDOUT_FILENO);
 		close(p->end[1]);
 	}
-	else if (node1->next && (node1->next->type == RED_OUT
-			|| node1->next->type == APP))
+	else if (cur->next && (cur->next->type == RED_OUT
+			|| cur->next->type == APP))
 	{
-		readout_append(node1, p);
+		readout_append(cur, p);
 		dup2(p->outfile, STDOUT_FILENO);
 		close(p->outfile);
 	}

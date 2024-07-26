@@ -95,3 +95,35 @@ void	open_outfile(t_command *node, t_pipex *p)
 	p->outfile = p->fd[p->i - 1];
 	free(p->fd);
 }
+
+void	open_infile(t_command *node, t_pipex *p)
+{
+	t_command	*cur;
+
+	p->fd = malloc(sizeof(int) * p->count_read_in);
+	if (p->fd == NULL)
+	{
+		perror("malloc");
+		exit(1);
+	}
+	p->i = 0;
+	cur = node;
+	while (cur && p->i < p->count_read_in)
+	{
+		if (cur->type == PIPE)
+			break ;
+		if (cur->type == RED_IN)
+		{
+			p->fd[p->i] = open(cur->args[0], O_RDONLY, 0644);
+			if 	(p->fd[p->i] == -1)
+			{
+				printf("%s: Permission denied\n", p->cur->args[0]);
+				p->indixe = 1;
+			}
+			p->i++;
+		}
+		cur = cur->next;
+	}
+	p->infile = p->fd[p->i - 1];
+	free(p->fd);
+}

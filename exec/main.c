@@ -89,41 +89,29 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	return (p->pid);
 }
 
-void	skip_prh(t_pipex *p)
-{
-	if (p->cur->type == RED_IN)
-	{
-		p->infile = open(p->cur->args[0], O_RDONLY, 0644);
-		if (p->infile == -1)
-		{
-			printf("%s: Permission denied\n", p->cur->args[0]);
-			p->indixe = 1;
-		}
-		p->flag = 1;
-	}
-	if (p->cur->type == PIPE)
-	{
-		p->indixe = 0;
-		// printf("d5al lhna\n");
-		if (p->cur->next && p->cur->next->type == HER_DOC)
-			p->k++;
-		printf("p->k = %d\n", p->k);
-		// 	ft_count_here_doc(p->cur, p);
-		// 	printf("p->count_here_doc = %d\n", p->count_here_doc);
-		// 	if (p->count_here_doc > 0)
-		// 	{
-		// 		printf("l9a here_doc\n");
-		// 		open_here_doc(p->cur->next, p);
-		// 	}
+// void	skip_prh(t_pipex *p)
+// {
+// 	if (p->cur->type == RED_IN)
+// 	{
+// 		open_infile(p->cur, p);
+		// p->infile = open(p->cur->args[0], O_RDONLY, 0644);
+		// if (p->infile == -1)
+		// {
+		// 	printf("%s: Permission denied\n", p->cur->args[0]);
+		// 	p->indixe = 1;
 		// }
-	}
-	if (p->cur->type == HER_DOC)
-	{
-		// here_doc(p->cur, p);
-		p->flag = 2;
-	}
-	p->cur = p->cur->next;
-}
+// 		p->flag = 1;
+// 	}
+// 	if (p->cur->type == PIPE)
+// 	{
+// 		p->indixe = 0;
+// 		if (p->cur->next && p->cur->next->type == HER_DOC)
+// 			p->k++;
+// 	}
+// 	if (p->cur->type == HER_DOC)
+// 		p->flag = 2;
+// 	p->cur = p->cur->next;
+// }
 
 void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 {
@@ -134,17 +122,39 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 	{
 		if (p->cur->type == PIPE || p->cur->type == RED_IN
 			|| p->cur->type == HER_DOC)
-			skip_prh(p);
+		{
+			if (p->cur->type == RED_IN)
+			{
+				// p->infile = open(p->cur->args[0], O_RDONLY, 0644);
+				// if (p->infile == -1)
+				// {
+				// 	printf("%s: Permission denied\n", p->cur->args[0]);
+				// 	p->indixe = 1;
+				// }
+				// open_infile(p->cur, p);
+				p->flag = 1;
+			}
+			if (p->cur->type == PIPE)
+			{
+				ft_count_read_in(p->cur, p);
+				if (p->count_read_in > 0)
+					open_infile(p->cur->next, p);
+				// p->indixe = 0;
+				// if (p->cur->next && p->cur->next->type == HER_DOC)
+				// 	p->k++;
+			}
+			// if (p->cur->type == HER_DOC)
+			// 	p->flag = 2;
+			p->cur = p->cur->next;
+
+			// skip_prh(p);
+		}
 		else if ((p->cur->type != RED_OUT || p->cur->type != APP)
 			&& p->cur->type == CMD)
 		{
 			printf("cmd\n");
 			if (p->cur->next && p->cur->next->type == HER_DOC)
-			{
-				// here_doc(p->cur, p);
 				p->flag = 2;
-			}
-			printf("flag == %d\n", p->flag);
 			p->r = fork_pipe(p->cur, ev, p);
 			p->flag = 0;
 			p->cur = p->cur->next;
@@ -162,9 +172,11 @@ int	func(t_command *list)
 	ft_count_pipe(list, &pipex);
 	ft_count_read_out(list, &pipex);
 	ft_count_read_in(list, &pipex);
-	// if (ft_count_read_out > 0)
-	// 	open_outfile(list, &pipex);
+	printf("pipex.count_in = %d\n", pipex.count_read_in);
+	if (pipex.count_read_in > 0)
+		open_infile(list, &pipex);
 	printf("pipex.count_here_doc = %d\n", pipex.count_here_doc );
+	
 	if (pipex.count_here_doc > 0)
 		open_here_doc(list, &pipex);
 	ft_pipe(list, data->envirenment, &pipex);
@@ -173,14 +185,17 @@ int	func(t_command *list)
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
 		pipex.i = wait(NULL);
 	}
-	pipex.i = 0;
-	while (pipex.strs[pipex.i])
+	if (pipex.count_here_doc > 0)
 	{
-		unlink(pipex.strs[pipex.i]);
-		free(pipex.strs[pipex.i]);
-		pipex.i++;
+		pipex.i = 0;
+		while (pipex.strs[pipex.i])
+		{
+			unlink(pipex.strs[pipex.i]);
+			// free(pipex.strs[pipex.i]);
+			pipex.i++;
+		}
+		free(pipex.strs);
 	}
-	free(pipex.strs);
 	
 	// unlink("file_here_doc.txt");
 	return (0);
