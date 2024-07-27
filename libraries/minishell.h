@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/25 09:39:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/27 14:44:37 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ t_env					*get_env_ele_ptr(char *env_val);
 void					print_array(char **array);
 // t_env					*sort_list(t_env *env);
 int						export(t_command *cmd, t_env *env);
-int						unset(char *env_var, t_env *envirenement);
+int						unset(char **env_var, t_env *envirenement);
 
 // general purpose utiles
 

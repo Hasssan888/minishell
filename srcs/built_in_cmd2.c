@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/27 13:09:03 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/27 14:45:20 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,9 @@ void print_export_env(t_env **env, int env_len)
 	while(i < env_len)
 	{
 		if (!env[i]->env_key)
-			printf("%s\n", env[i]->env_value);
+			printf("declare -x %s\n", env[i]->env_value);
 		else if (env[i]->env_key != NULL)
-			printf("%s=\"%s\"\n", env[i]->env_value, env[i]->env_key);
+			printf("declare -x %s=\"%s\"\n", env[i]->env_value, env[i]->env_key);
 		i++;
 	}
 }
@@ -280,16 +280,18 @@ void	del_node(t_env **env, t_env *env_var)
 	}
 }
 
-int	unset(char *env_var, t_env *envirenement)
+int	unset(char **env_var, t_env *envirenement)
 {
+	int i = 0;
 	t_env	*env_ptr;
-
-	if (!env_var)
-		return (0);
-	env_ptr = get_env_ele_ptr(env_var);
-	if (!env_ptr)
-		return (1);
-	del_node(&envirenement, env_ptr);
+	
+	while(env_var[i] != NULL)
+	{
+		env_ptr = get_env_ele_ptr(env_var[i++]);
+		if (!env_ptr)
+			continue;
+		del_node(&envirenement, env_ptr);		
+	}
 	data->expanded = 0;
 	return (0);
 }

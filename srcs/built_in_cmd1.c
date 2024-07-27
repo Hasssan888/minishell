@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/26 17:31:39 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/27 14:43:21 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,7 @@ int	is_builtin_cmd(t_command *command)
 	else if (ft_strcmp(command->value, "export") == 0)
 		export(command, data->env);
 	else if (ft_strcmp(command->value, "unset") == 0)
-		unset(command->args[1], data->env);
+		unset(&command->args[1], data->env);
 	else if (ft_strcmp(command->value, "exit") == 0)
 		exit_(command);
 	else

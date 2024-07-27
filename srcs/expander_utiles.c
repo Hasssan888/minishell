@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 14:16:43 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/27 13:22:03 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 		{
 			quote = arg[j++];
 			while (arg[j] && arg[j] != quote)
-			{
 				argument[k++] = arg[j++];
-			}
 			j++;
 		}
 		else
