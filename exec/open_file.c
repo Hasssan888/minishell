@@ -48,6 +48,8 @@ void	ft_count_read_in(t_command *node, t_pipex *p)
 	p->count_read_in = 0;
 	while (cur)
 	{
+		if (cur->type == PIPE)
+			break;
 		if (cur->type == RED_IN)
 			p->count_read_in++;
 		cur = cur->next;
@@ -98,6 +100,7 @@ void	open_outfile(t_command *node, t_pipex *p)
 
 void	open_infile(t_command *node, t_pipex *p)
 {
+	printf("d5al openfile\n");
 	t_command	*cur;
 
 	p->fd = malloc(sizeof(int) * p->count_read_in);
@@ -115,6 +118,7 @@ void	open_infile(t_command *node, t_pipex *p)
 		if (cur->type == RED_IN)
 		{
 			p->fd[p->i] = open(cur->args[0], O_RDONLY, 0644);
+			printf("p->fd[%d] = %d\n", p->i,p->fd[p->i]);
 			if 	(p->fd[p->i] == -1)
 			{
 				printf("%s: Permission denied\n", p->cur->args[0]);
@@ -124,6 +128,7 @@ void	open_infile(t_command *node, t_pipex *p)
 		}
 		cur = cur->next;
 	}
+	// printf("p->fd[%d] = %d\n", p->i,p->fd[p->i - 1]);
 	p->infile = p->fd[p->i - 1];
 	free(p->fd);
 }

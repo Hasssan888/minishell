@@ -125,6 +125,8 @@ typedef struct s_token
 
 typedef struct s_pipex
 {
+	int					pipe[2];
+	int					w;
 	int					i;
 	int					j;
 	int					k;
