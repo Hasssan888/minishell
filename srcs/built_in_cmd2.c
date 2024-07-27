@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/27 11:10:47 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/27 13:09:03 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	pwd(void)
 	data->expanded = 0;
 	free(cwd);
 }
+
 int ft_env_lenght(t_env *env)
 {
 	int env_len = 0;
@@ -56,66 +57,109 @@ char **env_to_array_(t_env *env, int *len)
 	return (array);
 }
 
-char **sort_array(char **array, int arr_len)
+// char **sort_array(char **array, int arr_len)
+// {
+// 	int i = 0;
+// 	int j = 0;
+	
+// 	while (i < arr_len - 1)
+// 	{
+// 		j = 0;
+// 		while (j < arr_len - i - 1)
+// 		{
+// 			if (ft_strcmp(array[j], array[j + 1]) > 0)
+// 			{
+// 				char *temp = array[j];
+// 				array[j] = array[j + 1];
+// 				array[j + 1] = temp;
+// 			}
+// 			j++;
+// 		}
+// 		i++;
+// 	}
+// 	array[arr_len] = NULL;
+// 	return (array);
+// }
+
+
+int env_c_len(t_env *env_)
+{
+	int len = 0;
+	while(env_ != NULL)
+	{
+		len++;
+		env_ = env_->next;
+	}
+	return (len);
+}
+
+t_env **sort_env(t_env **env_, int env_len)
 {
 	int i = 0;
 	int j = 0;
 	
-	while (i < arr_len - 1)
+	while (i < env_len - 1)
 	{
 		j = 0;
-		while (j < arr_len - i - 1)
+		while (j < env_len - i - 1)
 		{
-			if (ft_strcmp(array[j], array[j + 1]) > 0)
+			if (ft_strcmp(env_[j]->env_value, env_[j + 1]->env_value) > 0)
 			{
-				char *temp = array[j];
-				array[j] = array[j + 1];
-				array[j + 1] = temp;
+				t_env *temp = env_[j];
+				env_[j] = env_[j + 1];
+				env_[j + 1] = temp;
 			}
 			j++;
 		}
 		i++;
 	}
-	array[arr_len] = NULL;
-	return (array);
+	// env_[env_len] = NULL;
+	return (env_);
 }
 
-void print_export_env(t_env *env)
+
+void print_export_env(t_env **env, int env_len)
 {
-	if (!env)
-		return ;
-	while(env != NULL)
+	int i = 0;
+	while(i < env_len)
 	{
-		if (!env->env_key)
-			printf("%s\n", env->env_value);
-		else if (env->env_key != NULL)
-			printf("%s=\"%s\"\n", env->env_value, env->env_key);
-		// else if (!env->env_key[0])
-		// 	printf("%s=""\n", env->env_value);
-		env = env->next;
+		if (!env[i]->env_key)
+			printf("%s\n", env[i]->env_value);
+		else if (env[i]->env_key != NULL)
+			printf("%s=\"%s\"\n", env[i]->env_value, env[i]->env_key);
+		i++;
 	}
 }
 
 void print_sorted_env(t_env *env)
 {
-	int env_len = 0;
-	t_env *env__ = NULL;
-	char **sorted_arr = env_to_array_(env, &env_len);
-	if (data != NULL && data->envirenment != NULL)
+	t_env *env_ = env;
+	int env_len = env_c_len(env_);
+	int i = 0;
+	t_env **env__ = malloc((env_len + 1) * sizeof(t_env *));
+	while (i < env_len)
 	{
-		free_array(data->envirenment);
-		data->envirenment = NULL;
+		env__[i] = env_;
+		env_ = env_->next;
+		i++;
 	}
-	data->envirenment = sorted_arr;
-	sorted_arr = sort_array(sorted_arr, env_len);
-	env__ = creat_env(sorted_arr);
-	print_export_env(env__);
-	if (env__ != NULL)
-		clear_env(&env__);
-	// data->env = env;
-	// print_array(sorted_arr);
-		// free_array(sort_array);
+	env__[i] = NULL;
+	env__ = sort_env(env__, env_len);
+	print_export_env(env__, env_len);
+	free(env__);
 }
+	// char **sorted_arr = env_to_array_(env, &env_len);
+	// if (data != NULL && data->envirenment != NULL)
+	// {
+	// 	free_array(data->envirenment);
+	// 	data->envirenment = NULL;
+	// }
+	// data->envirenment = sorted_arr;
+	// sorted_arr = sort_array(sorted_arr, env_len);
+	// env__ = creat_env(sorted_arr);
+	// print_export_env(env__);
+	// if (env__ != NULL)
+	// 	clear_env(&env__);
 
 int valid_identifier(char *str)
 {
@@ -125,8 +169,10 @@ int valid_identifier(char *str)
 		return (0);
 	while(str[++i] && str[i] != '=')
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
+		if (str[i] == '+')
 			break;
+		else if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
 	}
 	if (str[i] && str[i] == '+' && str[i + 1] != '=')
 		return (0);
@@ -144,26 +190,16 @@ int	export(t_command *cmd, t_env *env)
 	}
 	while(cmd->args[++i] != NULL)
 	{
-		
-		if (!valid_identifier(cmd->args[i])) // || cmd->args[2] != NULL
+		if (!valid_identifier(cmd->args[i]))
 		{
 			ft_perror ("minishell: export: not a valid identifier\n");
 			data->exit_status = 1;
-			// free_array(splited);
 			continue;
-			// return (0);
 		}
 		char **splited = ft_split(cmd->args[i], '=');
 		data->str1 = ft_strchr(cmd->args[i], '=');
 		char *trimed = ft_strtrim(splited[0], "+");
 		t_env *env_ptr = get_env_ele_ptr(trimed);
-		// if (data->str1 != NULL && data->str1[0] == '=')
-		// {
-		// 	if (env_ptr != NULL)
-		// 		env_ptr->env_key = ft_strdup(&data->str1[1]);
-		// 	else
-		// 		add_back(&data->env, lstnew(ft_strdup(splited[0]), ft_strdup(&data->str1[1])));
-		// }
 		if (env_ptr != NULL && splited != NULL && splited[0] != NULL && data->str1 != NULL)
 		{
 			if (env_ptr->env_key != NULL && splited[0][ft_strlen(splited[0]) - 1] == '+')
