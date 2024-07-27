@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/26 11:58:37 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/27 16:05:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ char	*get_prompt(void)
 
 void	init_minishell(int ac, char **av, char **env)
 {
-	int len;
 	data->av = av;
 	data->ac = ac;
 	data->redirect = 0;
@@ -61,8 +60,7 @@ void	init_minishell(int ac, char **av, char **env)
 	data->envirenment = NULL;
 	data->exit_status = 0;
 	data->env = creat_env(env);
-	data->envirenment = env_to_array_(data->env, &len);
-	// data->envirenment = env;
+	data->envirenment = env_to_array_(data->env);
 	data->syntax_error = false;
 	data->prompt = get_prompt();
 	data->new_command = NULL;

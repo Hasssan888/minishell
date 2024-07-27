@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:04 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/27 15:07:25 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/27 15:28:31 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		ft_error_2();
 	else if (p->pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
 		printf("d5al process child\n");
 		child_process(node1, env, p);
 	}

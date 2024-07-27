@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/27 14:45:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/27 16:05:06 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int ft_env_lenght(t_env *env)
 	return (env_len);
 }
 
-char **env_to_array_(t_env *env, int *len)
+char **env_to_array_(t_env *env)
 {
 	// env_ptr1 = env;
 	int i = 0;
@@ -53,7 +53,7 @@ char **env_to_array_(t_env *env, int *len)
 		env = env->next;
 	}
 	array[i] = NULL;
-	*len = env_len;
+	// *len = env_len;
 	return (array);
 }
 

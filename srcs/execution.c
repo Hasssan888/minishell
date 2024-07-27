@@ -6,11 +6,25 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:45:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/24 18:14:25 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/27 16:42:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libraries/minishell.h"
+
+void parent_sigint_handler(int signo) 
+{
+	if (signo == SIGINT)
+	    printf("Parent caught SIGINT (Ctrl+C)\n");
+	else if (signo == SIGQUIT)
+	    printf("Parent caught SIGINT (Ctrl+\\)\n");
+}
+
+void child_sigint_handler(int signo) 
+{
+	(void) signo;
+	exit(0);
+}
 
 int	exec_command(t_command *commands_list)
 {
@@ -18,8 +32,13 @@ int	exec_command(t_command *commands_list)
 	int		fd[2];
 	int		prev_fd;
 	char	*cmd_path;
-
+	
 	prev_fd = -1;
+	struct sigaction sa_parent, sa_child;
+	sa_parent.sa_handler = parent_sigint_handler;
+    sigemptyset(&sa_parent.sa_mask);
+    sa_parent.sa_flags = 0;
+	
 	while (commands_list != NULL)
 	{
 		int		fd_out = 1;
@@ -56,6 +75,10 @@ int	exec_command(t_command *commands_list)
 				}
 				else if (pid == 0)
 				{
+					sa_child.sa_handler = child_sigint_handler;
+					sigemptyset(&sa_child.sa_mask);
+					sa_child.sa_flags = 0;
+					sigaction(SIGINT, &sa_child, NULL);
 					dup2(fd_out, STDOUT_FILENO);
 					if (prev_fd != -1)
 					{
