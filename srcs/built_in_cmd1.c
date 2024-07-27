@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/25 09:30:25 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:31:39 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	check_errors(void)
 		ft_perror("minishell: cd: No such file or directory\n");
 	else if (errno == ENOTDIR)
 		ft_perror("minishell: cd: No such file or directory\n");
+	data->exit_status = 1;
 }
 
 // char *getenvval(char **env_ptr)
@@ -91,6 +92,7 @@ int	cd(char **args)
 	if (args[0] != NULL && args[1] != NULL)
 	{
 		ft_perror("cd: too many arguments\n");
+		data->exit_status = 1;
 		return (0);
 	}
 	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
@@ -116,6 +118,7 @@ int	cd(char **args)
 		{
 			// free(path);
 			ft_perror("cd: HOME not set\n");
+			data->exit_status = 1;
 			return (0);
 		}
 		change_dir(env, NULL);
@@ -137,6 +140,7 @@ int	env(t_env *env)
 			printf("%s=%s\n", env->env_value, env->env_key);
 		env = env->next;
 	}
+	data->expanded = 0;
 	return (0);
 }
 
@@ -215,6 +219,7 @@ void exit_(t_command *command)
 	}
 	else if (command->args[1] != NULL)
 		exit(ft_atoi(command->args[1]) % 256);
+		// exit(ft_atoi(command->args[1]));
 	printf("exit\n");
 	clear_list(&data->list);
 	exit(0);

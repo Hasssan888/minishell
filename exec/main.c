@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:04 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/16 12:45:06 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/07/26 11:58:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,11 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	if (p->pid == -1)
 		ft_error_2();
 	else if (p->pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		child_process(node1, env, p);
+	}
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[0]);
