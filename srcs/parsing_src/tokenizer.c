@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/24 15:30:11 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 09:28:06 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 int	get_token_type(char *token)
 {

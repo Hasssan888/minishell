@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/27 15:21:16 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/28 10:04:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,6 @@ void	here_doc(t_command *node, t_pipex *pipex)
 	int pid = fork();
 	if (pid == 0)
 	{
-		signal(SIGQUIT, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
-		
 			
 			pipex->line = readline("> ");
 			printf("pipex->line = %s\n", pipex->line);

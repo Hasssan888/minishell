@@ -6,32 +6,31 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/27 16:05:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 09:27:10 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 t_data	*data = NULL;
 
 void	sig_handler(int signal)
 {
-	char	*prompt;
+	// char	*prompt;
 
-	prompt = get_prompt();
-	if (data->ignore_sig == 0)
-	{	
-		// if (signal == SIGQUIT)
-		// 	return ;
-		if (signal == SIGINT)
-		{
-			printf("\n%s", prompt);
-			data->exit_status = 130;
-		}
+	// prompt = get_prompt();
+	
+		// rl_on_new_line();
+		// rl_replace_line("", 0);
+		// rl_redisplay();
+	if (signal == SIGINT)
+	{
+		printf("\n%s", data->prompt);
+		data->exit_status = 130;
 	}
-	else
-		data->ignore_sig = 0;
-	free(prompt);
+	else if (signal == SIGQUIT)
+		data->exit_status = 131; 
+	// free(prompt);
 }
 
 char	*get_prompt(void)
@@ -105,10 +104,11 @@ int	main(int ac, char **av, char **env)
 	data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(ac, av, env);
 	// print_minishell();
+
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
 	signal(SIGINT, sig_handler);
 	command = readline(data->prompt);
-	signal(SIGINT, SIG_IGN);
 	while (command != NULL)
 	{
 		pipex.save1 = dup(STDIN_FILENO);
@@ -116,9 +116,11 @@ int	main(int ac, char **av, char **env)
 		parse_command(command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
+
 		signal(SIGINT, sig_handler);
+		signal(SIGTSTP, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 		command = readline(data->prompt);
-		signal(SIGINT, SIG_IGN);
 	}
 	printf("exit\n");
 	clear_history();

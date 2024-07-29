@@ -6,12 +6,12 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/27 14:43:21 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 09:34:23 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	get_old_current_pwd()
 {
@@ -24,21 +24,6 @@ void	get_old_current_pwd()
 	if (pwd != NULL && pwd->env_key != NULL)
 		free(pwd->env_key);
 	pwd->env_key = getcwd(NULL, 0);
-	
-	// char *old;
-	// if (data->pwd != NULL)
-	// {
-	// 	if (!*(data->old_pwd))
-	// 		free(*(data->old_pwd));
-	// 	old = *(data->current_pwd);
-	// 	*(data->old_pwd) = old;
-	// }
-	// if (data->current_pwd != NULL)
-	// {
-	// 	if (!*(data->current_pwd))
-	// 		free(*(data->current_pwd));
-	// 	*(data->current_pwd) = ft_strjoin(ft_strdup("PWD="), getcwd(NULL, 0));
-	// }
 }
 
 int	change_dir(t_env *env, char *path)
@@ -59,7 +44,7 @@ int	change_dir(t_env *env, char *path)
 	return (1);
 }
 
-void	check_errors(void)
+void	check_cd_errors(void)
 {
 	if (errno == EACCES)
 		ft_perror("minishell: cd: Permission denied\n");
@@ -70,24 +55,9 @@ void	check_errors(void)
 	data->exit_status = 1;
 }
 
-// char *getenvval(char **env_ptr)
-// {
-// 	char *old = NULL;
-// 	if (env_ptr != NULL)
-// 	{
-// 		old = *(env_ptr);
-// 		printf("old pwd: %s\n", old);
-// 		old = ft_strchr(old, '=');
-// 		old = ft_strdup(&old[1]); 	
-// 		free(*env_ptr);
-// 	}
-// 	return (old);
-// }
-
 int	cd(char **args)
 {
 	t_env *env = NULL;
-	// char *path = NULL;
 
 	if (args[0] != NULL && args[1] != NULL)
 	{
@@ -101,22 +71,16 @@ int	cd(char **args)
 		printf("path: %s\n", env->env_key);
 		if (env != NULL && env->env_key != NULL)
 		{
-			// printf("%s\n", *(data->old_pwd));
 			printf("%s\n", env->env_key);
 			change_dir(env, NULL);
-			// free(env->env_key);
-			// free(args[0]);
 		}
 		return (1);
 	}
 	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
 	{
-		// path = get_env_element("HOME");
 		env = get_env_ele_ptr("HOME");
-		// printf("%s\n", path);
 		if (!env || !env->env_key)
 		{
-			// free(path);
 			ft_perror("cd: HOME not set\n");
 			data->exit_status = 1;
 			return (0);
@@ -127,7 +91,7 @@ int	cd(char **args)
 	else if (args != NULL && change_dir(NULL, args[0]))
 		return (1);
 	else
-		check_errors();
+		check_cd_errors();
 	return (0);
 }
 
@@ -135,7 +99,6 @@ int	env(t_env *env)
 {
 	while (env != NULL)
 	{
-		// if (ft_strchr(env->value, '='))
 		if (env->env_key != NULL)
 			printf("%s=%s\n", env->env_value, env->env_key);
 		env = env->next;
@@ -162,10 +125,7 @@ bool check_echo_options(char *cmd)
 	if (!cmd)
 		return (flag);
 	if (cmd[j] == '-')
-	{
 		while(cmd[++j] == 'n');
-			// j++;
-	}
 	if (!cmd[j])
 		flag = true;
 	return (flag);

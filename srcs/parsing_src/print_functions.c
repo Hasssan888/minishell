@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:37:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/23 18:29:59 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 09:27:42 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	print_minishell(void)
 {
@@ -57,18 +57,6 @@ void	print_type(int type)
 	else if (type == PIPE)
 		printf("│ type: ----------- PIPE    │\n└───────────────────────────┘\n\n");
 }
-	// else if (type == LIST)
-	// 	printf("│ type: ----------- LIST    │\n└───────────────────────────┘\n\n");
-	// else if (type == BACK)
-	// 	printf("│ type: ----------- BACK    │\n└───────────────────────────┘\n\n");
-	// else if (type == ARG)
-	// 	printf("│ type: ----------- ARG     │\n└───────────────────────────┘\n\n");
-	// else if (type == OR_OP)
-		// printf("│ type: ----------- OR_OP   │\n└───────────────────────────┘\n\n");
-	// else if (type == AND_OP)
-		// printf("│ type: ----------- AND_OP  │\n└───────────────────────────┘\n\n");
-	// else if (type == FLE)
-		// printf("│ type: ----------- FLE     │\n└───────────────────────────┘\n\n");
 
 void	print_args(char **args)
 {

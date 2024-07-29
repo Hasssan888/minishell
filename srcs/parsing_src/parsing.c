@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/27 16:27:39 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 09:27:22 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 t_command	*syntax_error(t_command *list_command, t_command *head)
 {
@@ -132,8 +132,8 @@ int	parse_command(char *line)
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
 
-	// is_builtin_cmd(data->list);
-	exec_command(data->list);
+	is_builtin_cmd(data->list);
+	// exec_command(data->list);
 	// func(data->list);
 	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
 	clear_list(&data->list);

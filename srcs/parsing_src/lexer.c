@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:50:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/22 15:26:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 09:26:56 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 int	check_unqoted(char *line)
 {

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/27 16:05:34 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 09:24:45 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,10 @@ typedef enum s_types
 # define APP 			4
 # define HER_DOC 		5
 
+// #define  sigact;
+
+typedef struct sigaction sigact;
+
 typedef struct s_env
 {
 	// char				*value;
@@ -97,6 +101,7 @@ typedef struct s_data
 	char				*str2;
 	t_command			*list;
 	t_command			*head;
+	struct sigaction sa_child;
 	char				*prompt;
 	char				*expanded;	
 	char				**old_pwd;
@@ -186,15 +191,18 @@ char					*get_prompt(void);
 void					pwd(void);
 int						env(t_env *env);
 int						echo(char **cmd);
-// int						export(t_command *cmd, t_env *envir);
 int						is_builtin_cmd(t_command *command);
 char					*get_cmd_path(char *cmd_);
 char					*get_word_(char *line, char *del);
 t_env					*get_env_ele_ptr(char *env_val);
 void					print_array(char **array);
-// t_env					*sort_list(t_env *env);
 int						export(t_command *cmd, t_env *env);
 int						unset(char **env_var, t_env *envirenement);
+t_env					**sort_env(t_env **env_, int env_len);
+int					 	valid_identifier(char *str);
+void					print_sorted_env(t_env *env);
+void					print_export_env(t_env **env, int env_len);
+int					 	env_c_len(t_env *env_);
 
 // general purpose utiles
 
@@ -222,6 +230,10 @@ char					*duplicate_word(char *command_line, int *i, int j);
 void					print_minishell(void);
 void					print_prompt(void);
 void					ft_perror(char *message);
+
+// signals hanling
+
+void					child_sig_handler(int signo);
 
 
 // envirenement utiles

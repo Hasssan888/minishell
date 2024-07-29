@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/20 18:37:46 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 09:27:08 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 char	*get_env_element(char *env_var)
 {

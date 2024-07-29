@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 10:31:55 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/15 10:34:48 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 09:26:51 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/libft/libft.h"
+#include "../../libraries/minishell.h"
 
 static size_t	word_count(const char *s, char *c)
 {
