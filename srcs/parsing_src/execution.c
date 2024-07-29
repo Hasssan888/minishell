@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:45:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 14:40:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:21:42 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,18 @@ int	exec_command(t_command *commands_list)
 				if (commands_list->next != NULL
 					&& commands_list->next->type == PIPE)
 					pipe(fd);
-				else if (commands_list->next != NULL && (commands_list->next->type == RED_OUT || commands_list->next->type == RED_IN))
-				{
-					t_command *ptr = commands_list->next;
-					while(ptr != NULL && (ptr->type == RED_OUT || ptr->type == RED_IN))
-					{
-						if (ptr->type == RED_OUT)
-							fd_out = open(ptr->args[0], O_TRUNC | O_CREAT | O_RDWR, 0744);
-						if (ptr->type == RED_IN)
-							prev_fd = open(ptr->args[0], O_RDONLY);
-						ptr = ptr->next;
-					}
-				}
+				// else if (commands_list->next != NULL && (commands_list->next->type == RED_OUT || commands_list->next->type == RED_IN))
+				// {
+				// 	t_command *ptr = commands_list->next;
+				// 	while(ptr != NULL && (ptr->type == RED_OUT || ptr->type == RED_IN))
+				// 	{
+				// 		if (ptr->type == RED_OUT)
+				// 			fd_out = open(ptr->args[0], O_TRUNC | O_CREAT | O_RDWR, 0744);
+				// 		if (ptr->type == RED_IN)
+				// 			prev_fd = open(ptr->args[0], O_RDONLY);
+				// 		ptr = ptr->next;
+				// 	}
+				// }
 				pid = fork();
 				if (pid == -1)
 				{
@@ -117,16 +117,17 @@ int	exec_command(t_command *commands_list)
 					wait(&data->exit_status);
 				}
 			}
-			// else if (commands_list->type == RED_OUT)
-			// {
-			// 	// open(commands_list->args[0], O_CREAT | O_RDWR, 0644);
-			// 	while(commands_list != NULL && commands_list->type == RED_OUT)
-			// 	{
-			// 		open(commands_list->args[0], O_CREAT | O_RDWR, 0744);
-			// 		commands_list = commands_list->next;
-			// 	}
-			// 	continue;
-			// }
+			else if (commands_list->type >= 2 && commands_list->type <= 5)
+			{
+				// open(commands_list->args[0], O_CREAT | O_RDWR, 0644);
+				// while(commands_list != NULL && commands_list->type == RED_OUT)
+				// {
+				// 	open(commands_list->args[0], O_CREAT | O_RDWR, 0744);
+				// 	commands_list = commands_list->next;
+				// }
+				commands_list = commands_list->next;
+				continue;
+			}
 			else
 			{
 				printf("%s: command not found\n", commands_list->value);

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 14:17:57 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 19:30:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ char	*expand_vars(char *argument, int i)
 		{
 			expand_vars__(word);
 			free(word);
-
 		}
 		else
 		{
@@ -196,32 +195,57 @@ int is_ambigous(t_command *list)
 	return (1);
 }
 
-int _expander__extended(t_command *list)
+int is_empty(char *str)
 {
-	char **args = NULL;
-	char **splited = NULL;
-
-	// if (ft_strchr(list->value, '$'))
-	// {
-	list->value = expand_vars(list->value, 0);
-	list->value = unquote_arg(list, list->value, 0, 0);
-	if (!list->quoted && list->value != NULL && list->value[0])
-	{
-		splited = ft_split_str(list->value, " \t\v");
-		free(list->value);
-		list->value = ft_strdup(splited[0]);
-		if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
-		{
-			args = ft_arr_join(splited, &list->args[1]);	
-			list->args = args;
-		}
-		free_array(splited);
-	}	
-	// }
-	if (!is_ambigous(list))
-		return (0);
-	return (1);
+	int i = 0;
+	if (!str)
+		return (1);
+	while(str[i] && (str[i] == ' ' || str[i] == '\t'))
+		i++;
+	if (!str[i])
+		return 1;
+	return 0;
 }
+
+int split_expanded(t_command *list)
+{
+	int i = 0;
+	// char **args = NULL;
+	// char **splited = NULL;
+	
+	if (is_empty(list->value))
+	{
+		while(list->args[i] != NULL && is_empty(list->args[i]))
+			i++;
+		if (!list->args[i])
+		{
+			printf("[%s] [%d]\n", list->value, i);
+			clear_list(&list);
+			return (0);
+		}
+		list->value = list->args[i];
+		printf("[%s] [%d]\n", list->value, i);
+	}
+	// if (!list->quoted && list->value != NULL && list->value[0])
+	// {
+	// 	splited = ft_split_str(list->value, " \t\v");
+	// 	free(list->value);
+	// 	list->value = ft_strdup(splited[0]);
+	// 	if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+	// 	{
+	// 		args = ft_arr_join(splited, &list->args[i]);	
+	// 		list->args = args;
+	// 	}
+	// 	free_array(splited);
+	// }
+	return 1;
+}
+
+// int _expander__extended(t_command *list)
+// {
+	
+// 	return (1);
+// }
 
 int	expander_extended(t_command *list)
 {
@@ -240,7 +264,10 @@ int	expander_extended(t_command *list)
 		}
 		data->i++;
 	}
-	if (!_expander__extended(list))
+	list->value = expand_vars(list->value, 0);
+	list->value = unquote_arg(list, list->value, 0, 0);
+	
+	if (!split_expanded(list) || !is_ambigous(list))
 		return (0);
 	// list = list->next;
 	return (1);

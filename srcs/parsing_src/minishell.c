@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 14:36:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:20:04 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,16 @@ void	sig_handler(int signal)
 char	*get_prompt(void)
 {
 	char	*prompt1;
-	char	*prompt2;
 	char	*final_prompt;
 
-	prompt1 = ft_strjoin(ft_strdup(BWHT), getcwd(NULL, 0));
-	prompt2 = ft_strjoin(ft_strdup(BBLU "┌──(aziz㉿aelkheta)-[" COLOR_RESET),
-			prompt1);
-	final_prompt = ft_strjoin(prompt2, ft_strdup(BBLU "]\n└─$ " COLOR_RESET));
+	prompt1 = ft_strjoin(ft_strdup("┌──(aziz㉿aelkheta)-["), getcwd(NULL, 0));
+	final_prompt = ft_strjoin(prompt1, ft_strdup("]\n└─$ "));
+
+	
+	// prompt1 = ft_strjoin(ft_strdup(BWHT), getcwd(NULL, 0));
+	// prompt2 = ft_strjoin(ft_strdup(BBLU "┌──(aziz㉿aelkheta)-[" COLOR_RESET),
+	// 		prompt1);
+	// final_prompt = ft_strjoin(prompt2, ft_strdup(BBLU "]\n└─$ " COLOR_RESET));
 	return (final_prompt);
 }
 
@@ -109,6 +112,8 @@ int	main(int ac, char **av, char **env)
 	// signal(SIGTSTP, SIG_IGN);
 	// signal(SIGINT, sig_handler);
 	ignr_signals();
+	// command = readline(data->prompt);
+	// data->prompt = ft_strdup("minishell$ ");
 	command = readline(data->prompt);
 	while (command != NULL)
 	{

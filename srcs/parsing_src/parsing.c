@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 15:01:47 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 19:25:54 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,17 +123,18 @@ int	parse_command(char *line)
 	line = lexer_command(line);
 	if (!line)
 		return 0;
-	printf("line after lexer: %s\n", line);
-	printf("\n\n");
+	// printf("line after lexer: %s\n", line);
+	// printf("\n\n");
 	tokens_list = tokenzer_command(line);
-	print_list(tokens_list);
-	printf("\n\n");
+	// print_list(tokens_list);
+	// printf("\n\n");
 	data->list = parser_command(tokens_list);
 	print_list(data->list);
 	printf("\n\n");
 	data->list = expander_command(data->list);
 	print_list(data->list);
 	printf("\n\n");
+	// delete_empty_nodes(data->list);
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
 
