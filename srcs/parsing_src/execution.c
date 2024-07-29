@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:45:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:26:34 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:23:44 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void sig_child_hanler(int signo) 
 {
+	data->ignore_sig = 1;
 	if (signo == SIGINT)
 	{
 		// printf("\n%s", data->prompt);
@@ -72,10 +73,10 @@ int	exec_command(t_command *commands_list)
 				}
 				else if (pid == 0)
 				{
-					
+					data->ignore_sig = 0;
 					signal(SIGTSTP, SIG_DFL);
-					signal(SIGINT, sig_child_hanler);
-					signal(SIGQUIT, sig_child_hanler);
+					signal(SIGINT, SIG_DFL);
+					signal(SIGQUIT, SIG_DFL);
 				
 					dup2(fd_out, STDOUT_FILENO);
 					if (prev_fd != -1)

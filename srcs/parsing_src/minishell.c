@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:27:10 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:26:39 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,18 @@ t_data	*data = NULL;
 
 void	sig_handler(int signal)
 {
-	// char	*prompt;
-
-	// prompt = get_prompt();
-	
+	if (!data->ignore_sig)
+		printf("\n");
+	if (signal == SIGINT && data->ignore_sig)
+	{
+		printf("\n%s", data->prompt);
 		// rl_on_new_line();
 		// rl_replace_line("", 0);
 		// rl_redisplay();
-	if (signal == SIGINT)
-	{
-		printf("\n%s", data->prompt);
 		data->exit_status = 130;
 	}
 	else if (signal == SIGQUIT)
 		data->exit_status = 131; 
-	// free(prompt);
 }
 
 char	*get_prompt(void)
@@ -51,7 +48,7 @@ void	init_minishell(int ac, char **av, char **env)
 	data->av = av;
 	data->ac = ac;
 	data->redirect = 0;
-	data->ignore_sig = 0;
+	data->ignore_sig = 1;
 	data->list = NULL;
 	data->expanded = NULL;
 	data->old_pwd = NULL;

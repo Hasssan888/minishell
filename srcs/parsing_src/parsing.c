@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:27:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:24:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,6 @@ t_command	*get_command_with_args()
 			data->_tokens_list = redirect_list(&data->head, &data->rdrct_head);
 			if (data->syntax_error)
 			{
-				// free(data->_tokens_list);
-				// syntax_error(data->_tokens_list, data->head);
-				// free_command(data->_tokens_list);
 				clear_list(&data->rdrct_head);
 				clear_list(&data->head);
 				return (NULL);
@@ -111,8 +108,8 @@ int	parse_command(char *line)
 	// printf("\n++++++++++++++++++ parsing is started +++++++++++++++++\n");
 	data->list = NULL;
 	// printf("line befor lexer: %s\n", line);
-	data->ignore_sig = 0;
 	data->syntax_error = 0;
+	data->ignore_sig = 0;
 	// printf("\n\n");
 	if (line != NULL && !line[0])
 		return (0);
@@ -124,16 +121,17 @@ int	parse_command(char *line)
 	// print_list(tokens_list);
 	// printf("\n\n");
 	data->list = parser_command(tokens_list);
-	print_list(data->list);
-	printf("\n\n");
+	// print_list(data->list);
+	// printf("\n\n");
 	data->list = expander_command(data->list);
-	print_list(data->list);
-	printf("\n\n");
+	// print_list(data->list);
+	// printf("\n\n");
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
 
-	is_builtin_cmd(data->list);
-	// exec_command(data->list);
+	// is_builtin_cmd(data->list);
+	exec_command(data->list);
+	data->ignore_sig = 1;
 	// func(data->list);
 	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
 	clear_list(&data->list);

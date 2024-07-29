@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:26:48 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:17:57 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char	*expand_vars(char *argument, int i)
 	while (argument[i])
 	{
 		char *word = _get_quoted___word(argument, &i);
-		printf("word: %s %d\n", word, i);
+		// printf("word: %s %d\n", word, i);
 		if (word != NULL && word[0] != '\'')
 		{
 			expand_vars__(word);
