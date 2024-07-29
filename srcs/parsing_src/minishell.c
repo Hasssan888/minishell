@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 14:26:39 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:36:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@ void	sig_handler(int signal)
 	if (signal == SIGINT && data->ignore_sig)
 	{
 		printf("\n%s", data->prompt);
-		// rl_on_new_line();
-		// rl_replace_line("", 0);
-		// rl_redisplay();
 		data->exit_status = 130;
 	}
 	else if (signal == SIGQUIT)
@@ -93,6 +90,13 @@ void clear_all()
 	free(data);
 }
 
+void ignr_signals()
+{
+	signal(SIGINT, sig_handler);
+	signal(SIGTSTP, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	char	*command;
@@ -101,10 +105,10 @@ int	main(int ac, char **av, char **env)
 	data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(ac, av, env);
 	// print_minishell();
-
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN);
-	signal(SIGINT, sig_handler);
+	// signal(SIGQUIT, SIG_IGN);
+	// signal(SIGTSTP, SIG_IGN);
+	// signal(SIGINT, sig_handler);
+	ignr_signals();
 	command = readline(data->prompt);
 	while (command != NULL)
 	{
@@ -113,10 +117,7 @@ int	main(int ac, char **av, char **env)
 		parse_command(command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
-
-		signal(SIGINT, sig_handler);
-		signal(SIGTSTP, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
+		ignr_signals();
 		command = readline(data->prompt);
 	}
 	printf("exit\n");

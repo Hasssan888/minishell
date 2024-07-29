@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:24:45 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:58:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,7 +254,7 @@ char					*get_env_element(char *env_var);
 // lexer functions
 
 int						check_unqoted(char *line);
-char					*lexer_command(char *line, int i, int j);
+char					*lexer_command(char *line);
 
 // expander functions
 

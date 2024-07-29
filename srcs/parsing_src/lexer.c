@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:50:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:26:56 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:03:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,6 @@ int	check_unqoted(char *line)
 	return (0);
 }
 
-void	check_unqoted_line(int j)
-{
-	free(data->trimed_line);
-	data->unquoted_line[j] = '\0';
-	if (check_unqoted(data->unquoted_line))
-	{
-		printf("syntax error\n");
-		free(data->unquoted_line);
-		data->unquoted_line = NULL;
-	}
-}
-
 void	get_quoted_index(int *i, int *j, int quote)
 {
 	data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
@@ -63,33 +51,43 @@ void	get_quoted_index(int *i, int *j, int quote)
 	data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
 }
 
-char	*lexer_command(char *line, int i, int j)
+char	*lexer_command(char *line)
 {
 	data->trimed_line = ft_strtrim(line, " \t\n\v");
+	// data->unquoted_line = ft_calloc(ft_strlen(data->trimed_line) + 1,
+	// 		sizeof(char));
+	// while (data->trimed_line[i])
+	// {
+	// 	if (data->trimed_line[i] == '$' && (data->trimed_line[i + 1] == '"' || data->trimed_line[i + 1] == '\''))
+	// 		i++;
+	// 	else if (data->trimed_line[i] && data->trimed_line[i] == '\'')
+	// 	{
+	// 		if (data->trimed_line[i + 1] == '\'')
+	// 			i += 2;
+	// 		else
+	// 			get_quoted_index(&i, &j, '\'');
+	// 	}
+	// 	else if (data->trimed_line[i] && data->trimed_line[i] == '"')
+	// 	{
+	// 		if (data->trimed_line[i + 1] == '"')
+	// 			i += 2;
+	// 		else
+	// 			get_quoted_index(&i, &j, '"');
+	// 	}
+	// 	else
+	// 		data->unquoted_line[j++] = data->trimed_line[i++];
+	// }
+	// data->unquoted_line[j] = '\0';
+	// if (check_unqoted(data->unquoted_line))
 	free(line);
-	data->unquoted_line = ft_calloc(ft_strlen(data->trimed_line) + 1,
-			sizeof(char));
-	while (data->trimed_line[i])
+	if (check_unqoted(data->trimed_line))
 	{
-		if (data->trimed_line[i] == '$' && (data->trimed_line[i + 1] == '"' || data->trimed_line[i + 1] == '\''))
-			i++;
-		else if (data->trimed_line[i] && data->trimed_line[i] == '\'')
-		{
-			if (data->trimed_line[i + 1] == '\'')
-				i += 2;
-			else
-				get_quoted_index(&i, &j, '\'');
-		}
-		else if (data->trimed_line[i] && data->trimed_line[i] == '"')
-		{
-			if (data->trimed_line[i + 1] == '"')
-				i += 2;
-			else
-				get_quoted_index(&i, &j, '"');
-		}
-		else
-			data->unquoted_line[j++] = data->trimed_line[i++];
+		printf("syntax error\n");
+		free (data->trimed_line);
+		// free(data->unquoted_line);
+		data->trimed_line = NULL;
 	}
-	check_unqoted_line(j);
-	return (data->unquoted_line);
+	// free(data->trimed_line);
+	return (data->trimed_line);
+	// return (data->unquoted_line);
 }

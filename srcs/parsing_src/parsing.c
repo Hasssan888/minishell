@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 14:24:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:01:47 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,36 +101,44 @@ t_command	*parser_command(t_command *_tokens_list)
 	return (data->head);
 }
 
+void print_line(char *line)
+{
+	int i = -1;
+	while(line[++i])
+		printf("line[%d]: %d == %c\n", i, line[i], line[i]);
+}
+
 int	parse_command(char *line)
 {
-	t_command	*tokens_list;
-	// t_command	*list;
 	// printf("\n++++++++++++++++++ parsing is started +++++++++++++++++\n");
 	data->list = NULL;
-	// printf("line befor lexer: %s\n", line);
-	data->syntax_error = 0;
 	data->ignore_sig = 0;
-	// printf("\n\n");
+	data->syntax_error = 0;
+	t_command	*tokens_list;
 	if (line != NULL && !line[0])
 		return (0);
-	line = lexer_command(line, 0, 0);
-	// if (line != NULL && line[0])
-	// 	printf("line after lexer: %s\n", line);
-	// printf("\n\n");
+		
+	// print_line(line);
+	
+	line = lexer_command(line);
+	if (!line)
+		return 0;
+	printf("line after lexer: %s\n", line);
+	printf("\n\n");
 	tokens_list = tokenzer_command(line);
-	// print_list(tokens_list);
-	// printf("\n\n");
+	print_list(tokens_list);
+	printf("\n\n");
 	data->list = parser_command(tokens_list);
-	// print_list(data->list);
-	// printf("\n\n");
+	print_list(data->list);
+	printf("\n\n");
 	data->list = expander_command(data->list);
-	// print_list(data->list);
-	// printf("\n\n");
+	print_list(data->list);
+	printf("\n\n");
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
 
 	// is_builtin_cmd(data->list);
-	exec_command(data->list);
+	// exec_command(data->list);
 	data->ignore_sig = 1;
 	// func(data->list);
 	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
