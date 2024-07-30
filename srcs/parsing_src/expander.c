@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 19:30:38 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/30 11:18:01 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,8 +138,8 @@ char **ft_arr_join(char **arr1, char **arr2)
 	while(arr2 != NULL && arr2[j] != NULL)
 		joined[i++] = ft_strdup(arr2[j++]);
 	joined[i] = NULL;
-	// free_array(arr1);
-	// free_array(arr2);
+	free_array(arr1);
+	free_array(arr2);
 	return (joined);
 }
 
@@ -207,11 +207,40 @@ int is_empty(char *str)
 	return 0;
 }
 
+char **split_args_(char **exp_args, int i)
+{
+	// int i = -1;
+	char **args = NULL;
+	char **splited = NULL;
+
+	if (!exp_args)
+		return (NULL);
+	while(exp_args[i] != NULL)
+	{
+		if (is_empty(exp_args[i]))
+		{
+			i++;
+			continue;
+		}
+		splited = ft_split_str(exp_args[i], " \t\v");
+		// free(list->value);
+		// list->value = ft_strdup(splited[0]);
+		if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+			args = ft_arr_join(args, splited);
+		// free_array(args);
+		// {
+			// list->args = args;
+		// }
+		i++;
+	}
+	free_array(exp_args);
+	return (args);
+}
+
+
 int split_expanded(t_command *list)
 {
 	int i = 0;
-	// char **args = NULL;
-	// char **splited = NULL;
 	
 	if (is_empty(list->value))
 	{
@@ -223,21 +252,19 @@ int split_expanded(t_command *list)
 			clear_list(&list);
 			return (0);
 		}
-		list->value = list->args[i];
+		free(list->value);
+		char **splited = ft_split_str(list->args[i], " \t\v\n");
+		list->value = ft_strdup(splited[0]);
+		free_array(splited);
 		printf("[%s] [%d]\n", list->value, i);
 	}
-	// if (!list->quoted && list->value != NULL && list->value[0])
+	if (!list->quoted && list->value != NULL && list->value[0])
+	{
+		list->args = split_args_(list->args, i);
+	}
 	// {
-	// 	splited = ft_split_str(list->value, " \t\v");
-	// 	free(list->value);
-	// 	list->value = ft_strdup(splited[0]);
-	// 	if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
-	// 	{
-	// 		args = ft_arr_join(splited, &list->args[i]);	
-	// 		list->args = args;
-	// 	}
-	// 	free_array(splited);
 	// }
+	// while()
 	return 1;
 }
 
