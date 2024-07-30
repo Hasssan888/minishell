@@ -30,6 +30,7 @@ void	sig_handler(int signal)
 char	*get_prompt(void)
 {
 	char	*prompt1;
+	// char	*prompt2;
 	char	*final_prompt;
 
 	prompt1 = ft_strjoin(ft_strdup("┌──(aziz㉿aelkheta)-["), getcwd(NULL, 0));

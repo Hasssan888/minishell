@@ -258,23 +258,19 @@ int split_expanded(t_command *list)
 		char **splited = ft_split_str(list->args[i], " \t\v\n");
 		list->value = ft_strdup(splited[0]);
 		free_array(splited);
-		printf("[%s] [%d]\n", list->value, i);
+		// printf("[%s] [%d]\n", list->value, i);
 	}
 	if (!list->quoted && list->value != NULL && list->value[0])
 	{
+		free(list->value);
+		char **splited = ft_split_str(list->args[i], " \t\v\n");
+		list->value = ft_strdup(splited[0]);
+		free_array(splited);
 		list->args = split_args_(list->args, i);
 	}
-	// {
-	// }
-	// while()
 	return 1;
 }
 
-// int _expander__extended(t_command *list)
-// {
-	
-// 	return (1);
-// }
 
 int	expander_extended(t_command *list)
 {
