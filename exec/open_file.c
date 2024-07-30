@@ -64,17 +64,25 @@ void	ft_loop(t_command *cur, t_pipex *p)
 			break ;
 		else if (cur->type == RED_OUT || cur->type == APP)
 		{
+			// printf("cur->args[0] == %s\n", cur->args[0]);
 			if (cur->type == RED_OUT)
+			{
 				p->fd[p->i] = open(cur->args[0], O_WRONLY | O_CREAT | O_TRUNC,
 						0644);
+				p->b = 1;
+			}
 			else
+			{
 				p->fd[p->i] = open(cur->args[0], O_WRONLY | O_CREAT | O_APPEND,
 						0644);
+				p->b = 2;
+			}
 			if (p->fd[p->i] == -1)
 			{
 				printf("%s: Permission denied\n", cur->args[0]);
-				exit(1);
+				p->indixe = 1;
 			}
+			p->name_file[p->i] = ft_strdup(cur->args[0]);
 			p->i++;
 		}
 		cur = cur->next;
@@ -85,7 +93,9 @@ void	open_outfile(t_command *node, t_pipex *p)
 {
 	t_command	*cur;
 
+	p->b = 0;
 	p->fd = malloc(sizeof(int) * p->count_read_out);
+	p->name_file = malloc(sizeof(char *) * (p->count_read_out + 1));
 	if (p->fd == NULL)
 	{
 		perror("malloc");
@@ -94,13 +104,21 @@ void	open_outfile(t_command *node, t_pipex *p)
 	p->i = 0;
 	cur = node;
 	ft_loop(cur, p);
+	p->name_file[p->i] = NULL;
 	p->outfile = p->fd[p->i - 1];
+	printf("outfile = %d\n", p->outfile);
+	p->s = ft_strdup(p->name_file[p->i - 1]);
 	free(p->fd);
+	p->i = -1;
+	while (p->name_file[++p->i])
+		free(p->name_file[p->i]);
+	free(p->name_file);
+
 }
 
 void	open_infile(t_command *node, t_pipex *p)
 {
-	printf("d5al openfile\n");
+	// printf("d5al openfile\n");
 	t_command	*cur;
 
 	p->fd = malloc(sizeof(int) * p->count_read_in);
@@ -118,10 +136,10 @@ void	open_infile(t_command *node, t_pipex *p)
 		if (cur->type == RED_IN)
 		{
 			p->fd[p->i] = open(cur->args[0], O_RDONLY, 0644);
-			printf("p->fd[%d] = %d\n", p->i,p->fd[p->i]);
+			// printf("p->fd[%d] = %d\n", p->i,p->fd[p->i]);
 			if 	(p->fd[p->i] == -1)
 			{
-				printf("%s: Permission denied\n", p->cur->args[0]);
+				printf("%s: Permission denied\n", cur->args[0]);
 				p->indixe = 1;
 			}
 			p->i++;
@@ -130,5 +148,5 @@ void	open_infile(t_command *node, t_pipex *p)
 	}
 	// printf("p->fd[%d] = %d\n", p->i,p->fd[p->i - 1]);
 	p->infile = p->fd[p->i - 1];
-	free(p->fd);
+	free(p->fd);;
 }
