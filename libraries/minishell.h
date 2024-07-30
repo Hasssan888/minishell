@@ -130,6 +130,7 @@ typedef struct s_token
 
 typedef struct s_pipex
 {
+	char				**name_file;
 	int					pipe[2];
 	int					w;
 	int					i;
@@ -143,7 +144,7 @@ typedef struct s_pipex
 	pid_t				pid;
 	int					*fd;
 	int					*tb;
-	char				**strs;
+	int				**strs;
 	int					arr[1025];
 	int					end[2];
 	int					status;
@@ -161,6 +162,8 @@ typedef struct s_pipex
 	int					b;
 	char				*line;
 	t_command			*cur;
+	char 				*s;
+	int					*end_1;
 }						t_pipex;
 
 typedef struct s_path
@@ -306,4 +309,6 @@ int						if_is_buil(t_command *command);
 void    				readout_append(t_command *node1, t_pipex *p);
 void    				readout_append_2(t_command *node1, t_pipex *p);
 void    				excut_butlin(t_command *node1, char **env);
+void					sig_handler(int signal);
+
 #endif

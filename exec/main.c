@@ -15,14 +15,26 @@
 void	child_process(t_command *node1, char **env, t_pipex *p)
 {
 	if (p->flag == 1)
+	{
+		// printf("infile\n");
 		infile(node1, env, p);
+	}
 	else if (p->flag == 2)
+	{
+		// printf("infile\n");
 		pipe_heredoc(node1, env, p);
-	else if (node1->type == CMD && node1->next
-		&& (node1->next->type == RED_OUT || node1->next->type == APP))
+
+	}
+	else if (p->count_read_in == 0 && p->count_here_doc == 0 && p->count_read_out > 0)
+	{
+		// printf("outfile\n");
 		outfile(node1, env, p);
+	}
 	else if (node1->type == CMD && node1->next == NULL)
+	{
+		// printf("excut_butlin\n");
 		excut_butlin(node1, env);
+	}
 	else
 	{
 		close(p->end[0]);
@@ -35,7 +47,7 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 
 pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 {
-	printf("fork_pipe\n");
+	// printf("fork_pipe\n");
 	// int last;
 	// int temp;
 	// pid_t last_pid = 0;
@@ -48,19 +60,19 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		ft_error_2();
 	else if (p->pid == 0)
 	{
-		printf("d5al process child\n");
+		// printf("d5al process child\n");
 		child_process(node1, env, p);
 	}
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
 	// printf("dup2(end[0])\n");
 	close(p->end[0]);
-	if (ft_strcmp(node1->args[0], "cat") != 0 /*|| (ft_strcmp(node1->args[0],
-				"cat") == 0 && node1->next == NULL)*/)
-	{
+	// if (ft_strcmp(node1->args[0], "cat") != 0 /*|| (ft_strcmp(node1->args[0],
+	// 			"cat") == 0 && node1->next == NULL)*/)
+	// {
 		wait(&p->status);
 		data->exit_status = WEXITSTATUS(p->status);
-	}
+	// }
 
 
 		// while (1)
@@ -95,10 +107,18 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 	p->flag = 0;
 	p->k = 0;
 	if (p->count_read_in > 0)
+	{
+		// printf("open_infile\n");
 		open_infile(node1, p);
+	}
 	if (p->count_read_out > 0)
+	{
+		// printf("open_outfile\n");
+		
 		open_outfile(node1, p);
+	}
 	p->w = check(node1);
+	// printf("p->w = %d\n", p->w);
 	while (p->cur != NULL)
 	{
 		if (p->cur->type == PIPE || p->cur->type == RED_IN
@@ -108,14 +128,18 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 				p->flag = 1;
 			if (p->cur->type == PIPE)
 			{
-				printf("d5al if nta3 pipe\n");
-				ft_count_read_in(p->cur, p);
+				p->indixe = 0;
+				// printf("d5al if nta3 pipe\n");
+				ft_count_read_in(p->cur->next, p);
+				// printf("p->count_read_in = %d\n", p->count_read_in);
 				if (p->count_read_in > 0)
+				{
 					open_infile(p->cur->next, p);
-				ft_count_read_out(p->cur, p);
+					// printf("after pipe open_infile\n");
+				}
+				ft_count_read_out(p->cur->next, p);
 				if (p->count_read_out > 0)
 						open_outfile(p->cur->next, p);
-				p->indixe = 0;
 				t_command *c = p->cur->next;
 				while (c)
 				{
@@ -126,10 +150,11 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 					c = c->next;
 				}
 				p->w = check(p->cur->next);
+				// printf("p->w = %d\n", p->w);
 			}
 			if (p->cur->type == HER_DOC)
 				p->flag = 2;
-			printf("flag = %d\n", p->flag);
+			// printf("flag = %d\n", p->flag);
 			p->cur = p->cur->next;
 
 			// skip_prh(p);
@@ -137,10 +162,11 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 		else if ((p->cur->type != RED_OUT || p->cur->type != APP)
 			&& p->cur->type == CMD)
 		{
-			printf("cmd\n");
+			// printf("cmd\n");
 			t_command *c = p->cur->next;
 			while (c)
 			{
+				// printf("here_1\n");
 				if (c->type == PIPE)
 					break;
 				if (c && c->type == HER_DOC)
@@ -149,12 +175,13 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 					p->flag = 1;
 				c = c->next;
 			}
-			printf("flag = %d\n", p->flag);
+			// printf("flag = %d\n", p->flag);
 			p->r = fork_pipe(p->cur, ev, p);
 			p->flag = 0;
-			while (p->cur->next != NULL && p->cur->next->type == RED_IN )
+			while (p->cur->next != NULL && (p->cur->next->type == RED_IN 
+				|| p->cur->next->type == HER_DOC))
 				p->cur = p->cur->next;
-			printf("flag = %d\n", p->flag);
+			// printf("flag = %d\n", p->flag);
 			p->cur = p->cur->next;
 		}
 		else
@@ -170,9 +197,6 @@ int	func(t_command *list)
 	ft_count_pipe(list, &pipex);
 	ft_count_read_out(list, &pipex);
 	ft_count_read_in(list, &pipex);
-	printf("pipex.count_in = %d\n", pipex.count_read_in);
-	printf("pipex.count_here_doc = %d\n", pipex.count_here_doc );
-	
 	if (pipex.count_here_doc > 0)
 		open_here_doc(list, &pipex);
 	ft_pipe(list, data->envirenment, &pipex);
@@ -181,20 +205,8 @@ int	func(t_command *list)
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
 		pipex.i = wait(NULL);
 	}
-	if (pipex.count_here_doc > 0)
-	{
-		pipex.i = 0;
-		while (pipex.strs[pipex.i])
-		{
-			unlink(pipex.strs[pipex.i]);
-			// free(pipex.strs[pipex.i]);
-			pipex.i++;
-		}
-		free(pipex.strs);
-		free(pipex.tb);
-	}
-	
-	// unlink("file_here_doc.txt");
+	// if (pipex.count_here_doc > 0)
+	// 	free(pipex.strs);
 	return (0);
 }
 
