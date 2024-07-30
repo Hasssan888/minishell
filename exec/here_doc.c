@@ -52,8 +52,8 @@ void	here_doc_error(char **av)
 
 void	here_doc(t_command *node, t_pipex *pipex)
 {
-	// printf("d5al here_doc\n");
-	// printf("j = %d\n", pipex->j);
+	printf("d5al here_doc\n");
+	printf("j = %d\n", pipex->j);
 	char	*str;
 	// int 	status = 0;
 
@@ -109,30 +109,29 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 	pid = fork();
 	if (pid == 0)
 	{
-		signal(SIGQUIT, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
 		pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
 		t_command	*cur;
 		pipex->j = 0;
 		pipex->q = 0;
 		cur = node;
-		int her = 0;
 		while (cur != NULL)
 		{
+			signal(SIGQUIT, SIG_DFL);
+			signal(SIGINT, SIG_DFL);
 			if (cur->type == HER_DOC)
 			{
-				int end[2];
+				int *end = malloc(sizeof(int) * 2);
 				pipe(end);
 				pipex->strs[pipex->j] = end;
-				// if (!pipex->strs[pipex->j])
-				// 	exit(0);
 				here_doc(cur, pipex);
 				pipex->arr[pipex->q] = pipex->j;
-					pipex->j++;
+				printf("pipex->arr[%d] = %d\n",pipex->q, pipex->arr[pipex->q]);
+				pipex->j++;
+					
 			}
 			if (cur->type == PIPE)
 				pipex->q++;
-			her++;
+				
 			cur = cur->next;
 		}
 		pipex->strs[pipex->j] = NULL;
@@ -141,6 +140,25 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 	}
 	pipex->r = pid;
 	wait(NULL);
+
+	// int i = 0;
+	// while (i < pipex->count_here_doc)
+	// {
+	// 	printf("arr[%d] = %d\n", i,pipex->arr[i]);
+	// 	i++;
+	// }
+
+	// int t = 0;
+	// while (t < pipex->count_here_doc)
+	// {
+	// 	int j = 0;
+	// 	while (j < 2)
+	// 	{
+	// 		printf("strs[%d][%d] = %d\n", t, j,pipex->strs[t][j]);
+	// 		j++;
+	// 	}
+	// 	t++;
+	// }
 
 }
 

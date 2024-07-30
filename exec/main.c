@@ -25,7 +25,7 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 		pipe_heredoc(node1, env, p);
 
 	}
-	else if (p->count_read_in == 0 && p->count_here_doc == 0 && p->count_read_out > 0)
+	else if (p->w == 2)
 	{
 		// printf("outfile\n");
 		outfile(node1, env, p);
@@ -106,17 +106,7 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 	p->cur = node1;
 	p->flag = 0;
 	p->k = 0;
-	if (p->count_read_in > 0)
-	{
-		// printf("open_infile\n");
-		open_infile(node1, p);
-	}
-	if (p->count_read_out > 0)
-	{
-		// printf("open_outfile\n");
-		
-		open_outfile(node1, p);
-	}
+
 	p->w = check(node1);
 	// printf("p->w = %d\n", p->w);
 	while (p->cur != NULL)
@@ -138,17 +128,14 @@ void	ft_pipe(t_command *node1, char **ev, t_pipex *p)
 					// printf("after pipe open_infile\n");
 				}
 				ft_count_read_out(p->cur->next, p);
+				// printf("p->count_read_out = %d\n", p->count_read_out);
 				if (p->count_read_out > 0)
-						open_outfile(p->cur->next, p);
-				t_command *c = p->cur->next;
-				while (c)
 				{
-					if (c->type == PIPE)
-						break;
-					else if (c->type == HER_DOC)
-						p->k++;
-					c = c->next;
+						open_outfile(p->cur->next, p);
+						// printf("after pipe open_outfile\n");
 				}
+				p->k++;
+				// printf("p->k = %d\n", p->k);
 				p->w = check(p->cur->next);
 				// printf("p->w = %d\n", p->w);
 			}
@@ -197,16 +184,31 @@ int	func(t_command *list)
 	ft_count_pipe(list, &pipex);
 	ft_count_read_out(list, &pipex);
 	ft_count_read_in(list, &pipex);
+	if (pipex.count_read_in > 0)
+	{
+		// printf("open_infile\n");
+		open_infile(list, &pipex);
+	}
+	if (pipex.count_read_out > 0)
+	{
+		// printf("open_outfile\n");
+		
+		open_outfile(list, &pipex);
+	}
 	if (pipex.count_here_doc > 0)
+	{
+		// printf("open heredoc\n");
 		open_here_doc(list, &pipex);
+	}
 	ft_pipe(list, data->envirenment, &pipex);
+	// free(pipex.s);
 	while (pipex.i != -1)
 	{
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
 		pipex.i = wait(NULL);
 	}
-	// if (pipex.count_here_doc > 0)
-	// 	free(pipex.strs);
+	if (pipex.count_here_doc > 0)
+		free(pipex.strs);
 	return (0);
 }
 
