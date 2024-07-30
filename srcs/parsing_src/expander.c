@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/30 11:18:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/30 12:08:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,8 @@ char **split_args_(char **exp_args, int i)
 		// free(list->value);
 		// list->value = ft_strdup(splited[0]);
 		if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+			args = ft_arr_join(args, splited);
+		else
 			args = ft_arr_join(args, splited);
 		// free_array(args);
 		// {
