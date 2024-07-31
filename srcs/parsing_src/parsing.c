@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/30 11:25:09 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 09:39:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 t_command	*syntax_error(t_command *list_command, t_command *head)
 {
-	printf("syntax error\n");
-	data->syntax_error = 1;
+	ft_perror("syntax error\n");
+	data->syntax_error = SYNTERRR;
+	data->exit_status = 2;
 	free_node(&list_command);
 	clear_list(&head);
 	return (NULL);
@@ -73,6 +74,7 @@ t_command	*parser_command(t_command *_tokens_list)
 	data->_tokens_list = _tokens_list;
 	while (data->_tokens_list != NULL)
 	{
+		data->_tokens_list->syntxerr = 0;
 		if (data->syntax_error)
 			return (NULL);
 		init_parser_var();
@@ -117,17 +119,10 @@ int	parse_command(char *line)
 	t_command	*tokens_list;
 	if (line != NULL && !line[0])
 		return (0);
-		
-	// print_line(line);
-	
 	line = lexer_command(line);
 	if (!line)
 		return 0;
-	// printf("line after lexer: %s\n", line);
-	// printf("\n\n");
 	tokens_list = tokenzer_command(line);
-	// print_list(tokens_list);
-	// printf("\n\n");
 	data->list = parser_command(tokens_list);
 	print_list(data->list);
 	printf("\n\n");
@@ -141,8 +136,7 @@ int	parse_command(char *line)
 	// is_builtin_cmd(data->list);
 	// exec_command(data->list);
 	data->ignore_sig = 1;
-
-	// func(data->list);
+	func(data->list);
 	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
 	clear_list(&data->list);
 	return (0);

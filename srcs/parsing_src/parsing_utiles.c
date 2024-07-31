@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:27:16 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 09:38:31 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_command	*redirect_list(t_command **head, t_command **redirect_head)
 	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
+		data->exit_status = 2;
 		ft_perror("syntax error\n");
 		free_node(&redirection_node);
 		free_array(data->list_command->args);

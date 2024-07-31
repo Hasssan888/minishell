@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 14:58:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 09:31:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,12 @@ typedef enum s_types
 // # define AND_OP 			9
 // # define FLE				10
 
+# define WHITESPACES 	" \t\v\n"
+# define SYNTERRR 		1
+# define AMPIGOUS 		2
+
+
+
 # define TOKEN 			0
 # define PIPE 			1
 # define RED_OUT 		2
@@ -80,8 +86,9 @@ typedef struct s_env
 typedef struct s_command
 {
 	int					type;
-	int					in_file;
-	int					out_file;
+	// int					in_file;
+	// int					out_file;
+	int					syntxerr;
 	int					quoted;
 	char				*value;
 	char				**args;

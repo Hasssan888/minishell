@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/30 12:08:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 09:43:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,13 +182,12 @@ int is_ambigous(t_command *list)
 {
 	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
 	{
-		// printf("%s\n", list->args[0]);
 		if (ambigous_red(list->args[0]))
 		{
-			// open_files(data->head);
-			clear_list(&data->head);
+			// clear_list(&data->head);
 			ft_perror("ambiguous redirect\n");
-			data->syntax_error = 0;
+			data->syntax_error = AMPIGOUS;
+			data->exit_status = 1;
 			return (0);
 		}
 	}
@@ -200,6 +199,8 @@ int is_empty(char *str)
 	int i = 0;
 	if (!str)
 		return (1);
+	if (!str[i])
+		return 0;
 	while(str[i] && (str[i] == ' ' || str[i] == '\t'))
 		i++;
 	if (!str[i])
@@ -209,7 +210,6 @@ int is_empty(char *str)
 
 char **split_args_(char **exp_args, int i)
 {
-	// int i = -1;
 	char **args = NULL;
 	char **splited = NULL;
 
@@ -223,16 +223,10 @@ char **split_args_(char **exp_args, int i)
 			continue;
 		}
 		splited = ft_split_str(exp_args[i], " \t\v");
-		// free(list->value);
-		// list->value = ft_strdup(splited[0]);
 		if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
 			args = ft_arr_join(args, splited);
 		else
 			args = ft_arr_join(args, splited);
-		// free_array(args);
-		// {
-			// list->args = args;
-		// }
 		i++;
 	}
 	free_array(exp_args);
@@ -250,20 +244,22 @@ int split_expanded(t_command *list)
 			i++;
 		if (!list->args[i])
 		{
-			printf("[%s] [%d]\n", list->value, i);
 			clear_list(&list);
 			return (0);
 		}
+		char **splited = ft_split_str(list->args[i], WHITESPACES);
+		if (!splited)
+			return (0);	
 		free(list->value);
-		char **splited = ft_split_str(list->args[i], " \t\v\n");
 		list->value = ft_strdup(splited[0]);
 		free_array(splited);
-		// printf("[%s] [%d]\n", list->value, i);
 	}
-	if (!list->quoted && list->value != NULL && list->value[0])
+	if (list->args && !list->quoted && list->value != NULL && list->value[0])
 	{
+		char **splited = ft_split_str(list->args[i], WHITESPACES);
+		if (!splited)
+			return (1);
 		free(list->value);
-		char **splited = ft_split_str(list->args[i], " \t\v\n");
 		list->value = ft_strdup(splited[0]);
 		free_array(splited);
 		list->args = split_args_(list->args, i);
@@ -274,9 +270,9 @@ int split_expanded(t_command *list)
 
 int	expander_extended(t_command *list)
 {
-	while (list->value != NULL && list->args != NULL && list->args[data->i] != NULL)
+	while (list->value != NULL && list->value[0] && list->args != NULL && list->args[data->i] != NULL)
 	{
-		if (list->quoted != 1 && list->type != HER_DOC)
+		if (ft_strchr(list->args[data->i], '$') && list->quoted != 1 && list->type != HER_DOC)
 			list->args[data->i] = expand_vars(list->args[data->i], 0);
 		if (list->type != HER_DOC)
 			list->args[data->i] = unquote_arg(list, list->args[data->i], 0, 0);
@@ -284,17 +280,20 @@ int	expander_extended(t_command *list)
 		{
 			clear_list(&data->head);
 			ft_perror("syntax error\n");
-			data->syntax_error = 0;
+			data->list->syntxerr = SYNTERRR;
+			data->exit_status = 2;
 			return (0);
 		}
 		data->i++;
 	}
-	list->value = expand_vars(list->value, 0);
+	if (list->value && list->value[0] && ft_strchr(list->value, '$'))
+		list->value = expand_vars(list->value, 0);
 	list->value = unquote_arg(list, list->value, 0, 0);
 	
-	if (!split_expanded(list) || !is_ambigous(list))
+	if (!split_expanded(list))
+		return 0;
+	if (!is_ambigous(list))
 		return (0);
-	// list = list->next;
 	return (1);
 }
 
@@ -306,6 +305,7 @@ t_command	*expander_command(t_command *list)
 		return (NULL);
 	if (list != NULL && list->type == PIPE)
 	{
+		data->exit_status = 2;
 		ft_perror("syntax error\n");
 		clear_list(&data->head);
 		return (NULL);
@@ -316,6 +316,7 @@ t_command	*expander_command(t_command *list)
 		list->quoted = 0;
 		if (list->type == -1)
 		{
+			data->exit_status = 2;
 			ft_perror("syntax error\n");
 			clear_list(&data->head);
 			return (NULL);

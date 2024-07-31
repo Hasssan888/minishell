@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/16 14:26:03 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/07/31 09:26:20 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	open_outfile(t_command *node, t_pipex *p)
 	while (p->name_file[++p->i])
 		free(p->name_file[p->i]);
 	free(p->name_file);
-
+	free(p->s);
 }
 
 void	open_infile(t_command *node, t_pipex *p)
