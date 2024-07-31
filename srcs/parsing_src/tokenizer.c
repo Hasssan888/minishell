@@ -77,8 +77,7 @@ char	*get_token(char *cmd_line, int *i)
 		*i = j;
 		if (cmd_line[j] == '\'' || cmd_line[j] == '"')
 			j = get_quoted_word_index(cmd_line, j);
-		else if (cmd_line[j] == '<' || cmd_line[j] == '>'
-			|| cmd_line[j] == '|')
+		else if (cmd_line[j] == '<' || cmd_line[j] == '>' || cmd_line[j] == '|')
 		{
 			special = cmd_line[j];
 			while (cmd_line[j] && cmd_line[j] == special)

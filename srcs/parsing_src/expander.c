@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 15:22:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 16:23:18 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,12 @@ char	*expand_digits(char *argument, int *i)
 	}
 	return (g_data->expanded);
 }
-void expand_(char *argument, int *i)
+void	expand_(char *argument, int *i)
 {
 	if (!argument[*i + 1])
 	{
-		// free(argument);
-		
-		g_data->expanded = ft_strdup("$");
-		// return (free(argument), ft_strdup("$"));
+		(*i)++;
+		g_data->expanded = ft_strjoin(g_data->expanded, ft_strdup("$"));
 	}
 	else if (argument[*i + 1] == '?')
 	{
@@ -231,6 +229,7 @@ char	**split_args_(char **exp_args, int i)
 			i++;
 			continue ;
 		}
+		printf("====%s====\n", exp_args[i]);
 		splited = ft_split_str(exp_args[i], " \t\v");
 		if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
 			args = ft_arr_join(args, splited);
@@ -254,6 +253,14 @@ char	**split_argument(t_command *list, int i)
 	list->value = ft_strdup(splited[0]);
 	free_array(splited);
 	return (splited);
+}
+
+void	set_error(int err_num, char *str, t_command **cmd)
+{
+	ft_perror(str);
+	g_data->list->syntxerr = err_num;
+	g_data->exit_status = err_num;
+	clear_list(cmd);
 }
 
 int	split_expanded(t_command *list)
@@ -296,10 +303,7 @@ int	expander_extended(t_command *list)
 					0);
 		if (g_data->syntax_error)
 		{
-			clear_list(&g_data->head);
-			ft_perror("syntax error\n");
-			g_data->list->syntxerr = SYNTERRR;
-			g_data->exit_status = 2;
+			set_error(SYNTERRR, "syntax error\n", &g_data->head);
 			return (0);
 		}
 		g_data->i++;
@@ -321,9 +325,7 @@ t_command	*expander_command(t_command *list)
 		return (NULL);
 	if (list != NULL && list->type == PIPE)
 	{
-		g_data->exit_status = 2;
-		ft_perror("syntax error\n");
-		clear_list(&g_data->head);
+		set_error(SYNTERRR, "syntax error\n", &g_data->head);
 		return (NULL);
 	}
 	while (list != NULL)
@@ -332,9 +334,7 @@ t_command	*expander_command(t_command *list)
 		list->quoted = 0;
 		if (list->type == -1)
 		{
-			g_data->exit_status = 2;
-			ft_perror("syntax error\n");
-			clear_list(&g_data->head);
+			set_error(SYNTERRR, "syntax error\n", &g_data->head);
 			return (NULL);
 		}
 		if (!expander_extended(list))

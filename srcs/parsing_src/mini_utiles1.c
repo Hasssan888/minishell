@@ -94,11 +94,11 @@ t_env	*get_alternative_env(void)
 	return (head);
 }
 
-void env_maker(char *env, t_env **head)
+void	env_maker(char *env, t_env **head)
 {
 	t_env	*new;
 	char	**splited;
-	
+
 	new = NULL;
 	splited = NULL;
 	splited = ft_split(env, '=');
