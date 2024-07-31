@@ -213,32 +213,40 @@ int	is_empty(char *str)
 	return (0);
 }
 
-char	**split_args_(char **exp_args, int i)
-{
-	char	**args;
-	char	**splited;
+// char	**split_args_(char **exp_args, int i)
+// {
+// 	char	**args;
+// 	char	**splited;
 
-	args = NULL;
-	splited = NULL;
-	if (!exp_args)
-		return (NULL);
-	while (exp_args[i] != NULL)
-	{
-		if (is_empty(exp_args[i]))
-		{
-			i++;
-			continue ;
-		}
-		printf("====%s====\n", exp_args[i]);
-		splited = ft_split_str(exp_args[i], " \t\v");
-		if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
-			args = ft_arr_join(args, splited);
-		else
-			args = ft_arr_join(args, splited);
-		i++;
-	}
-	free_array(exp_args);
-	return (args);
+// 	args = NULL;
+// 	splited = NULL;
+// 	if (!exp_args)
+// 		return (NULL);
+// 	while (exp_args[i] != NULL)
+// 	{
+// 		if (is_empty(exp_args[i]))
+// 		{
+// 			i++;
+// 			continue ;
+// 		}
+// 		splited = ft_split_str(exp_args[i], WHITESPACES);
+// 		if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+// 			args = ft_arr_join(args, splited);
+// 		else
+// 			args = ft_arr_join(args, splited);
+// 		i++;
+// 	}
+// 	free_array(exp_args);
+// 	return (args);
+// }
+
+
+void	set_error(int err_num, char *str, t_command **cmd)
+{
+	ft_perror(str);
+	g_data->list->syntxerr = err_num;
+	g_data->exit_status = err_num;
+	clear_list(cmd);
 }
 
 char	**split_argument(t_command *list, int i)
@@ -255,64 +263,88 @@ char	**split_argument(t_command *list, int i)
 	return (splited);
 }
 
-void	set_error(int err_num, char *str, t_command **cmd)
-{
-	ft_perror(str);
-	g_data->list->syntxerr = err_num;
-	g_data->exit_status = err_num;
-	clear_list(cmd);
-}
-
-int	split_expanded(t_command *list)
+int	get_cmd_if_empty(t_command *list)
 {
 	int	i;
+	char **splited;
 
 	i = 0;
+	splited = NULL;
 	if (list->type == TOKEN && is_empty(list->value))
 	{
 		while (list->args[i] != NULL && is_empty(list->args[i]))
 			i++;
 		if (!list->args[i])
-		{
-			clear_list(&list);
 			return (0);
-		}
-		if (!split_argument(list, i))
-			return (0);
+		free(list->value);
+		list->value = ft_strdup(list->args[0]);
 	}
-	if (list->args && list->type == TOKEN && !list->quoted
-		&& list->value != NULL && list->value[0])
+	else
 	{
-		if (!split_argument(list, i))
-			return (1);
-		list->args = split_args_(list->args, i);
+		splited = ft_split_str(list->value, WHITESPACES);
+		if (!splited)
+			return (0);
+		free(list->value);
+		list->value = ft_strdup(splited[0]);
+		free_array(splited);
 	}
 	return (1);
 }
 
+char **split_and_join(char **args, char *exp_args)
+{
+	char **splited = NULL;
+	splited = ft_split_str(exp_args, WHITESPACES);
+	if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+		args = ft_arr_join(args, splited);
+	else
+		args = ft_arr_join(args, splited);
+	return args;
+}
+
 int	expander_extended(t_command *list)
 {
+	int i = -1;
+	int SPLIT = 0;
+	char **args = NULL;
 	while (list->value != NULL && list->value[0] && list->args != NULL
-		&& list->args[g_data->i] != NULL)
+		&& list->args[++i] != NULL)
 	{
-		if (ft_strchr(list->args[g_data->i], '$') && list->quoted != 1
+		if (is_empty(list->args[i]))
+			continue;
+		if (ft_strchr(list->args[i], '$') && list->quoted != 1
 			&& list->type != HER_DOC)
-			list->args[g_data->i] = expand_vars(list->args[g_data->i], 0);
+		{
+			list->args[i] = expand_vars(list->args[i], 0);
+			SPLIT = 1;
+		}
 		if (list->type != HER_DOC)
-			list->args[g_data->i] = unquote_arg(list, list->args[g_data->i], 0,
-					0);
+			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
+		if (SPLIT)
+		{
+			args = split_and_join(args, list->args[i]);
+			SPLIT = 0;
+		}
 		if (g_data->syntax_error)
 		{
 			set_error(SYNTERRR, "syntax error\n", &g_data->head);
 			return (0);
 		}
-		g_data->i++;
+	}
+	if (args)
+	{
+		printf("asssa\n");
+		free_array(list->args);
+		list->args = args;
 	}
 	if (list->value && list->value[0] && ft_strchr(list->value, '$'))
 		list->value = expand_vars(list->value, 0);
 	list->value = unquote_arg(list, list->value, 0, 0);
-	if (!split_expanded(list))
+	if (!get_cmd_if_empty(list))
+	{
+		clear_list(&list);
 		return (0);
+	}
 	if (!is_ambigous(list))
 		return (0);
 	return (1);
@@ -330,7 +362,6 @@ t_command	*expander_command(t_command *list)
 	}
 	while (list != NULL)
 	{
-		g_data->i = 0;
 		list->quoted = 0;
 		if (list->type == -1)
 		{
