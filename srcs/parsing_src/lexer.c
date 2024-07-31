@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:50:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 09:39:12 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:50:29 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,52 +43,24 @@ int	check_unqoted(char *line)
 
 void	get_quoted_index(int *i, int *j, int quote)
 {
-	data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
-	while (data->trimed_line[(*i)] && data->trimed_line[(*i)] != quote)
-		data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
-	if (!data->trimed_line[(*i)])
+	g_data->unquoted_line[(*j)++] = g_data->trimed_line[(*i)++];
+	while (g_data->trimed_line[(*i)] && g_data->trimed_line[(*i)] != quote)
+		g_data->unquoted_line[(*j)++] = g_data->trimed_line[(*i)++];
+	if (!g_data->trimed_line[(*i)])
 		return ;
-	data->unquoted_line[(*j)++] = data->trimed_line[(*i)++];
+	g_data->unquoted_line[(*j)++] = g_data->trimed_line[(*i)++];
 }
 
 char	*lexer_command(char *line)
 {
-	data->trimed_line = ft_strtrim(line, " \t\n\v");
-	// data->unquoted_line = ft_calloc(ft_strlen(data->trimed_line) + 1,
-	// 		sizeof(char));
-	// while (data->trimed_line[i])
-	// {
-	// 	if (data->trimed_line[i] == '$' && (data->trimed_line[i + 1] == '"' || data->trimed_line[i + 1] == '\''))
-	// 		i++;
-	// 	else if (data->trimed_line[i] && data->trimed_line[i] == '\'')
-	// 	{
-	// 		if (data->trimed_line[i + 1] == '\'')
-	// 			i += 2;
-	// 		else
-	// 			get_quoted_index(&i, &j, '\'');
-	// 	}
-	// 	else if (data->trimed_line[i] && data->trimed_line[i] == '"')
-	// 	{
-	// 		if (data->trimed_line[i + 1] == '"')
-	// 			i += 2;
-	// 		else
-	// 			get_quoted_index(&i, &j, '"');
-	// 	}
-	// 	else
-	// 		data->unquoted_line[j++] = data->trimed_line[i++];
-	// }
-	// data->unquoted_line[j] = '\0';
-	// if (check_unqoted(data->unquoted_line))
+	g_data->trimed_line = ft_strtrim(line, " \t\n\v");
 	free(line);
-	if (check_unqoted(data->trimed_line))
+	if (check_unqoted(g_data->trimed_line))
 	{
-		data->exit_status = 2;
+		g_data->exit_status = 2;
 		ft_perror("syntax error\n");
-		free (data->trimed_line);
-		// free(data->unquoted_line);
-		data->trimed_line = NULL;
+		free(g_data->trimed_line);
+		g_data->trimed_line = NULL;
 	}
-	// free(data->trimed_line);
-	return (data->trimed_line);
-	// return (data->unquoted_line);
+	return (g_data->trimed_line);
 }

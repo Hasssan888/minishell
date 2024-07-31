@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:04 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/28 10:04:13 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:46:58 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	// 			"cat") == 0 && node1->next == NULL)*/)
 	// {
 		wait(&p->status);
-		data->exit_status = WEXITSTATUS(p->status);
+		g_data->exit_status = WEXITSTATUS(p->status);
 	// }
 
 
@@ -80,7 +80,7 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		// 	last = wait(&temp);
 		// 	if (last == last_pid)
 		// 	{
-		// 		data->exit_status  = WEXITSTATUS(temp);
+		// 		g_data->exit_status  = WEXITSTATUS(temp);
 		// 	}
 		// }
 	
@@ -200,7 +200,7 @@ int	func(t_command *list)
 		// printf("open heredoc\n");
 		open_here_doc(list, &pipex);
 	}
-	ft_pipe(list, data->envirenment, &pipex);
+	ft_pipe(list, g_data->envirenment, &pipex);
 	// free(pipex.s);
 	while (pipex.i != -1)
 	{

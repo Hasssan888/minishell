@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:34:28 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:46:08 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	pwd(void)
 
 	cwd = getcwd(NULL, 0);
 	printf("%s\n", cwd);
-	data->expanded = 0;
+	g_data->expanded = 0;
 	free(cwd);
 }
 
@@ -93,6 +93,6 @@ int	unset(char **env_var, t_env *envirenement)
 			continue;
 		del_node(&envirenement, env_ptr);		
 	}
-	data->expanded = 0;
+	g_data->expanded = 0;
 	return (0);
 }

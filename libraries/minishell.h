@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 09:31:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 12:43:01 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ typedef enum s_types
 // # define FLE				10
 
 # define WHITESPACES 	" \t\v\n"
-# define SYNTERRR 		1
-# define AMPIGOUS 		2
+# define SYNTERRR 		2
+# define AMPIGOUS 		1
 
 
 
@@ -151,7 +151,7 @@ typedef struct s_pipex
 	pid_t				pid;
 	int					*fd;
 	int					*tb;
-	int				**strs;
+	int					**strs;
 	int					arr[1025];
 	int					end[2];
 	int					status;
@@ -182,7 +182,7 @@ typedef struct s_path
 	char				*path_from_envp;
 }						t_path;
 
-extern t_data *data; // for use this global var from all files
+extern t_data *g_data; // for use this global var from all files
 
 
 // # include <termios.h>

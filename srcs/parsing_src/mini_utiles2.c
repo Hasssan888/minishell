@@ -6,17 +6,21 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:27:08 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 12:04:15 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
+void	ft_perror(char *message)
+{
+	ft_putstr_fd(message, 2);
+}
 char	*get_env_element(char *env_var)
 {
 	t_env	*env;
 
-	env = data->env;
+	env = g_data->env;
 	if (!env_var)
 		return (NULL);
 	while (env != NULL)
@@ -34,11 +38,8 @@ char	*get_cmd_path(char *cmd_)
 	char	*cmd_path;
 	char	*env_ele;
 	char	**path;
-	// char	*cmd;
 
 	i = 0;
-	// cmd_path = ft_strjoin(ft_strdup("./"), ft_strdup(cmd_));
-	// printf("cmd_path: %s\n", cmd_path);
 	if (access(cmd_, X_OK) == 0)
 		return (ft_strdup(cmd_));
 	env_ele = get_env_element("PATH");
@@ -46,8 +47,8 @@ char	*get_cmd_path(char *cmd_)
 	free(env_ele);
 	while (path[i])
 	{
-		// cmd = ft_strjoin(ft_strdup("/"), ft_strdup(cmd_));
-		cmd_path = ft_strjoin(ft_strdup(path[i]), ft_strjoin(ft_strdup("/"), ft_strdup(cmd_)));
+		cmd_path = ft_strjoin(ft_strdup(path[i]), ft_strjoin(ft_strdup("/"),
+					ft_strdup(cmd_)));
 		if (access(cmd_path, X_OK) == 0)
 		{
 			free_array(path);
@@ -58,9 +59,4 @@ char	*get_cmd_path(char *cmd_)
 	}
 	free_array(path);
 	return (NULL);
-}
-
-void	ft_perror(char *message)
-{
-	ft_putstr_fd(message, 2);
 }

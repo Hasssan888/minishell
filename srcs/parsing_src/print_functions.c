@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:37:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:27:42 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 13:30:57 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,20 @@
 void	print_minishell(void)
 {
 	printf("\n");
-	printf("███╗   ███╗██╗███╗   ██╗██╗");printf(COLOR"███████╗██╗  ██╗███████╗██╗     ██╗\n"reset);
-	printf("████╗ ████║██║████╗  ██║██║");printf(COLOR"██╔════╝██║  ██║██╔════╝██║     ██║\n"reset);
-	printf("██╔████╔██║██║██╔██╗ ██║██║");printf(COLOR"███████╗███████║█████╗  ██║     ██║\n"reset);
-	printf("██║╚██╔╝██║██║██║╚██╗██║██║");printf(COLOR"╚════██║██╔══██║██╔══╝  ██║     ██║\n"reset);
-	printf("██║ ╚═╝ ██║██║██║ ╚████║██║");printf(COLOR"███████║██║  ██║███████╗███████╗███");
-	printf(COLOR"████╗\n"reset);
-	printf("╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝");printf(COLOR"╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══");
-	printf("════╝\n"reset);
+	printf("███╗   ███╗██╗███╗   ██╗██╗");
+	printf(COLOR "███████╗██╗  ██╗███████╗██╗     ██╗\n" reset);
+	printf("████╗ ████║██║████╗  ██║██║");
+	printf(COLOR "██╔════╝██║  ██║██╔════╝██║     ██║\n" reset);
+	printf("██╔████╔██║██║██╔██╗ ██║██║");
+	printf(COLOR "███████╗███████║█████╗  ██║     ██║\n" reset);
+	printf("██║╚██╔╝██║██║██║╚██╗██║██║");
+	printf(COLOR "╚════██║██╔══██║██╔══╝  ██║     ██║\n" reset);
+	printf("██║ ╚═╝ ██║██║██║ ╚████║██║");
+	printf(COLOR "███████║██║  ██║███████╗███████╗███");
+	printf(COLOR "████╗\n" reset);
+	printf("╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝");
+	printf(COLOR "╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══");
+	printf("════╝\n" reset);
 	printf("\n");
 }
 
@@ -40,22 +46,28 @@ void	print_prompt(void)
 	write(1, reset_color, ft_strlen(reset_color));
 }
 
+void	print_str2(char *str1, char *str2)
+{
+	printf("│ %s: ----------- %s   	", str1, str2);
+	printf("\n└───────────────────────────┘\n");
+}
+
 void	print_type(int type)
 {
 	if (type == -1)
-		printf("│ type: ----------- ERROR   │\n└───────────────────────────┘\n");
+		print_str2("type", "ERROR");
 	else if (type == TOKEN)
-		printf("│ type: ----------- TOKEN   │\n└───────────────────────────┘\n");
+		print_str2("type", "TOKEN");
 	else if (type == RED_OUT)
-		printf("│ type: ----------- RED_OUT │\n└───────────────────────────┘\n");
+		print_str2("type", "RED_OUT");
 	else if (type == RED_IN)
-		printf("│ type: ----------- RED_IN  │\n└───────────────────────────┘\n");
+		print_str2("type", "RED_IN");
 	else if (type == APP)
-		printf("│ type: ----------- APP     │\n└───────────────────────────┘\n");
+		print_str2("type", "APP");
 	else if (type == HER_DOC)
-		printf("│ type: ----------- HER_DOC │\n└───────────────────────────┘\n");
+		print_str2("type", "HER_DOC");
 	else if (type == PIPE)
-		printf("│ type: ----------- PIPE    │\n└───────────────────────────┘\n\n");
+		print_str2("type", "PIPE");
 }
 
 void	print_args(char **args)
@@ -65,9 +77,9 @@ void	print_args(char **args)
 	i = 0;
 	while (args != NULL && *args)
 	{
-		printf("	┌───────────────────────────┐\n");
-		printf("	│ arg[%d]: --------- [%s]   \n", i++, *args++);
-		printf("	└───────────────────────────┘\n");
+		printf("	  ┌───────────────────────────┐\n");
+		printf("    ─────>│ arg[%d]: --------- [%s]   \n", i++, *args++);
+		printf("	  └───────────────────────────┘\n");
 	}
 }
 
@@ -77,9 +89,9 @@ void	print_list(t_command *table)
 		return ;
 	while (table != NULL)
 	{
-		printf("┌───────────────────────────┐\n");
 		if (table->value != NULL)
 		{
+			printf("┌───────────────────────────┐\n");
 			printf("│ token: ---------- [%s]    \n", table->value);
 			print_type(table->type);
 			print_args(table->args);

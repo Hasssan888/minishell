@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:34:23 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:46:00 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ int	change_dir(t_env *env, char *path)
 		if (chdir(env->env_key) != 0)
 			return 0;
 	}
-	free(data->prompt);
+	free(g_data->prompt);
 	get_old_current_pwd();
-	data->prompt = get_prompt();
+	g_data->prompt = get_prompt();
 	return (1);
 }
 
@@ -52,7 +52,7 @@ void	check_cd_errors(void)
 		ft_perror("minishell: cd: No such file or directory\n");
 	else if (errno == ENOTDIR)
 		ft_perror("minishell: cd: No such file or directory\n");
-	data->exit_status = 1;
+	g_data->exit_status = 1;
 }
 
 int	cd(char **args)
@@ -62,7 +62,7 @@ int	cd(char **args)
 	if (args[0] != NULL && args[1] != NULL)
 	{
 		ft_perror("cd: too many arguments\n");
-		data->exit_status = 1;
+		g_data->exit_status = 1;
 		return (0);
 	}
 	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
@@ -82,7 +82,7 @@ int	cd(char **args)
 		if (!env || !env->env_key)
 		{
 			ft_perror("cd: HOME not set\n");
-			data->exit_status = 1;
+			g_data->exit_status = 1;
 			return (0);
 		}
 		change_dir(env, NULL);
@@ -103,7 +103,7 @@ int	env(t_env *env)
 			printf("%s=%s\n", env->env_value, env->env_key);
 		env = env->next;
 	}
-	data->expanded = 0;
+	g_data->expanded = 0;
 	return (0);
 }
 
@@ -148,7 +148,7 @@ int	echo(char **cmd)
 	echo_it(cmd, i);
 	if (!flag)
 		printf("\n");
-	data->exit_status = 0;
+	g_data->exit_status = 0;
 	return (0);
 }
 
@@ -174,14 +174,14 @@ void exit_(t_command *command)
 	else if (command->args[1] != NULL && command->args[2] != NULL)
 	{
 		ft_perror("minishell: exit: too many arguments\n");
-		data->exit_status = 1;
+		g_data->exit_status = 1;
 		return ;
 	}
 	else if (command->args[1] != NULL)
 		exit(ft_atoi(command->args[1]) % 256);
 		// exit(ft_atoi(command->args[1]));
 	printf("exit\n");
-	clear_list(&data->list);
+	clear_list(&g_data->list);
 	exit(0);
 }
 
@@ -196,11 +196,11 @@ int	is_builtin_cmd(t_command *command)
 	else if (ft_strcmp(command->value, "cd") == 0)
 		cd(&command->args[1]);
 	else if (ft_strcmp(command->value, "env") == 0)
-		env(data->env);
+		env(g_data->env);
 	else if (ft_strcmp(command->value, "export") == 0)
-		export(command, data->env);
+		export(command, g_data->env);
 	else if (ft_strcmp(command->value, "unset") == 0)
-		unset(&command->args[1], data->env);
+		unset(&command->args[1], g_data->env);
 	else if (ft_strcmp(command->value, "exit") == 0)
 		exit_(command);
 	else

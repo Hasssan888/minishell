@@ -6,11 +6,19 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 15:07:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 13:02:58 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
+
+void	what_quote(t_command *list, char *arg, char quote)
+{
+	if (arg[0] == quote && quote == '\'')
+		list->quoted = 1;
+	else if (arg[0] == quote && quote == '"')
+		list->quoted = 2;
+}
 
 char	*get_var(char *env_var, int *i)
 {
@@ -32,7 +40,7 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 {
 	char	quote;
 	char	*argument;
-	
+
 	if (!list || !arg)
 		return (NULL);
 	argument = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
@@ -50,34 +58,11 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 		}
 		else
 			argument[k++] = arg[j++];
-		if (arg[0] == quote && quote == '\'')
-			list->quoted = 1;
-		else if (arg[0] == quote && quote == '"')
-			list->quoted = 2;
+		what_quote(list, arg, quote);
 	}
 	free(arg);
 	return (argument);
 }
-
-// char	*ft_strnstr_l(const char *big, const char *little, size_t len)
-// {
-// 	size_t	i;
-// 	size_t	j;
-
-// 	i = 0;
-// 	if (*little == '\0')
-// 		return ((char *)big);
-// 	while (big[i] && i < len)
-// 	{
-// 		j = 0;
-// 		while (big[i + j] == little[j] && little[j] && (i + j) < len)
-// 			j++;
-// 		if (little[j] == '\0')
-// 			return ((char *)&big[i + j]);
-// 		i++;
-// 	}
-// 	return (NULL);
-// }
 
 char	*get_word(char *argument, int *i)
 {
@@ -98,14 +83,14 @@ char	*get_word(char *argument, int *i)
 
 int	get_expanded(char *argument, int *i)
 {
-	data->str1 = get_var(&argument[++(*i)], i);
-	data->str2 = get_env_element(data->str1);
-	free(data->str1);
-	if (!data->str2 || !data->str2[0])
+	g_data->str1 = get_var(&argument[++(*i)], i);
+	g_data->str2 = get_env_element(g_data->str1);
+	free(g_data->str1);
+	if (!g_data->str2 || !g_data->str2[0])
 	{
-		free(data->str2);
+		free(g_data->str2);
 		return (1);
 	}
-	data->expanded = ft_strjoin(data->expanded, data->str2);
+	g_data->expanded = ft_strjoin(g_data->expanded, g_data->str2);
 	return (0);
 }
