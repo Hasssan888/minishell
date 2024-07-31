@@ -34,6 +34,8 @@ void	ft_count_read_out(t_command *node, t_pipex *p)
 	p->count_read_out = 0;
 	while (cur)
 	{
+		if (cur->type == PIPE)
+			break;
 		if (cur->type == RED_OUT || cur->type == APP)
 			p->count_read_out++;
 		cur = cur->next;
@@ -79,7 +81,8 @@ void	ft_loop(t_command *cur, t_pipex *p)
 			}
 			if (p->fd[p->i] == -1)
 			{
-				printf("%s: Permission denied\n", cur->args[0]);
+				// printf("%s: Permission denied\n", cur->args[0]);
+				perror(cur->args[0]);
 				p->indixe = 1;
 			}
 			p->name_file[p->i] = ft_strdup(cur->args[0]);
@@ -139,7 +142,8 @@ void	open_infile(t_command *node, t_pipex *p)
 			// printf("p->fd[%d] = %d\n", p->i,p->fd[p->i]);
 			if 	(p->fd[p->i] == -1)
 			{
-				printf("%s: Permission denied\n", cur->args[0]);
+				// printf("%s: Permission denied\n", cur->args[0]);
+				perror(cur->args[0]);
 				p->indixe = 1;
 			}
 			p->i++;
