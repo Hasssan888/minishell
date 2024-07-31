@@ -184,7 +184,7 @@ int is_ambigous(t_command *list)
 	{
 		if (ambigous_red(list->args[0]))
 		{
-			// clear_list(&data->head);
+			clear_list(&data->head);
 			ft_perror("ambiguous redirect\n");
 			data->syntax_error = AMPIGOUS;
 			data->exit_status = 1;
@@ -233,12 +233,23 @@ char **split_args_(char **exp_args, int i)
 	return (args);
 }
 
+char **split_argument(t_command *list, int i)
+{
+	char **splited = NULL;
+	splited = ft_split_str(list->args[i], WHITESPACES);
+	if (!splited)
+		return (splited);	
+	free(list->value);
+	list->value = ft_strdup(splited[0]);
+	free_array(splited);
+	return (splited);
+}
 
 int split_expanded(t_command *list)
 {
 	int i = 0;
 	
-	if (is_empty(list->value))
+	if (list->type == TOKEN && is_empty(list->value))
 	{
 		while(list->args[i] != NULL && is_empty(list->args[i]))
 			i++;
@@ -247,21 +258,25 @@ int split_expanded(t_command *list)
 			clear_list(&list);
 			return (0);
 		}
-		char **splited = ft_split_str(list->args[i], WHITESPACES);
-		if (!splited)
-			return (0);	
-		free(list->value);
-		list->value = ft_strdup(splited[0]);
-		free_array(splited);
+		// char **splited = ft_split_str(list->args[i], WHITESPACES);
+		// if (!splited)
+		// 	return (0);	
+		// free(list->value);
+		// list->value = ft_strdup(splited[0]);
+		// free_array(splited);
+		if (!split_argument(list, i))
+			return 0;
 	}
-	if (list->args && !list->quoted && list->value != NULL && list->value[0])
+	else if (list->args && list->type == TOKEN && !list->quoted && list->value != NULL && list->value[0])
 	{
-		char **splited = ft_split_str(list->args[i], WHITESPACES);
-		if (!splited)
-			return (1);
-		free(list->value);
-		list->value = ft_strdup(splited[0]);
-		free_array(splited);
+		// char **splited = ft_split_str(list->args[i], WHITESPACES);
+		// if (!splited)
+		// 	return (1);
+		// free(list->value);
+		// list->value = ft_strdup(splited[0]);
+		// free_array(splited);
+		if (!split_argument(list, i))
+			return 1;
 		list->args = split_args_(list->args, i);
 	}
 	return 1;
