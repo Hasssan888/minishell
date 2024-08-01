@@ -97,6 +97,7 @@ void	open_outfile(t_command *node, t_pipex *p)
 	t_command	*cur;
 
 	p->b = 0;
+	p->indixe = 0;
 	p->fd = malloc(sizeof(int) * p->count_read_out);
 	p->name_file = malloc(sizeof(char *) * (p->count_read_out + 1));
 	if (p->fd == NULL)
@@ -121,7 +122,8 @@ void	open_outfile(t_command *node, t_pipex *p)
 
 void	open_infile(t_command *node, t_pipex *p)
 {
-	// printf("d5al openfile\n");
+	p->indixe = 0;
+	printf("d5al openfile\n");
 	t_command	*cur;
 
 	p->fd = malloc(sizeof(int) * p->count_read_in);
@@ -144,7 +146,10 @@ void	open_infile(t_command *node, t_pipex *p)
 			{
 				// printf("%s: Permission denied\n", cur->args[0]);
 				perror(cur->args[0]);
+				printf("p->indixe = %d\n", p->indixe );
 				p->indixe = 1;
+				printf("p->indixe = %d\n", p->indixe );
+
 			}
 			p->i++;
 		}

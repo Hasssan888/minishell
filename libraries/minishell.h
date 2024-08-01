@@ -159,6 +159,7 @@ typedef struct s_pipex
 	t_command			*cur;
 	char 				*s;
 	int					*end_1;
+	int					*pipe_t;
 }						t_pipex;
 
 typedef struct s_path

@@ -21,7 +21,7 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 	}
 	else if (p->flag == 2)
 	{
-		// printf("infile\n");
+		// printf("herdoc\n");
 		pipe_heredoc(node1, env, p);
 
 	}
@@ -47,15 +47,9 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 
 pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 {
-	// printf("fork_pipe\n");
-	// int last;
-	// int temp;
-	// pid_t last_pid = 0;
 	if (pipe(p->end) == -1)
 		ft_error_2();
 	p->pid = fork();
-	// if (p->pid != 0)
-	// last_pid = p->pid; 
 	if (p->pid == -1)
 		ft_error_2();
 	else if (p->pid == 0)
@@ -65,7 +59,6 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	}
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
-	// printf("dup2(end[0])\n");
 	close(p->end[0]);
 	// if (ft_strcmp(node1->args[0], "cat") != 0 /*|| (ft_strcmp(node1->args[0],
 	// 			"cat") == 0 && node1->next == NULL)*/)
@@ -74,15 +67,6 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		data->exit_status = WEXITSTATUS(p->status);
 	// }
 
-
-		// while (1)
-		// {
-		// 	last = wait(&temp);
-		// 	if (last == last_pid)
-		// 	{
-		// 		data->exit_status  = WEXITSTATUS(temp);
-		// 	}
-		// }
 	
 	return (p->pid);
 }
@@ -201,7 +185,6 @@ int	func(t_command *list)
 		open_here_doc(list, &pipex);
 	}
 	ft_pipe(list, data->envirenment, &pipex);
-	// free(pipex.s);
 	while (pipex.i != -1)
 	{
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
