@@ -6,69 +6,58 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/24 14:19:11 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 13:28:08 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
-t_data	*data = NULL;
+t_data	*g_data = NULL;
 
 void	sig_handler(int signal)
 {
-	char	*prompt;
-
-	prompt = get_prompt();
-	if (data->ignore_sig == 0)
-	{	
-		if (signal == SIGQUIT)
-			return ;
-		if (signal == SIGINT)
-		{
-			printf("\n%s", prompt);
-			data->exit_status = 130;
-		}
+	if (!g_data->ignore_sig)
+		printf("\n");
+	if (signal == SIGINT && g_data->ignore_sig)
+	{
+		printf("\n%s", g_data->prompt);
+		g_data->exit_status = 130;
 	}
-	else
-		data->ignore_sig = 0;
-	free(prompt);
+	else if (signal == SIGQUIT)
+		g_data->exit_status = 131;
 }
 
 char	*get_prompt(void)
 {
 	char	*prompt1;
-	char	*prompt2;
 	char	*final_prompt;
 
-	prompt1 = ft_strjoin(ft_strdup(BWHT), getcwd(NULL, 0));
-	prompt2 = ft_strjoin(ft_strdup(BBLU "┌──(aziz㉿aelkheta)-[" COLOR_RESET),
-			prompt1);
-	final_prompt = ft_strjoin(prompt2, ft_strdup(BBLU "]\n└─$ " COLOR_RESET));
+	prompt1 = ft_strjoin(ft_strdup("┌──(aziz㉿aelkheta)-["), getcwd(NULL, 0));
+	final_prompt = ft_strjoin(prompt1, ft_strdup("]\n└─$ "));
 	return (final_prompt);
 }
 
 void	init_minishell(int ac, char **av, char **env)
 {
-	int len;
-	data->av = av;
-	data->ac = ac;
-	data->redirect = 0;
-	data->ignore_sig = 0;
-	data->list = NULL;
-	data->expanded = NULL;
-	data->old_pwd = NULL;
-	data->current_pwd = NULL;
-	data->envirenment = NULL;
-	data->exit_status = 0;
-	data->env = creat_env(env);
-	data->envirenment = env_to_array_(data->env, &len);
-	// data->envirenment = env;
-	data->syntax_error = false;
-	data->prompt = get_prompt();
-	data->new_command = NULL;
+	ft_bzero(g_data, sizeof(t_data));
+	g_data->av = av;
+	g_data->ac = ac;
+	g_data->redirect = 0;
+	g_data->ignore_sig = 1;
+	g_data->list = NULL;
+	// g_data->expanded = NULL;
+	// g_data->old_pwd = NULL;
+	// g_data->current_pwd = NULL;
+	// g_data->envirenment = NULL;
+	g_data->exit_status = 0;
+	g_data->env = creat_env(env);
+	g_data->envirenment = env_to_array_(g_data->env);
+	g_data->syntax_error = false;
+	g_data->prompt = get_prompt();
+	// g_data->new_command = NULL;
 }
 
-void clear_env(t_env **env)
+void	clear_env(t_env **env)
 {
 	t_env	*node;
 	t_env	*ptr;
@@ -89,14 +78,21 @@ void clear_env(t_env **env)
 	*env = NULL;
 }
 
-void clear_all()
+void	clear_all(void)
 {
-	free(data->prompt);
-	free(data->new_command);
-	if (data->envirenment != NULL)
-		free_array(data->envirenment);
-	clear_env(&data->env);
-	free(data);
+	free(g_data->prompt);
+	free(g_data->new_command);
+	if (g_data->envirenment != NULL)
+		free_array(g_data->envirenment);
+	clear_env(&g_data->env);
+	free(g_data);
+}
+
+void	ignr_signals(void)
+{
+	signal(SIGINT, sig_handler);
+	signal(SIGTSTP, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 int	main(int ac, char **av, char **env)
@@ -104,13 +100,11 @@ int	main(int ac, char **av, char **env)
 	char	*command;
 	t_pipex	pipex;
 
-	data = (t_data *)malloc(sizeof(t_data));
+	g_data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(ac, av, env);
-	// print_minishell();
-	signal(SIGQUIT, sig_handler);
-	signal(SIGINT, SIG_IGN);
-	command = readline(data->prompt);
-	signal(SIGINT, SIG_IGN);
+	print_minishell();
+	ignr_signals();
+	command = readline(g_data->prompt);
 	while (command != NULL)
 	{
 		pipex.save1 = dup(STDIN_FILENO);
@@ -118,9 +112,8 @@ int	main(int ac, char **av, char **env)
 		parse_command(command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
-		signal(SIGINT, sig_handler);
-		command = readline(data->prompt);
-		signal(SIGINT, SIG_IGN);
+		ignr_signals();
+		command = readline(g_data->prompt);
 	}
 	printf("exit\n");
 	clear_history();

@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   allcmd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:44:49 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/16 12:44:51 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/07/28 10:03:58 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libraries/minishell.h"
+
 void	infile(t_command *node1, char **env, t_pipex *p)
 {
 	printf("p->index = %d\n", p->indixe);

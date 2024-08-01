@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:04 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/16 12:45:06 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/07/31 11:46:58 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,18 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	// 			"cat") == 0 && node1->next == NULL)*/)
 	// {
 		wait(&p->status);
-		data->exit_status = WEXITSTATUS(p->status);
+		g_data->exit_status = WEXITSTATUS(p->status);
 	// }
 
+
+		// while (1)
+		// {
+		// 	last = wait(&temp);
+		// 	if (last == last_pid)
+		// 	{
+		// 		data->exit_status  = WEXITSTATUS(temp);
+		// 	}
+		// }
 	
 	return (p->pid);
 }
@@ -185,6 +194,7 @@ int	func(t_command *list)
 		open_here_doc(list, &pipex);
 	}
 	ft_pipe(list, data->envirenment, &pipex);
+	// free(pipex.s);
 	while (pipex.i != -1)
 	{
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/24 16:21:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/30 11:24:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	here_doc(t_command *node, t_pipex *pipex)
 	char	*str;
 	// int 	status = 0;
 
+			
 	// int pid = fork();
 	// if (pid == 0)
 	// {
@@ -84,7 +85,6 @@ void	here_doc(t_command *node, t_pipex *pipex)
 			close(pipex->strs[pipex->j][1]);
 			free(pipex->line);
 			free(str);
-
 	// }
 	// else
 	// 	wait(&status);
@@ -174,3 +174,4 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 // 	free(a);
 // 	free(b);
 // 	return t;
+// }

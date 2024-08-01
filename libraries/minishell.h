@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/24 13:19:58 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 12:43:01 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,22 @@ typedef enum s_types
 // # define AND_OP 			9
 // # define FLE				10
 
+# define WHITESPACES 	" \t\v\n"
+# define SYNTERRR 		2
+# define AMPIGOUS 		1
+
+
+
 # define TOKEN 			0
 # define PIPE 			1
 # define RED_OUT 		2
 # define RED_IN 		3
 # define APP 			4
 # define HER_DOC 		5
+
+// #define  sigact;
+
+typedef struct sigaction sigact;
 
 typedef struct s_env
 {
@@ -76,8 +86,9 @@ typedef struct s_env
 typedef struct s_command
 {
 	int					type;
-	int					in_file;
-	int					out_file;
+	// int					in_file;
+	// int					out_file;
+	int					syntxerr;
 	int					quoted;
 	char				*value;
 	char				**args;
@@ -97,6 +108,7 @@ typedef struct s_data
 	char				*str2;
 	t_command			*list;
 	t_command			*head;
+	struct sigaction sa_child;
 	char				*prompt;
 	char				*expanded;	
 	char				**old_pwd;
@@ -139,7 +151,7 @@ typedef struct s_pipex
 	pid_t				pid;
 	int					*fd;
 	int					*tb;
-	int				**strs;
+	int					**strs;
 	int					arr[1025];
 	int					end[2];
 	int					status;
@@ -171,7 +183,7 @@ typedef struct s_path
 	char				*path_from_envp;
 }						t_path;
 
-extern t_data *data; // for use this global var from all files
+extern t_data *g_data; // for use this global var from all files
 
 
 // # include <termios.h>
@@ -190,15 +202,18 @@ char					*get_prompt(void);
 void					pwd(void);
 int						env(t_env *env);
 int						echo(char **cmd);
-// int						export(t_command *cmd, t_env *envir);
 int						is_builtin_cmd(t_command *command);
 char					*get_cmd_path(char *cmd_);
 char					*get_word_(char *line, char *del);
 t_env					*get_env_ele_ptr(char *env_val);
 void					print_array(char **array);
-t_env					*sort_list(t_env *env);
 int						export(t_command *cmd, t_env *env);
-int						unset(char *env_var, t_env *envirenement);
+int						unset(char **env_var, t_env *envirenement);
+t_env					**sort_env(t_env **env_, int env_len);
+int					 	valid_identifier(char *str);
+void					print_sorted_env(t_env *env);
+void					print_export_env(t_env **env, int env_len);
+int					 	env_c_len(t_env *env_);
 
 // general purpose utiles
 
@@ -227,6 +242,10 @@ void					print_minishell(void);
 void					print_prompt(void);
 void					ft_perror(char *message);
 
+// signals hanling
+
+void					child_sig_handler(int signo);
+
 
 // envirenement utiles
 
@@ -234,7 +253,7 @@ void 					clear_env(t_env **env);
 t_env					*creat_env(char **env);
 void					add_back(t_env **lst, t_env *new);
 t_env					*lstnew(char *env_value, char *env_key);
-char					**env_to_array_(t_env *env, int *len);
+char					**env_to_array_(t_env *env);
 // parsing utiles
 
 // int 					ft_strisalnum(char *str);
@@ -246,7 +265,7 @@ char					*get_env_element(char *env_var);
 // lexer functions
 
 int						check_unqoted(char *line);
-char					*lexer_command(char *line, int i, int j);
+char					*lexer_command(char *line);
 
 // expander functions
 
