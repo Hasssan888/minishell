@@ -266,10 +266,10 @@ char	**split_argument(t_command *list, int i)
 int	get_cmd_if_empty(t_command *list)
 {
 	int	i;
-	char **splited;
+	// char **splited;
 
 	i = 0;
-	splited = NULL;
+	// splited = NULL;
 	if (list->type == TOKEN && is_empty(list->value))
 	{
 		while (list->args[i] != NULL && is_empty(list->args[i]))
@@ -281,12 +281,12 @@ int	get_cmd_if_empty(t_command *list)
 	}
 	else
 	{
-		splited = ft_split_str(list->value, WHITESPACES);
-		if (!splited)
-			return (0);
-		free(list->value);
-		list->value = ft_strdup(splited[0]);
-		free_array(splited);
+		// splited = ft_split_str(list->value, WHITESPACES);
+		// if (!splited)
+		// 	return (0);
+		// free(list->value);
+		// list->value = ft_strdup(splited[0]);
+		// free_array(splited);
 	}
 	return (1);
 }
@@ -300,6 +300,20 @@ char **split_and_join(char **args, char *exp_args)
 	else
 		args = ft_arr_join(args, splited);
 	return args;
+}
+
+char **ft_arrcpy(char **arr, int arr_len)
+{
+	int i = -1;
+	if (arr_len <= 0 || !arr)
+		return NULL;
+	char **arr_cpy = malloc((arr_len + 1)* sizeof(char *));
+	if (!arr_cpy)
+		return NULL;
+	while(++i < arr_len)
+		arr_cpy[i] = ft_strdup(arr[i]);
+	arr_cpy[i] = NULL;
+	return arr_cpy;
 }
 
 int	expander_extended(t_command *list)
@@ -322,6 +336,7 @@ int	expander_extended(t_command *list)
 			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
 		if (SPLIT)
 		{
+			args = ft_arrcpy(list->args, i);
 			args = split_and_join(args, list->args[i]);
 			SPLIT = 0;
 		}
@@ -333,7 +348,6 @@ int	expander_extended(t_command *list)
 	}
 	if (args)
 	{
-		printf("asssa\n");
 		free_array(list->args);
 		list->args = args;
 	}
