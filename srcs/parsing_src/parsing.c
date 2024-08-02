@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 12:02:42 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/07/31 18:14:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +129,9 @@ int	parse_command(char *line)
 	// delete_empty_nodes(g_data->list);
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
-	// is_builtin_cmd(g_data->list);
 	// exec_command(g_data->list);
 	g_data->ignore_sig = 1;
+	// is_builtin_cmd(g_data->list);
 	func(g_data->list);
 	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
 	clear_list(&g_data->list);

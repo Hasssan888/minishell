@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 13:28:08 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/02 20:11:06 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	main(int ac, char **av, char **env)
 	g_data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(ac, av, env);
 	print_minishell();
-	ignr_signals();
+	// ignr_signals();
 	command = readline(g_data->prompt);
 	while (command != NULL)
 	{
@@ -112,7 +112,7 @@ int	main(int ac, char **av, char **env)
 		parse_command(command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
-		ignr_signals();
+		// ignr_signals();
 		command = readline(g_data->prompt);
 	}
 	printf("exit\n");

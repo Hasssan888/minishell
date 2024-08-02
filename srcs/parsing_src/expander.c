@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 16:23:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/02 20:18:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	expand_(char *argument, int *i)
 	}
 	else if (argument[*i + 1] == '?')
 	{
-		i += 2;
+		*i += 2;
 		g_data->expanded = ft_strjoin(g_data->expanded,
 				ft_itoa(g_data->exit_status));
 	}
