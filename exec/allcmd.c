@@ -103,6 +103,7 @@ void	pipe_heredoc(t_command *node1, char **env, t_pipex *p)
 			p->outfile = open(p->s ,O_WRONLY | O_CREAT | O_APPEND,
 						0644);
 		// printf("p->outfile = %d\n", p->outfile);
+		free(p->s);
 		dup2(p->outfile, 1);
 		close(p->outfile);
 	}
