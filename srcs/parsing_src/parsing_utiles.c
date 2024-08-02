@@ -1,0 +1,136 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utiles.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
+/*   Updated: 2024/07/31 13:26:45 by aelkheta         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../libraries/minishell.h"
+
+int	get_args_size(t_command *list)
+{
+	int	i;
+
+	i = 0;
+	while (list != NULL)
+	{
+		if (list->type == PIPE)
+			return (i);
+		if (list->type == TOKEN)
+			i++;
+		if (list->next != NULL && list->next == TOKEN && (list->type == RED_IN
+				|| list->type == RED_OUT || list->type == HER_DOC
+				|| list->type == APP))
+			i--;
+		list = list->next;
+	}
+	return (i);
+}
+
+t_command	*redirect_list(t_command **head, t_command **redirect_head)
+{
+	t_command	*redirection_node;
+
+	(void)head;
+	redirection_node = new_node(g_data->_tokens_list->type,
+			ft_strdup(g_data->_tokens_list->value));
+	g_data->_tokens_list = free_node(&g_data->_tokens_list);
+	if (!g_data->_tokens_list || g_data->_tokens_list->type != TOKEN)
+	{
+		g_data->exit_status = 2;
+		ft_perror("syntax error\n");
+		free_node(&redirection_node);
+		free_array(g_data->list_command->args);
+		free_node(&g_data->list_command);
+		clear_list(&g_data->_tokens_list);
+		g_data->syntax_error = 1;
+		return (NULL);
+	}
+	redirection_node->args = malloc(2 * sizeof(char *));
+	redirection_node->args[0] = ft_strdup(g_data->_tokens_list->value);
+	redirection_node->args[1] = NULL;
+	g_data->_tokens_list = free_node(&g_data->_tokens_list);
+	add_back_list(redirect_head, redirection_node);
+	return (g_data->_tokens_list);
+}
+
+void	fake_here_doc__(void)
+{
+	int	pid;
+	int	status;
+	int	len;
+
+	status = 0;
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
+		g_data->str1 = readline("> ");
+		while (g_data->str1 != NULL)
+		{
+			len = ft_strlen(g_data->str1) > ft_strlen(g_data->str2) ? ft_strlen(g_data->str1) : ft_strlen(g_data->str2);
+			if (ft_strncmp(g_data->str2, g_data->str1, len) == 0)
+				break ;
+			free(g_data->str1);
+			g_data->str1 = readline("> ");
+		}
+		clear_list(&g_data->list);
+		free(g_data->str1);
+		exit(0);
+	}
+	else
+		waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			g_data->exit_status = 130;
+	}
+	else
+		g_data->exit_status = 2;
+}
+
+void	get_redirect_node(void)
+{
+	int	i;
+
+	i = 0;
+	g_data->_tokens_list = free_node(&g_data->_tokens_list);
+	if (!g_data->_tokens_list || g_data->_tokens_list->type != TOKEN)
+	{
+		g_data->ignore_sig = 1;
+		if (g_data->redirect)
+			fake_here_doc__();
+		ft_perror("syntax error\n");
+		free_array(g_data->list_command->args);
+		free_node(&g_data->list_command);
+		clear_list(&g_data->_tokens_list);
+		g_data->syntax_error = 1;
+		g_data->list = NULL;
+		return ;
+	}
+	g_data->list_command->args = malloc(2 * sizeof(char *));
+	g_data->list_command->args[0] = ft_strdup(g_data->_tokens_list->value);
+	g_data->list_command->args[1] = NULL;
+	if (!i)
+	{
+		g_data->redirect = 1;
+		g_data->str2 = g_data->list_command->args[0];
+	}
+	g_data->_tokens_list = free_node(&g_data->_tokens_list);
+}
+
+char	*duplicate_word(char *command_line, int *i, int j)
+{
+	char	*token_val;
+
+	token_val = malloc((j - *i) * sizeof(char) + 1);
+	ft_strlcpy(token_val, &command_line[*i], j - *i + 1);
+	*i = j;
+	return (token_val);
+}

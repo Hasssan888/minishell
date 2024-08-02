@@ -1,0 +1,96 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander_utiles.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
+/*   Updated: 2024/07/31 13:02:58 by aelkheta         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../libraries/minishell.h"
+
+void	what_quote(t_command *list, char *arg, char quote)
+{
+	if (arg[0] == quote && quote == '\'')
+		list->quoted = 1;
+	else if (arg[0] == quote && quote == '"')
+		list->quoted = 2;
+}
+
+char	*get_var(char *env_var, int *i)
+{
+	int		k;
+	char	*env_val;
+
+	k = 0;
+	if (!env_var || !env_var[0])
+		return (NULL);
+	while (env_var[k] && (ft_isalnum(env_var[k]) || env_var[k] == '_'))
+		k++;
+	*i += k;
+	env_val = malloc((k + 1) * sizeof(char));
+	ft_strlcpy(env_val, env_var, k + 1);
+	return (env_val);
+}
+
+char	*unquote_arg(t_command *list, char *arg, int j, int k)
+{
+	char	quote;
+	char	*argument;
+
+	if (!list || !arg)
+		return (NULL);
+	argument = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
+	while (arg[j])
+	{
+		quote = arg[j];
+		if (arg[j] == '$' && (arg[j + 1] == '"' || arg[j + 1] == '\''))
+			j++;
+		else if (arg[j] == '\'' || arg[j] == '"')
+		{
+			quote = arg[j++];
+			while (arg[j] && arg[j] != quote)
+				argument[k++] = arg[j++];
+			j++;
+		}
+		else
+			argument[k++] = arg[j++];
+		what_quote(list, arg, quote);
+	}
+	free(arg);
+	return (argument);
+}
+
+char	*get_word(char *argument, int *i)
+{
+	char	*str;
+	int		j;
+
+	str = NULL;
+	j = *i;
+	if (argument[j] == '$')
+		j++;
+	while (argument[j] && argument[j] != '$')
+		j++;
+	str = malloc((j - *i + 1) * sizeof(char));
+	ft_strlcpy(str, &argument[*i], (j - *i + 1));
+	*i = j;
+	return (str);
+}
+
+int	get_expanded(char *argument, int *i)
+{
+	g_data->str1 = get_var(&argument[++(*i)], i);
+	g_data->str2 = get_env_element(g_data->str1);
+	free(g_data->str1);
+	if (!g_data->str2 || !g_data->str2[0])
+	{
+		free(g_data->str2);
+		return (1);
+	}
+	g_data->expanded = ft_strjoin(g_data->expanded, g_data->str2);
+	return (0);
+}

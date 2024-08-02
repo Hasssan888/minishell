@@ -35,8 +35,8 @@ void	excut_butlin(t_command *node1, char **env)
 {
 	if (if_is_buil(node1))
 	{
-		printf("is_bul\n");
 		is_builtin_cmd(node1);
+		exit(0);
 	}
 	else
 		ft_excute(node1->args, env);
@@ -60,5 +60,30 @@ void	readout_append(t_command *node1, t_pipex *p)
 			printf("%s: Permission denied\n", node1->next->args[0]);
 			exit(1);
 		}
+	}
+}
+
+void	readout_append_2(t_command *node1, t_pipex *p)
+{
+	printf("node1->arg[0] = %s\n", node1->args[0]);
+	if (node1->next && (node1->next->type == RED_OUT
+			|| node1->next->type == APP))
+		open_outfile(node1, p);
+	else
+	{
+		printf("outfile\n");
+		if (node1->type == APP)
+			p->outfile = open(node1->args[0],
+					O_WRONLY | O_CREAT | O_APPEND, 0644);
+		else
+			p->outfile = open(node1->args[0],
+					O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		printf("p->outfile = %d\n", p->outfile);
+		if (p->outfile == -1)
+		{
+			printf("%s: Permission denied\n", node1->args[0]);
+			exit(1);
+		}
+
 	}
 }
