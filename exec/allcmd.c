@@ -14,7 +14,7 @@
 
 void	infile(t_command *node1, char **env, t_pipex *p)
 {
-	printf("p->index = %d\n", p->indixe);
+	// printf("p->index = %d\n", p->indixe);
 	if (p->indixe == 1)
 	{
 		p->indixe = 0;
@@ -43,6 +43,7 @@ void	outfile(t_command *node1, char **env, t_pipex *p)
 	// close(p->end[1]);
 	if (p->indixe == 1)
 	{
+		p->indixe = 0;
 		exit(1);
 	}
 	dup2(p->outfile, STDOUT_FILENO);
@@ -88,10 +89,12 @@ void	pipe_heredoc(t_command *node1, char **env, t_pipex *p)
 	{
 
 		if (p->indixe == 1)
+		{
+			p->indixe = 0;
 			exit(1);
+		}
 		if (check_redout(node1) == 1)
 			open_outfile(node1, p);
-		// printf("p->s = %s\n", p->s);
 		// printf("p->b == %d\n", p->b);
 		if (p->b == 1)
 			p->outfile = open(p->s ,O_WRONLY | O_CREAT | O_TRUNC,
@@ -99,6 +102,7 @@ void	pipe_heredoc(t_command *node1, char **env, t_pipex *p)
 		else if (p->b == 2)
 			p->outfile = open(p->s ,O_WRONLY | O_CREAT | O_APPEND,
 						0644);
+		// printf("p->outfile = %d\n", p->outfile);
 		dup2(p->outfile, 1);
 		close(p->outfile);
 	}

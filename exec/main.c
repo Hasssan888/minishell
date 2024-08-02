@@ -16,7 +16,7 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 {
 	if (p->flag == 1)
 	{
-		// printf("infile\n");
+		printf("infile\n");
 		infile(node1, env, p);
 	}
 	else if (p->flag == 2)
@@ -60,12 +60,12 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[0]);
-	// if (ft_strcmp(node1->args[0], "cat") != 0 /*|| (ft_strcmp(node1->args[0],
-	// 			"cat") == 0 && node1->next == NULL)*/)
-	// {
+	if (ft_strcmp(node1->args[0], "cat") != 0 /*|| (ft_strcmp(node1->args[0],
+				"cat") == 0 && node1->next == NULL)*/)
+	{
 		wait(&p->status);
 		g_data->exit_status = WEXITSTATUS(p->status);
-	// }
+	}
 
 
 		// while (1)
@@ -188,12 +188,18 @@ int	func(t_command *list)
 		
 		open_outfile(list, &pipex);
 	}
-	if (pipex.count_here_doc > 0)
+	if (pipex.count_here_doc > 0 && pipex.count_here_doc <= 16)
 	{
 		// printf("open heredoc\n");
 		open_here_doc(list, &pipex);
 	}
-	ft_pipe(list, data->envirenment, &pipex);
+	else if (pipex.count_here_doc > 16)
+	{
+		perror("bash: maximum here-document count exceeded");
+		g_data->exit_status = 2;
+		exit(2);
+	}
+	ft_pipe(list, g_data->envirenment, &pipex);
 	// free(pipex.s);
 	while (pipex.i != -1)
 	{
@@ -231,7 +237,7 @@ int	func(t_command *list)
 		// p->infile = open(p->cur->args[0], O_RDONLY, 0644);
 		// if (p->infile == -1)
 		// {
-		// 	printf("%s: Permission denied\n", p->cur->args[0]);
+			// printf("%s: Permission denied\n", p->cur->args[0]);
 		// 	p->indixe = 1;
 		// }
 // 		p->flag = 1;

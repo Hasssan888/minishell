@@ -1,0 +1,15 @@
+a.txt
+b.txt
+compiler
+c.txt
+d.txt
+exec
+libraries
+Makefile
+minishell
+objs
+readline.supp
+README.md
+srcs
+tests
+usless
