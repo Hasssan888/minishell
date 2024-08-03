@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 16:23:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/02 20:18:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	expand_(char *argument, int *i)
 	}
 	else if (argument[*i + 1] == '?')
 	{
-		i += 2;
+		*i += 2;
 		g_data->expanded = ft_strjoin(g_data->expanded,
 				ft_itoa(g_data->exit_status));
 	}
@@ -278,16 +278,19 @@ int	get_cmd_if_empty(t_command *list)
 			return (0);
 		free(list->value);
 		list->value = ft_strdup(list->args[0]);
+		printf("====%s===\n", list->value);
 	}
-	else
-	{
-		// splited = ft_split_str(list->value, WHITESPACES);
-		// if (!splited)
-		// 	return (0);
-		// free(list->value);
-		// list->value = ft_strdup(splited[0]);
-		// free_array(splited);
-	}
+	// else
+	// {
+	// 	splited = ft_split_str(list->value, WHITESPACES);
+	// 	if (!splited)
+	// 		return (0);
+	// 	free(list->value);
+	// 	list->value = ft_strdup(splited[0]);
+	// 	printf("Hello\n");
+	// 	printf("====%s===\n", list->value);
+	// 	free_array(splited);
+	// }
 	return (1);
 }
 
@@ -295,24 +298,66 @@ char **split_and_join(char **args, char *exp_args)
 {
 	char **splited = NULL;
 	splited = ft_split_str(exp_args, WHITESPACES);
-	if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
-		args = ft_arr_join(args, splited);
-	else
-		args = ft_arr_join(args, splited);
+	// if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
+	// 	args = ft_arr_join(args, splited);
+	// else
+	args = ft_arr_join(args, splited);
 	return args;
+}
+
+int get_real_len(char **arr)
+{
+	int i = -1;
+	int len = 0;
+
+	while(arr && arr[++i])
+	{
+		if (!is_empty(arr[i]))
+			len++;
+	}
+	return (len);
 }
 
 char **ft_arrcpy(char **arr, int arr_len)
 {
 	int i = -1;
-	if (arr_len <= 0 || !arr)
+	int j = 0;
+	if (!arr)
 		return NULL;
-	char **arr_cpy = malloc((arr_len + 1)* sizeof(char *));
+	int len = get_real_len(arr);
+	char **arr_cpy = malloc((len + 1)* sizeof(char *));
 	if (!arr_cpy)
 		return NULL;
 	while(++i < arr_len)
-		arr_cpy[i] = ft_strdup(arr[i]);
-	arr_cpy[i] = NULL;
+	{
+		// if (!arr[i][0])
+		// 	arr_cpy[j++] = ft_strdup("");
+		if (!is_empty(arr[i]))
+			arr_cpy[j++] = ft_strdup(arr[i]);
+	}
+	arr_cpy[j] = NULL;
+	return arr_cpy;
+}
+
+
+char **ft_arrcpy_nempty(char **arr)
+{
+	int i = -1;
+	int j = 0;
+	if (!arr)
+		return NULL;
+	int len = get_real_len(arr);
+	char **arr_cpy = malloc((len + 1)* sizeof(char *));
+	if (!arr_cpy)
+		return NULL;
+	while(arr[++i])
+	{
+		// if (!arr[i][0])
+		// 	arr_cpy[j++] = ft_strdup("");
+		if (!is_empty(arr[i]))
+			arr_cpy[j++] = ft_strdup(arr[i]);
+	}
+	arr_cpy[j] = NULL;
 	return arr_cpy;
 }
 
@@ -321,17 +366,19 @@ int	expander_extended(t_command *list)
 	int i = -1;
 	int SPLIT = 0;
 	char **args = NULL;
+	// list->args = arrcpy_nempty(list->args);
+
 	while (list->value != NULL && list->value[0] && list->args != NULL
 		&& list->args[++i] != NULL)
 	{
-		if (is_empty(list->args[i]))
-			continue;
 		if (ft_strchr(list->args[i], '$') && list->quoted != 1
 			&& list->type != HER_DOC)
 		{
 			list->args[i] = expand_vars(list->args[i], 0);
 			SPLIT = 1;
 		}
+		// if (is_empty(list->args[i]))
+		// 	continue;
 		if (list->type != HER_DOC)
 			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
 		if (SPLIT)

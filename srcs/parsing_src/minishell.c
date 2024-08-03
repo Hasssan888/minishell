@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 13:28:08 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 09:13:44 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,9 @@ void	clear_all(void)
 void	ignr_signals(void)
 {
 	signal(SIGINT, sig_handler);
-	signal(SIGTSTP, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
+	// signal(SIGTSTP, SIG_IGN);
+	// signal(SIGTSTP, SIG_IGN);
 }
 
 int	main(int ac, char **av, char **env)
@@ -105,6 +106,7 @@ int	main(int ac, char **av, char **env)
 	print_minishell();
 	ignr_signals();
 	command = readline(g_data->prompt);
+	signal(SIGINT, SIG_IGN);
 	while (command != NULL)
 	{
 		pipex.save1 = dup(STDIN_FILENO);
@@ -114,6 +116,7 @@ int	main(int ac, char **av, char **env)
 		close(pipex.save1);
 		ignr_signals();
 		command = readline(g_data->prompt);
+		signal(SIGINT, SIG_IGN);
 	}
 	printf("exit\n");
 	clear_history();
