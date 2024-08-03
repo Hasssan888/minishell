@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 12:04:15 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 12:54:12 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ void	ft_perror(char *message)
 {
 	ft_putstr_fd(message, 2);
 }
-char	*get_env_element(char *env_var)
+char	*get_env_element(t_data *data, char *env_var)
 {
 	t_env	*env;
 
-	env = g_data->env;
+	env = data->env;
 	if (!env_var)
 		return (NULL);
 	while (env != NULL)
@@ -32,7 +32,7 @@ char	*get_env_element(char *env_var)
 	return (ft_strdup(""));
 }
 
-char	*get_cmd_path(char *cmd_)
+char	*get_cmd_path(t_data *data, char *cmd_)
 {
 	int		i;
 	char	*cmd_path;
@@ -42,7 +42,7 @@ char	*get_cmd_path(char *cmd_)
 	i = 0;
 	if (access(cmd_, X_OK) == 0)
 		return (ft_strdup(cmd_));
-	env_ele = get_env_element("PATH");
+	env_ele = get_env_element(data, "PATH");
 	path = ft_split(env_ele, ':');
 	free(env_ele);
 	while (path[i])

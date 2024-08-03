@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 11:46:08 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 13:09:45 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	pwd(void)
 
 	cwd = getcwd(NULL, 0);
 	printf("%s\n", cwd);
-	g_data->expanded = 0;
+	g_exit_stat = 0;
 	free(cwd);
 }
 
@@ -73,6 +73,7 @@ void	del_node(t_env **env, t_env *env_var)
 		{
 			previous->next = current->next;
 			free(current->env_value);
+			free(current->env_key);
 			free(current);
 			return ;
 		}
@@ -81,18 +82,18 @@ void	del_node(t_env **env, t_env *env_var)
 	}
 }
 
-int	unset(char **env_var, t_env *envirenement)
+int	unset(t_data *data, char **env_var, t_env *envirenement)
 {
 	int i = 0;
 	t_env	*env_ptr;
 	
 	while(env_var[i] != NULL)
 	{
-		env_ptr = get_env_ele_ptr(env_var[i++]);
+		env_ptr = get_env_ele_ptr(data, env_var[i++]);
 		if (!env_ptr)
 			continue;
 		del_node(&envirenement, env_ptr);		
 	}
-	g_data->expanded = 0;
+	g_exit_stat = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 12:43:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 13:18:29 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ typedef struct s_data
 	char				*str2;
 	t_command			*list;
 	t_command			*head;
-	struct sigaction 	sa_child;
+	// struct sigaction 	sa_child;
 	char				*prompt;
 	char				*expanded;	
 	char				**old_pwd;
@@ -122,7 +122,7 @@ typedef struct s_data
 	t_command			*list_command;
 	t_command			*_tokens_list;
 	t_command			*rdrct_head;
-	bool				ignore_sig;
+	int					ignore_sig;
 	bool 				syntax_error; 	// boolean variable for syntax_error
 }						t_data;
 
@@ -183,7 +183,10 @@ typedef struct s_path
 	char				*path_from_envp;
 }						t_path;
 
-extern t_data *g_data; // for use this global var from all files
+// extern t_data *g_data; // for use this global var from all files
+
+extern int g_exit_stat; // for use this global var from all files
+extern int flag;
 
 
 // # include <termios.h>
@@ -197,18 +200,18 @@ void					print_list(t_command *table);
 
 // buit-in commands:
 
-int						cd(char **args);
+int						cd(t_data *data, char **args);
 char					*get_prompt(void);
 void					pwd(void);
 int						env(t_env *env);
 int						echo(char **cmd);
-int						is_builtin_cmd(t_command *command);
-char					*get_cmd_path(char *cmd_);
+int						is_builtin_cmd(t_data *data, t_command *command);
+char					*get_cmd_path(t_data *data, char *cmd_);
 char					*get_word_(char *line, char *del);
-t_env					*get_env_ele_ptr(char *env_val);
+t_env					*get_env_ele_ptr(t_data *data, char *env_val);
 void					print_array(char **array);
-int						export(t_command *cmd, t_env *env);
-int						unset(char **env_var, t_env *envirenement);
+int						export(t_data *data, t_command *cmd, t_env *env);
+int						unset(t_data *data, char **env_var, t_env *envirenement);
 t_env					**sort_env(t_env **env_, int env_len);
 int					 	valid_identifier(char *str);
 void					print_sorted_env(t_env *env);
@@ -227,10 +230,10 @@ void					clear_list(t_command **lst);
 
 // parsing functions
 
-int						parse_command(char *command);
+int						parse_command(t_data *data, char *command);
 int						get_args_size(t_command *list);
-t_command				*redirect_list(t_command **head, t_command **redirect_head);
-void					get_redirect_node();
+t_command				*redirect_list(t_data *data, t_command **redirect_head);
+void					get_redirect_node(t_data *data);
 
 // tokenizer functions
 t_command				*tokenzer_command(char *command_line);
@@ -245,38 +248,40 @@ void					ft_perror(char *message);
 // signals hanling
 
 // void					child_sig_handler(int signo);
-void 					ign_sig_child();
+// void 				ign_sig_child();
+void					handle_signals(int *ign_sig, int i);
+int 					check_exit_status(int status);
 
 // envirenement utiles
 
 void 					clear_env(t_env **env);
-t_env					*creat_env(char **env);
+char					**env_to_array_(t_env *env);
 void					add_back(t_env **lst, t_env *new);
 t_env					*lstnew(char *env_value, char *env_key);
-char					**env_to_array_(t_env *env);
+t_env					*creat_env(t_data *data, char **env);
 // parsing utiles
 
 // int 					ft_strisalnum(char *str);
-int						exec_command(t_command *commands_list);
+int						exec_command(t_data *data, t_command *commands_list);
 // char					*ft_strnstr_l(const char *big, const char *little,
 // 							size_t len);
-char					*get_env_element(char *env_var);
+char					*get_env_element(t_data *data, char *env_var);
 
 // lexer functions
 
 int						check_unqoted(char *line);
-char					*lexer_command(char *line);
+char					*lexer_command(t_data *data, char *line);
 
 // expander functions
 
 char					*get_var(char *env_var, int *i);
 char					*unquote_arg(t_command *list, char *arg, int j, int k);
-char					*ft_strnstr_l(const char *big, const char *little,
-							size_t len);
+// char					*ft_strnstr_l(const char *big, const char *little,
+// 							size_t len);
 char					*get_word(char *argument, int *i);
-char					*expand_vars(char *argument, int i);
-t_command				*expander_command(t_command *list);
-int						get_expanded(char *argument, int *i);
+char					*expand_vars(t_data *data, char *argument, int i);
+t_command				*expander_command(t_data *data, t_command *list);
+int						get_expanded(t_data *data, char *argument, int *i);
 char					**ft_split_str(const char *s, char *del);
 
 // clean functions
@@ -297,26 +302,25 @@ char					*slash(char *mycmdargs);
 char					*without_slash(char **env, char *mycmdargs);
 char					*search_path(char *mycmdargs, char **env);
 void					ft_error(char **av);
-pid_t					fork_pipe(t_command *node1, char **env, t_pipex *p);
-void					open_here_doc(t_command *node, t_pipex *pipex);
-void					here_doc(t_command *node, t_pipex *pipex);
+pid_t					fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p);
+void					open_here_doc(t_data *data, t_command *node, t_pipex *pipex);
+void					here_doc(t_data *data, t_command *node, t_pipex *pipex);
 void					ft_excute(char **av, char **env);
 void					ft_error_2(void);
-void					ft_pipe(t_command *node1, char **ev, t_pipex *p);
+void					ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p);
 int						ft_strcmp(char *s1, char *s2);
-int						func(t_command *list);
+int						func(t_data *data, t_command *list);
 char					*strjoin1(char *s1, char *s2);
 t_command				*lstlast(t_command *lst);
-void   					infile(t_command *node1, char **env,t_pipex *p);
-void					outfile(t_command *node1, char **env,t_pipex *p);
+void   					infile(t_data *data, t_command *node1, char **env, t_pipex *p);
+void					outfile(t_data *data, t_command *node1, char **env, t_pipex *p);
 void    				one_here_doc(t_command *node1, char **env, t_pipex *p);
 void    				heredoc_readout_app(t_command *node1, char **env,t_pipex *p);
-void					pipe_heredoc(t_command *node1, char **env, t_pipex *p);
-int						exec_command(t_command *commands_list);
+void					pipe_heredoc(t_data *data, t_command *node1, char **env, t_pipex *p);
 int						if_is_buil(t_command *command);
 void    				readout_append(t_command *node1, t_pipex *p);
 void    				readout_append_2(t_command *node1, t_pipex *p);
-void    				excut_butlin(t_command *node1, char **env);
+void					excut_butlin(t_data *data, t_command *node1, char **env);
 void					sig_handler(int signal);
 
 #endif

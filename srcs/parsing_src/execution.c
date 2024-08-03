@@ -6,27 +6,26 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:45:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 12:01:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 13:22:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
-void	sig_child_hanler(int signo)
-{
-	g_data->ignore_sig = 1;
-	if (signo == SIGINT)
-	{
-		// printf("\n%s", g_data->prompt);
-		g_data->exit_status = 130;
-		exit(0);
-	}
-	else if (signo == SIGQUIT)
-		g_data->exit_status = 131;
-	else if (signo == SIGTSTP)
-		g_data->exit_status = 132;
-	exit(0);
-}
+// void	sig_child_hanler(int signo)
+// {
+// 	if (signo == SIGINT)
+// 	{
+// 		// printf("\n%s", data->prompt);
+// 		data->exit_status = 130;
+// 		exit(0);
+// 	}
+// 	else if (signo == SIGQUIT)
+// 		data->exit_status = 131;
+// 	else if (signo == SIGTSTP)
+// 		data->exit_status = 132;
+// 	exit(0);
+// }
 
 void	sig_dflt(void)
 {
@@ -34,7 +33,7 @@ void	sig_dflt(void)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 }
-int	exec_command(t_command *commands_list)
+int	exec_command(t_data *data, t_command *commands_list)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -46,14 +45,14 @@ int	exec_command(t_command *commands_list)
 	while (commands_list != NULL)
 	{
 		fd_out = 1;
-		if (is_builtin_cmd(commands_list))
+		if (is_builtin_cmd(data, commands_list))
 		{
 			commands_list = commands_list->next;
 			continue ;
 		}
 		else
 		{
-			cmd_path = get_cmd_path(commands_list->value);
+			cmd_path = get_cmd_path(data, commands_list->value);
 			if (commands_list->type == TOKEN && cmd_path != NULL)
 			{
 				if (commands_list->next != NULL
@@ -83,7 +82,6 @@ int	exec_command(t_command *commands_list)
 				}
 				else if (pid == 0)
 				{
-					g_data->ignore_sig = 0;
 					sig_dflt();
 					dup2(fd_out, STDOUT_FILENO);
 					if (prev_fd != -1)
@@ -103,7 +101,7 @@ int	exec_command(t_command *commands_list)
 					// else if (commands_list->next != NULL
 					// 	&& (commands_list->next->type == RED_IN))
 					// 	dup2(fd_out, STDIN_FILENO);
-					execve(cmd_path, commands_list->args, g_data->envirenment);
+					execve(cmd_path, commands_list->args, data->envirenment);
 					ft_perror("execve");
 					exit(1);
 				}
@@ -117,7 +115,7 @@ int	exec_command(t_command *commands_list)
 						close(fd[1]);
 						prev_fd = fd[0];
 					}
-					wait(&g_data->exit_status);
+					wait(&data->exit_status);
 				}
 			}
 			else if (commands_list->type >= 2 && commands_list->type <= 5)
@@ -135,7 +133,8 @@ int	exec_command(t_command *commands_list)
 			else
 			{
 				printf("%s: command not found\n", commands_list->value);
-				g_data->exit_status = 127;
+				// data->exit_status = 127;
+				g_exit_stat = 127;
 			}
 			free(cmd_path);
 		}

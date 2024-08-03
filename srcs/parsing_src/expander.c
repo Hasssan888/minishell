@@ -6,13 +6,13 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/02 20:18:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 13:22:51 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
-char	*expand_digits(char *argument, int *i)
+char	*expand_digits(t_data *data, char *argument, int *i)
 {
 	int	j;
 
@@ -21,37 +21,37 @@ char	*expand_digits(char *argument, int *i)
 		*i += 2;
 		j = *i;
 		if (!argument[j])
-			return (g_data->expanded);
+			return (data->expanded);
 		while (argument[++j] && argument[j] != '$')
 			;
-		g_data->expanded = ft_strjoin(g_data->expanded, duplicate_word(argument,
+		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument,
 					i, j));
 		*i = j;
 	}
-	return (g_data->expanded);
+	return (data->expanded);
 }
-void	expand_(char *argument, int *i)
+void	expand_(t_data *data, char *argument, int *i)
 {
 	if (!argument[*i + 1])
 	{
 		(*i)++;
-		g_data->expanded = ft_strjoin(g_data->expanded, ft_strdup("$"));
+		data->expanded = ft_strjoin(data->expanded, ft_strdup("$"));
 	}
 	else if (argument[*i + 1] == '?')
 	{
 		*i += 2;
-		g_data->expanded = ft_strjoin(g_data->expanded,
-				ft_itoa(g_data->exit_status));
+		data->expanded = ft_strjoin(data->expanded,
+				ft_itoa(g_exit_stat));
 	}
 	else if (!ft_isdigit(argument[*i + 1]))
 	{
-		get_expanded(argument, i);
+		get_expanded(data, argument, i);
 	}
 	else if (ft_isdigit(argument[*i + 1]))
-		g_data->expanded = expand_digits(argument, i);
+		data->expanded = expand_digits(data, argument, i);
 }
 
-char	*expand_vars__(char *argument)
+char	*expand_vars__(t_data *data, char *argument)
 {
 	int	i;
 
@@ -60,19 +60,19 @@ char	*expand_vars__(char *argument)
 	{
 		if (argument[i] == '$' && (ft_isalnum(argument[i + 1])
 				|| ft_strchr("?_", argument[i + 1])))
-			expand_(argument, &i);
+			expand_(data, argument, &i);
 		else
 		{
-			g_data->str1 = get_word(argument, &i);
-			g_data->expanded = ft_strjoin(g_data->expanded, g_data->str1);
+			data->str1 = get_word(argument, &i);
+			data->expanded = ft_strjoin(data->expanded, data->str1);
 		}
 	}
-	if (!g_data->expanded[0])
+	if (!data->expanded[0])
 	{
-		free(g_data->expanded);
-		g_data->expanded = NULL;
+		free(data->expanded);
+		data->expanded = NULL;
 	}
-	return (g_data->expanded);
+	return (data->expanded);
 }
 
 char	*_get_quoted___word(char *arg, int *i)
@@ -98,24 +98,24 @@ char	*_get_quoted___word(char *arg, int *i)
 	return (_quoted_word);
 }
 
-char	*expand_vars(char *argument, int i)
+char	*expand_vars(t_data *data, char *argument, int i)
 {
 	char	*word;
 
-	g_data->expanded = ft_strdup("");
+	data->expanded = ft_strdup("");
 	while (argument[i])
 	{
 		word = _get_quoted___word(argument, &i);
 		if (word != NULL && word[0] != '\'')
 		{
-			expand_vars__(word);
+			expand_vars__(data, word);
 			free(word);
 		}
 		else
-			g_data->expanded = ft_strjoin(g_data->expanded, word);
+			data->expanded = ft_strjoin(data->expanded, word);
 	}
 	free(argument);
-	return (g_data->expanded);
+	return (data->expanded);
 }
 
 size_t	ft_len_arr(char **arr)
@@ -181,16 +181,17 @@ int	ambigous_red(char *red_file)
 	return (0);
 }
 
-int	is_ambigous(t_command *list)
+int	is_ambigous(t_data *data, t_command *list)
 {
 	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
 	{
 		if (ambigous_red(list->args[0]))
 		{
-			clear_list(&g_data->head);
+			clear_list(&data->head);
 			ft_perror("ambiguous redirect\n");
-			g_data->syntax_error = AMPIGOUS;
-			g_data->exit_status = 1;
+			data->syntax_error = AMPIGOUS;
+			// data->exit_status = 1;
+			g_exit_stat = 1;
 			return (0);
 		}
 	}
@@ -241,11 +242,12 @@ int	is_empty(char *str)
 // }
 
 
-void	set_error(int err_num, char *str, t_command **cmd)
+void	set_error(t_data *data, int err_num, char *str, t_command **cmd)
 {
 	ft_perror(str);
-	g_data->list->syntxerr = err_num;
-	g_data->exit_status = err_num;
+	data->list->syntxerr = err_num;
+	// data->exit_status = err_num;
+	g_exit_stat = err_num;
 	clear_list(cmd);
 }
 
@@ -340,28 +342,28 @@ char **ft_arrcpy(char **arr, int arr_len)
 }
 
 
-char **ft_arrcpy_nempty(char **arr)
-{
-	int i = -1;
-	int j = 0;
-	if (!arr)
-		return NULL;
-	int len = get_real_len(arr);
-	char **arr_cpy = malloc((len + 1)* sizeof(char *));
-	if (!arr_cpy)
-		return NULL;
-	while(arr[++i])
-	{
-		// if (!arr[i][0])
-		// 	arr_cpy[j++] = ft_strdup("");
-		if (!is_empty(arr[i]))
-			arr_cpy[j++] = ft_strdup(arr[i]);
-	}
-	arr_cpy[j] = NULL;
-	return arr_cpy;
-}
+// char **ft_arrcpy_nempty(char **arr)
+// {
+// 	int i = -1;
+// 	int j = 0;
+// 	if (!arr)
+// 		return NULL;
+// 	int len = get_real_len(arr);
+// 	char **arr_cpy = malloc((len + 1)* sizeof(char *));
+// 	if (!arr_cpy)
+// 		return NULL;
+// 	while(arr[++i])
+// 	{
+// 		// if (!arr[i][0])
+// 		// 	arr_cpy[j++] = ft_strdup("");
+// 		if (!is_empty(arr[i]))
+// 			arr_cpy[j++] = ft_strdup(arr[i]);
+// 	}
+// 	arr_cpy[j] = NULL;
+// 	return arr_cpy;
+// }
 
-int	expander_extended(t_command *list)
+int	expander_extended(t_data *data, t_command *list)
 {
 	int i = -1;
 	int SPLIT = 0;
@@ -374,7 +376,7 @@ int	expander_extended(t_command *list)
 		if (ft_strchr(list->args[i], '$') && list->quoted != 1
 			&& list->type != HER_DOC)
 		{
-			list->args[i] = expand_vars(list->args[i], 0);
+			list->args[i] = expand_vars(data, list->args[i], 0);
 			SPLIT = 1;
 		}
 		// if (is_empty(list->args[i]))
@@ -387,9 +389,9 @@ int	expander_extended(t_command *list)
 			args = split_and_join(args, list->args[i]);
 			SPLIT = 0;
 		}
-		if (g_data->syntax_error)
+		if (data->syntax_error)
 		{
-			set_error(SYNTERRR, "syntax error\n", &g_data->head);
+			set_error(data, SYNTERRR, "syntax error\n", &data->head);
 			return (0);
 		}
 	}
@@ -399,26 +401,26 @@ int	expander_extended(t_command *list)
 		list->args = args;
 	}
 	if (list->value && list->value[0] && ft_strchr(list->value, '$'))
-		list->value = expand_vars(list->value, 0);
+		list->value = expand_vars(data, list->value, 0);
 	list->value = unquote_arg(list, list->value, 0, 0);
 	if (!get_cmd_if_empty(list))
 	{
 		clear_list(&list);
 		return (0);
 	}
-	if (!is_ambigous(list))
+	if (!is_ambigous(data, list))
 		return (0);
 	return (1);
 }
 
-t_command	*expander_command(t_command *list)
+t_command	*expander_command(t_data *data, t_command *list)
 {
-	g_data->head = list;
+	data->head = list;
 	if (!list)
 		return (NULL);
 	if (list != NULL && list->type == PIPE)
 	{
-		set_error(SYNTERRR, "syntax error\n", &g_data->head);
+		set_error(data, SYNTERRR, "syntax error\n", &data->head);
 		return (NULL);
 	}
 	while (list != NULL)
@@ -426,12 +428,12 @@ t_command	*expander_command(t_command *list)
 		list->quoted = 0;
 		if (list->type == -1)
 		{
-			set_error(SYNTERRR, "syntax error\n", &g_data->head);
+			set_error(data, SYNTERRR, "syntax error\n", &data->head);
 			return (NULL);
 		}
-		if (!expander_extended(list))
+		if (!expander_extended(data, list))
 			return (NULL);
 		list = list->next;
 	}
-	return (g_data->head);
+	return (data->head);
 }

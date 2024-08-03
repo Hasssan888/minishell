@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   one_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:01 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/16 12:46:03 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/03 13:29:23 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ int	if_is_buil(t_command *command)
 	return (0);
 }
 
-void	excut_butlin(t_command *node1, char **env)
+void	excut_butlin(t_data *data, t_command *node1, char **env)
 {
 	if (if_is_buil(node1))
 	{
-		is_builtin_cmd(node1);
+		is_builtin_cmd(data, node1);
 		exit(0);
 	}
 	else

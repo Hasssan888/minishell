@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/30 11:24:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 13:13:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,72 +47,45 @@ void	here_doc_error(char **av)
 		2);
 	ft_putstr_fd(av[0], 2);
 	write(2, "\n", 1);
+	exit(1);
 }
 
-void	here_doc(t_command *node, t_pipex *pipex)
+void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
 {
-	// printf("d5al here_doc\n");
-	// printf("j = %d\n", pipex->j);
 	char	*str;
-	// int 	status = 0;
 
-			
-	// int pid = fork();
-	// if (pid == 0)
-	// {
-
-			// signal(SIGQUIT, SIG_DFL);
-			// signal(SIGINT, SIG_DFL);
-			pipex->line = readline("> ");
-			if (pipex->line == NULL)
-				here_doc_error(node->args);
-			else
-				pipex->line = strjoin1(pipex->line, "\n");
-			str = strjoin1(node->args[0], "\n");
-			str = unquote_arg(node, str, 0, 0);
-			while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
-			{
-				if (pipex->line[0] == '$' && !node->quoted)
-					pipex->line = expand_vars(pipex->line, 0);
-				write(pipex->strs[pipex->j][1], pipex->line, ft_strlen(pipex->line));
-				free(pipex->line);
-				pipex->line = readline("> ");
-				if (pipex->line == NULL)
-					here_doc_error(node->args);
-				else
-					pipex->line = strjoin1(pipex->line, "\n");
-			}
-			close(pipex->strs[pipex->j][1]);
-			free(pipex->line);
-			free(str);
-	// }
-	// else
-	// 	wait(&status);
-	// signal(SIGQUIT, sig_handler);
-	// signal(SIGINT, SIG_IGN);
-	// if(WIFSIGNALED(status))
-	// {
-	// 	if (WTERMSIG(status) == SIGINT)
-	// 		data->exit_status = 130;
-	// }
-	// else
-	// 	data->exit_status = 2;
+	pipex->line = readline("> ");
+	if (pipex->line == NULL)
+		here_doc_error(node->args);
+	else
+		pipex->line = strjoin1(pipex->line, "\n");
+	str = strjoin1(node->args[0], "\n");
+	str = unquote_arg(node, str, 0, 0);
+	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
+	{
+		if (pipex->line[0] == '$' && !node->quoted)
+			pipex->line = expand_vars(data, pipex->line, 0);
+		write(pipex->strs[pipex->j][1], pipex->line, ft_strlen(pipex->line));
+		free(pipex->line);
+		pipex->line = readline("> ");
+		if (pipex->line == NULL)
+			here_doc_error(node->args);
+		else
+			pipex->line = strjoin1(pipex->line, "\n");
+	}
+	close(pipex->strs[pipex->j][1]);
+	free(pipex->line);
+	free(str);
 }
 
-// }
-
-void	open_here_doc(t_command *node, t_pipex *pipex)
+void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 {
 
-	// pid_t pid;
-	// pid = fork();
-	// if (pid == 0)
-	// {
 	pid_t pid;
 	pid = fork();
 	if (pid == 0)
 	{
-		ign_sig_child();
+		handle_signals(&data->ignore_sig, 4);
 		pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
 		t_command	*cur;
 		pipex->j = 0;
@@ -120,17 +93,13 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 		cur = node;
 		while (cur != NULL)
 		{
-			// signal(SIGQUIT, SIG_DFL);
-			// signal(SIGINT, SIG_DFL);
-
 			if (cur->type == HER_DOC)
 			{
 				pipex->pipe_t = malloc(sizeof(int) * 2);
 				pipe(pipex->pipe_t);
 				pipex->strs[pipex->j] = pipex->pipe_t;
-				here_doc(cur, pipex);
+				here_doc(data, cur, pipex);
 				pipex->arr[pipex->q] = pipex->j;
-				// printf("pipex->arr[%d] = %d\n",pipex->q, pipex->arr[pipex->q]);
 				pipex->j++;
 					
 			}
@@ -140,40 +109,11 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 			cur = cur->next;
 		}
 		pipex->strs[pipex->j] = NULL;
-		// pipex->strs;
-		// exit(0);
-	// }
-	// pipex->r = pid;
-	// wait(NULL);
+
 	}
 	pipex->r = pid;
-	// wait(NULL);
 	wait(&pipex->status);
-	if (WIFSIGNALED(pipex->status))
-	{
-		write(1,"\n",1);
-		g_data->exit_status = 128 + WTERMSIG(pipex->status);
-	}
-	else
-		g_data->exit_status = WEXITSTATUS(pipex->status);
-	// int i = 0;
-	// while (i < pipex->count_here_doc)
-	// {
-	// 	printf("arr[%d] = %d\n", i,pipex->arr[i]);
-	// 	i++;
-	// }
-
-	// int t = 0;
-	// while (t < pipex->count_here_doc)
-	// {
-	// 	int j = 0;
-	// 	while (j < 2)
-	// 	{
-	// 		printf("strs[%d][%d] = %d\n", t, j,pipex->strs[t][j]);
-	// 		j++;
-	// 	}
-	// 	t++;
-	// }
+	data->ignore_sig = check_exit_status(pipex->status);
 
 }
 

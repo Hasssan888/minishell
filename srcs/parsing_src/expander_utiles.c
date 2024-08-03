@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 13:02:58 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 12:15:41 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,16 +81,16 @@ char	*get_word(char *argument, int *i)
 	return (str);
 }
 
-int	get_expanded(char *argument, int *i)
+int	get_expanded(t_data *data, char *argument, int *i)
 {
-	g_data->str1 = get_var(&argument[++(*i)], i);
-	g_data->str2 = get_env_element(g_data->str1);
-	free(g_data->str1);
-	if (!g_data->str2 || !g_data->str2[0])
+	data->str1 = get_var(&argument[++(*i)], i);
+	data->str2 = get_env_element(data, data->str1);
+	free(data->str1);
+	if (!data->str2 || !data->str2[0])
 	{
-		free(g_data->str2);
+		free(data->str2);
 		return (1);
 	}
-	g_data->expanded = ft_strjoin(g_data->expanded, g_data->str2);
+	data->expanded = ft_strjoin(data->expanded, data->str2);
 	return (0);
 }
