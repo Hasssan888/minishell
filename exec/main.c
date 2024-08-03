@@ -45,6 +45,13 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 
 }
 
+void ign_sig_child()
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
+
+
 pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 {
 	// printf("fork_pipe\n");
@@ -60,6 +67,8 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		ft_error_2();
 	else if (p->pid == 0)
 	{
+		ign_sig_child();
+		// signal(SIGTSTP, SIG_DFL);
 		// printf("d5al process child\n");
 		child_process(node1, env, p);
 	}
@@ -70,7 +79,13 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	// if (ft_strcmp(node1->args[0], "cat") != 0 /*|| (ft_strcmp(node1->args[0],
 	// 			"cat") == 0 && node1->next == NULL)*/)
 	// {
-		wait(&p->status);
+	wait(&p->status);
+	if (WIFSIGNALED(p->status))
+	{
+		write(1,"\n",1);
+		g_data->exit_status = 128 + WTERMSIG(p->status);
+	}
+	else
 		g_data->exit_status = WEXITSTATUS(p->status);
 	// }
 

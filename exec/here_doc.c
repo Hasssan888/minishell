@@ -109,6 +109,7 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 	pid = fork();
 	if (pid == 0)
 	{
+		ign_sig_child();
 		pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
 		t_command	*cur;
 		pipex->j = 0;
@@ -116,8 +117,6 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 		cur = node;
 		while (cur != NULL)
 		{
-			signal(SIGQUIT, SIG_DFL);
-			signal(SIGINT, SIG_DFL);
 			if (cur->type == HER_DOC)
 			{
 				int *end = malloc(sizeof(int) * 2);
@@ -139,8 +138,15 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 		// exit(0);
 	}
 	pipex->r = pid;
-	wait(NULL);
-
+	// wait(NULL);
+	wait(&pipex->status);
+	if (WIFSIGNALED(pipex->status))
+	{
+		write(1,"\n",1);
+		g_data->exit_status = 128 + WTERMSIG(pipex->status);
+	}
+	else
+		g_data->exit_status = WEXITSTATUS(pipex->status);
 	// int i = 0;
 	// while (i < pipex->count_here_doc)
 	// {

@@ -108,7 +108,7 @@ typedef struct s_data
 	char				*str2;
 	t_command			*list;
 	t_command			*head;
-	struct sigaction sa_child;
+	struct sigaction 	sa_child;
 	char				*prompt;
 	char				*expanded;	
 	char				**old_pwd;
@@ -243,8 +243,8 @@ void					ft_perror(char *message);
 
 // signals hanling
 
-void					child_sig_handler(int signo);
-
+// void					child_sig_handler(int signo);
+void 					ign_sig_child();
 
 // envirenement utiles
 
