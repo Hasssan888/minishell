@@ -47,7 +47,7 @@ void	here_doc_error(char **av)
 		2);
 	ft_putstr_fd(av[0], 2);
 	write(2, "\n", 1);
-	exit(0);
+	exit(1);
 }
 
 void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
@@ -85,8 +85,7 @@ void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 	pid = fork();
 	if (pid == 0)
 	{
-		signal(SIGQUIT, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
+		handle_signals(&data->ignore_sig, 4);
 		pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
 		t_command	*cur;
 		pipex->j = 0;
@@ -114,31 +113,7 @@ void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 	}
 	pipex->r = pid;
 	wait(&pipex->status);
-	if (WIFSIGNALED(pipex->status))
-	{
-		write(1,"\n",1);
-		g_exit_stat = 128 + WTERMSIG(pipex->status);
-	}
-	else
-		g_exit_stat = WEXITSTATUS(pipex->status);
-	// int i = 0;
-	// while (i < pipex->count_here_doc)
-	// {
-	// 	printf("arr[%d] = %d\n", i,pipex->arr[i]);
-	// 	i++;
-	// }
-
-	// int t = 0;
-	// while (t < pipex->count_here_doc)
-	// {
-	// 	int j = 0;
-	// 	while (j < 2)
-	// 	{
-	// 		printf("strs[%d][%d] = %d\n", t, j,pipex->strs[t][j]);
-	// 		j++;
-	// 	}
-	// 	t++;
-	// }
+	data->ignore_sig = check_exit_status(pipex->status);
 
 }
 

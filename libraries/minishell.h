@@ -108,7 +108,7 @@ typedef struct s_data
 	char				*str2;
 	t_command			*list;
 	t_command			*head;
-	struct sigaction 	sa_child;
+	// struct sigaction 	sa_child;
 	char				*prompt;
 	char				*expanded;	
 	char				**old_pwd;
@@ -122,7 +122,7 @@ typedef struct s_data
 	t_command			*list_command;
 	t_command			*_tokens_list;
 	t_command			*rdrct_head;
-	bool				ignore_sig;
+	int					ignore_sig;
 	bool 				syntax_error; 	// boolean variable for syntax_error
 }						t_data;
 
@@ -186,6 +186,8 @@ typedef struct s_path
 // extern t_data *g_data; // for use this global var from all files
 
 extern int g_exit_stat; // for use this global var from all files
+extern int flag;
+
 
 // # include <termios.h>
 // # include <sys/stat.h>
@@ -246,7 +248,9 @@ void					ft_perror(char *message);
 // signals hanling
 
 // void					child_sig_handler(int signo);
-// void 					ign_sig_child();
+// void 				ign_sig_child();
+void					handle_signals(int *ign_sig, int i);
+int 					check_exit_status(int status);
 
 // envirenement utiles
 

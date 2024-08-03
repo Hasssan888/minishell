@@ -16,16 +16,43 @@ int	g_exit_stat = 0;
 
 void	sig_handler(int signal)
 {
+	char *prompt = get_prompt();
 	if (signal == SIGINT)
 	{
-		// printf("\n%s", data->prompt);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-        rl_redisplay();
+        rl_replace_line("", 0); // Clear the current input line
+        // rl_on_new_line();       // Move to a new line
+        // rl_redisplay();         // Redisplay the prompt
+		printf("\n%s", prompt);
 		g_exit_stat = 130;
 	}
 	else if (signal == SIGQUIT)
 		g_exit_stat = 131;
+	free(prompt);
+}
+
+void handle_signals(int *ign_sig ,int mode) 
+{
+    if (mode == 1) 
+	{
+        signal(SIGINT, sig_handler);
+        signal(SIGQUIT, SIG_IGN);
+    } 
+	else if (mode == 2) 
+	{
+        signal(SIGINT, SIG_IGN);
+        signal(SIGQUIT, SIG_IGN);
+    } 
+	else if (mode == 3) 
+	{
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
+    } 
+	else if (mode == 4)
+	{
+		*ign_sig = mode;
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_IGN);
+    }
 }
 
 char	*get_prompt()
@@ -44,18 +71,16 @@ void	init_minishell(t_data *data, int ac, char **av, char **env)
 	data->av = av;
 	data->ac = ac;
 	data->redirect = 0;
-	data->ignore_sig = 1;
-	data->list = NULL;
-	// data->expanded = NULL;
-	// data->old_pwd = NULL;
-	// data->current_pwd = NULL;
-	// data->envirenment = NULL;
-	// data->exit_status = 0;
-	g_exit_stat = 0;
 	data->env = creat_env(data, env);
 	data->envirenment = env_to_array_(data->env);
 	data->syntax_error = false;
 	data->prompt = get_prompt();
+	// data->list = NULL;
+	// data->old_pwd = NULL;
+	// data->expanded = NULL;
+	// data->exit_status = 0;
+	// data->current_pwd = NULL;
+	// data->envirenment = NULL;
 	// data->new_command = NULL;
 }
 
@@ -90,25 +115,18 @@ void	clear_all(t_data *data)
 	// free(data);
 }
 
-void	ignr_signals(void)
-{
-	signal(SIGINT, sig_handler);
-	signal(SIGQUIT, SIG_IGN);
-	// signal(SIGTSTP, SIG_IGN);
-	// signal(SIGTSTP, SIG_IGN);
-}
-
 int	main(int ac, char **av, char **env)
 {
-	char	*command;
 	t_data 	data;
 	t_pipex	pipex;
+	char	*command;
+
+	// print_minishell();
 	// data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(&data, ac, av, env);
-	// print_minishell();
-	ignr_signals();
+	handle_signals(&data.ignore_sig, 1);
 	command = readline(data.prompt);
-	signal(SIGINT, SIG_IGN);
+	handle_signals(&data.ignore_sig, 2);
 	while (command != NULL)
 	{
 		pipex.save1 = dup(STDIN_FILENO);
@@ -116,9 +134,9 @@ int	main(int ac, char **av, char **env)
 		parse_command(&data, command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
-		ignr_signals();
+		handle_signals(&data.ignore_sig, 1);
 		command = readline(data.prompt);
-		signal(SIGINT, SIG_IGN);
+		handle_signals(&data.ignore_sig, 2);
 	}
 	printf("exit\n");
 	clear_history();

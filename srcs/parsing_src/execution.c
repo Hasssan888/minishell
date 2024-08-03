@@ -82,7 +82,6 @@ int	exec_command(t_data *data, t_command *commands_list)
 				}
 				else if (pid == 0)
 				{
-					data->ignore_sig = 0;
 					sig_dflt();
 					dup2(fd_out, STDOUT_FILENO);
 					if (prev_fd != -1)

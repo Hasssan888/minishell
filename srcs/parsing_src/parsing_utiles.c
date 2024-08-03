@@ -105,7 +105,6 @@ void	get_redirect_node(t_data *data)
 	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		data->ignore_sig = 1;
 		if (data->redirect)
 			fake_here_doc__(data);
 		ft_perror("syntax error\n");

@@ -12,6 +12,19 @@
 
 #include "../libraries/minishell.h"
 
+
+int check_exit_status(int status)
+{
+	if (WIFSIGNALED(status)) // if the child terminate with a signal
+	{
+		write(1,"\n",1);
+		g_exit_stat = 128 + WTERMSIG(status);
+	}
+	else if (WIFEXITED(status)) // if the child terminate normally 
+		g_exit_stat = WEXITSTATUS(status);
+	return (g_exit_stat);
+}
+
 void	child_process(t_data *data, t_command *node1, char **env, t_pipex *p)
 {
 	if (p->flag == 1)
@@ -36,13 +49,6 @@ void	child_process(t_data *data, t_command *node1, char **env, t_pipex *p)
 
 }
 
-void sig_child()
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-}
-
-
 pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 {
 	if (pipe(p->end) == -1)
@@ -52,7 +58,7 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 		ft_error_2();
 	else if (p->pid == 0)
 	{
-		sig_child();
+		handle_signals(&data->ignore_sig, 3);
 		child_process(data, node1, env, p);
 	}
 	close(p->end[1]);
@@ -63,13 +69,7 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 		// wait(&p->status);
 
 	wait(&p->status);
-	if (WIFSIGNALED(p->status))
-	{
-		write(1,"\n",1);
-		g_exit_stat = 128 + WTERMSIG(p->status);
-	}
-	else
-		g_exit_stat = WEXITSTATUS(p->status);
+	data->ignore_sig = check_exit_status(p->status);
 	return (p->pid);
 }
 int check(t_command *node)
@@ -163,11 +163,16 @@ int	func(t_data *data, t_command *list)
 		open_here_doc(data, list, &pipex);
 	else if (pipex.count_here_doc > 16)
 	{
-		perror("bash: maximum here-document count exceeded");
+		perror("minishell: maximum here-document count exceeded");
 		g_exit_stat = 2;
 		exit(2);
 	}
-	if (pipex.count_pipe == 0 && if_is_buil(list))
+	if (data->ignore_sig)
+	{
+		data->ignore_sig = 0;
+		return (g_exit_stat);
+	}
+	else if (pipex.count_pipe == 0 && if_is_buil(list))
 		is_builtin_cmd(data, list);
 	else
 		ft_pipe(data, list, data->envirenment, &pipex);

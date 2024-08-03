@@ -111,8 +111,6 @@ int	parse_command(t_data *data, char *line)
 	t_command	*tokens_list;
 
 	// printf("\n++++++++++++++++++ parsing is started +++++++++++++++++\n");
-	data->list = NULL;
-	data->ignore_sig = 0;
 	data->syntax_error = 0;
 	if (line != NULL && !line[0])
 		return (0);
@@ -124,13 +122,12 @@ int	parse_command(t_data *data, char *line)
 	// print_list(data->list);
 	// printf("\n\n");
 	data->list = expander_command(data, data->list);
-	print_list(data->list);
-	printf("\n\n");
+	// print_list(data->list);
+	// printf("\n\n");
 	// delete_empty_nodes(data->list);
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
 	// exec_command(data->list);
-	// data->ignore_sig = 1;
 	// is_builtin_cmd(data->list);
 	func(data, data->list);
 	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
