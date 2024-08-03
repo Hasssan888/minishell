@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 13:21:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 11:49:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,8 @@ t_command	*tokenzer_command(char *cmd_line)
 			free(token);
 			free(cmd_line);
 			clear_list(&table);
-			g_data->exit_status = 2;
+			// data->exit_status = 2;
+			g_exit_stat = 2;
 			ft_perror("syntax error\n");
 			return (NULL);
 		}

@@ -6,17 +6,18 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 18:14:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 13:24:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
-t_command	*syntax_error(t_command *list_command, t_command *head)
+t_command	*syntax_error(t_data *data, t_command *list_command, t_command *head)
 {
 	ft_perror("syntax error\n");
-	g_data->syntax_error = SYNTERRR;
-	g_data->exit_status = 2;
+	data->syntax_error = SYNTERRR;
+	// data->exit_status = 2;
+	g_exit_stat = 2;
 	free_node(&list_command);
 	clear_list(&head);
 	return (NULL);
@@ -29,111 +30,110 @@ void	free_command(t_command *cmd)
 	free(cmd);
 }
 
-t_command	*get_command_with_args(void)
+t_command	*get_command_with_args(t_data *data)
 {
 	int	i;
 	int	args_size;
 
 	i = 0;
-	args_size = get_args_size(g_data->_tokens_list);
-	g_data->list_command->args = malloc((args_size + 2) * sizeof(char *));
-	if (!g_data->list_command)
+	args_size = get_args_size(data->_tokens_list);
+	data->list_command->args = malloc((args_size + 2) * sizeof(char *));
+	if (!data->list_command)
 		return (NULL);
-	while (g_data->_tokens_list != NULL && g_data->_tokens_list->type != PIPE)
+	while (data->_tokens_list != NULL && data->_tokens_list->type != PIPE)
 	{
-		g_data->list_command->args[i++] = ft_strdup(g_data->_tokens_list->value);
-		g_data->list_command->args[i] = NULL;
-		g_data->_tokens_list = free_node(&g_data->_tokens_list);
-		while (g_data->_tokens_list != NULL && (g_data->_tokens_list->type >= 2
-				&& g_data->_tokens_list->type <= 5))
+		data->list_command->args[i++] = ft_strdup(data->_tokens_list->value);
+		data->list_command->args[i] = NULL;
+		data->_tokens_list = free_node(&data->_tokens_list);
+		while (data->_tokens_list != NULL && (data->_tokens_list->type >= 2
+				&& data->_tokens_list->type <= 5))
 		{
-			g_data->_tokens_list = redirect_list(&g_data->head,
-					&g_data->rdrct_head);
-			if (g_data->syntax_error)
+			data->_tokens_list = redirect_list(data, &data->rdrct_head);
+			if (data->syntax_error)
 			{
-				clear_list(&g_data->rdrct_head);
-				clear_list(&g_data->head);
+				clear_list(&data->rdrct_head);
+				clear_list(&data->head);
 				return (NULL);
 			}
 		}
 	}
-	return (g_data->list_command);
+	return (data->list_command);
 }
 
-void	init_parser_var(void)
+void	init_parser_var(t_data *data)
 {
-	g_data->list_command = new_node(g_data->_tokens_list->type,
-			ft_strdup(g_data->_tokens_list->value));
-	if (!g_data->list_command)
+	data->list_command = new_node(data->_tokens_list->type,
+			ft_strdup(data->_tokens_list->value));
+	if (!data->list_command)
 		return ;
-	g_data->list_command->args = NULL;
-	g_data->rdrct_head = NULL;
+	data->list_command->args = NULL;
+	data->rdrct_head = NULL;
 }
 
-t_command	*parser_command(t_command *_tokens_list)
+t_command	*parser_command(t_data *data, t_command *_tokens_list)
 {
-	g_data->head = NULL;
-	g_data->_tokens_list = _tokens_list;
-	while (g_data->_tokens_list != NULL)
+	data->head = NULL;
+	data->_tokens_list = _tokens_list;
+	while (data->_tokens_list != NULL)
 	{
-		g_data->_tokens_list->syntxerr = 0;
-		if (g_data->syntax_error)
+		data->_tokens_list->syntxerr = 0;
+		if (data->syntax_error)
 			return (NULL);
-		init_parser_var();
-		if (!g_data->list_command)
+		init_parser_var(data);
+		if (!data->list_command)
 		{
-			clear_list(&g_data->head);
+			clear_list(&data->head);
 			return (NULL);
 		}
-		if (g_data->_tokens_list->type == TOKEN)
+		if (data->_tokens_list->type == TOKEN)
 		{
-			g_data->list_command = get_command_with_args();
-			if (!g_data->list_command)
+			data->list_command = get_command_with_args(data);
+			if (!data->list_command)
 				return (NULL);
 		}
-		else if (g_data->_tokens_list->type >= 2
-			&& g_data->_tokens_list->type <= 5)
-			get_redirect_node(g_data->list_command);
+		else if (data->_tokens_list->type >= 2
+			&& data->_tokens_list->type <= 5)
+			get_redirect_node(data);
 		else
 		{
-			g_data->_tokens_list = free_node(&g_data->_tokens_list);
-			if (!g_data->_tokens_list)
-				return (syntax_error(g_data->list_command, g_data->head));
+			data->_tokens_list = free_node(&data->_tokens_list);
+			if (!data->_tokens_list)
+				return (syntax_error(data, data->list_command, data->head));
 		}
-		add_back_list(&g_data->head, g_data->list_command);
-		add_back_list(&g_data->head, g_data->rdrct_head);
+		add_back_list(&data->head, data->list_command);
+		add_back_list(&data->head, data->rdrct_head);
 	}
-	return (g_data->head);
+	return (data->head);
 }
 
-int	parse_command(char *line)
+int	parse_command(t_data *data, char *line)
 {
 	t_command	*tokens_list;
 
 	// printf("\n++++++++++++++++++ parsing is started +++++++++++++++++\n");
-	g_data->list = NULL;
-	g_data->ignore_sig = 0;
-	g_data->syntax_error = 0;
+	data->list = NULL;
+	data->ignore_sig = 0;
+	data->syntax_error = 0;
 	if (line != NULL && !line[0])
 		return (0);
-	line = lexer_command(line);
+	line = lexer_command(data, line);
 	if (!line)
 		return (0);
 	tokens_list = tokenzer_command(line);
-	g_data->list = parser_command(tokens_list);
-	print_list(g_data->list);
+	data->list = parser_command(data, tokens_list);
+	// print_list(data->list);
+	// printf("\n\n");
+	data->list = expander_command(data, data->list);
+	print_list(data->list);
 	printf("\n\n");
-	g_data->list = expander_command(g_data->list);
-	print_list(g_data->list);
-	printf("\n\n");
-	// delete_empty_nodes(g_data->list);
+	// delete_empty_nodes(data->list);
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
-	// exec_command(g_data->list);
-	g_data->ignore_sig = 1;
-	// is_builtin_cmd(g_data->list);
-	func(g_data->list);
+	// exec_command(data->list);
+	// data->ignore_sig = 1;
+	// is_builtin_cmd(data->list);
+	func(data, data->list);
 	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
-	clear_list(&g_data->list);
+	clear_list(&data->list);
 	return (0);
 }

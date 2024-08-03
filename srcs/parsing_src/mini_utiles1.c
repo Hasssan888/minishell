@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 13:20:42 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 12:10:56 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_env	*lstnew(char *env_value, char *env_key)
 	return (new_node);
 }
 
-t_env	*get_alternative_env(void)
+t_env	*get_alternative_env(t_data *data)
 {
 	t_env	*head;
 	t_env	*new;
@@ -85,10 +85,10 @@ t_env	*get_alternative_env(void)
 	add_back(&head, new);
 	cwd = getcwd(NULL, 0);
 	new = lstnew(ft_strdup("PWD"), ft_strdup(cwd));
-	g_data->current_pwd = &(new->env_value);
+	data->current_pwd = &(new->env_value);
 	add_back(&head, new);
 	new = lstnew(ft_strdup("OLDPWD"), ft_strdup(cwd));
-	g_data->old_pwd = &(new->env_value);
+	data->old_pwd = &(new->env_value);
 	add_back(&head, new);
 	free(cwd);
 	return (head);
@@ -114,7 +114,7 @@ void	env_maker(char *env, t_env **head)
 	add_back(head, new);
 }
 
-t_env	*creat_env(char **env)
+t_env	*creat_env(t_data *data, char **env)
 {
 	int		i;
 	t_env	*head;
@@ -122,7 +122,7 @@ t_env	*creat_env(char **env)
 	i = 0;
 	head = NULL;
 	if (!env || !*env)
-		return (get_alternative_env());
+		return (get_alternative_env(data));
 	else
 	{
 		i = -1;
