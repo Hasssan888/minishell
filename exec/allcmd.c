@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:44:49 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/28 10:03:58 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 09:57:15 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,12 @@ void	pipe_heredoc(t_command *node1, char **env, t_pipex *p)
 	// printf("pipe_heredoc\n");
 	close(p->end[0]);
 	// printf("p->k = %d\n",p->k);
-	// if (p->strs != NULL)
-	// {
+	if (p->strs != NULL)
+	{
 		close(p->strs[p->arr[p->k]][1]);
 		dup2(p->strs[p->arr[p->k]][0], 0);
 		close(p->strs[p->arr[p->k]][0]);
-	// }
+	}
 
 	// printf("p->w = %d\n", p->w);
 	if (p->w  == 1)

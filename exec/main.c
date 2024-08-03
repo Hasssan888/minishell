@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:04 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/03 09:23:09 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 09:59:47 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 
 }
 
-void ign_sig_child()
+void sig_child()
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -61,8 +61,7 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		ft_error_2();
 	else if (p->pid == 0)
 	{
-		ign_sig_child();
-		// signal(SIGTSTP, SIG_DFL);
+		sig_child();
 		// printf("d5al process child\n");
 		child_process(node1, env, p);
 	}
@@ -84,7 +83,7 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		g_data->exit_status = 128 + WTERMSIG(p->status);
 	}
 	else
-	  g_data->exit_status = WEXITSTATUS(p->status);
+		g_data->exit_status = WEXITSTATUS(p->status);
 	}
 
 
@@ -193,6 +192,7 @@ int	func(t_command *list)
 {
 	t_pipex	pipex;
 
+	ft_bzero(&pipex, sizeof(t_pipex));
 	ft_count_here_doc(list, &pipex);
 	ft_count_pipe(list, &pipex);
 	ft_count_read_out(list, &pipex);
@@ -226,8 +226,8 @@ int	func(t_command *list)
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
 		pipex.i = wait(NULL);
 	}
-	if (pipex.count_here_doc > 0)
-		free(pipex.strs);
+	// if (pipex.count_here_doc > 0)
+	// 	free(pipex.strs);
 	return (0);
 }
 

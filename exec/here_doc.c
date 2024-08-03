@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/30 11:24:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/03 10:02:07 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ void	here_doc(t_command *node, t_pipex *pipex)
 			
 	// int pid = fork();
 	// if (pid == 0)
-	// {
+	{
 
-			// signal(SIGQUIT, SIG_DFL);
-			// signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
+			signal(SIGINT, SIG_DFL);
 			pipex->line = readline("> ");
 			if (pipex->line == NULL)
 				here_doc_error(node->args);
@@ -85,7 +85,16 @@ void	here_doc(t_command *node, t_pipex *pipex)
 			close(pipex->strs[pipex->j][1]);
 			free(pipex->line);
 			free(str);
+	}
+	// else
+	// 	wait(&pipex->status);
+	// if (WIFSIGNALED(pipex->status))
+	// {
+	// 	write(1,"\n",1);
+	// 	g_data->exit_status = 128 + WTERMSIG(pipex->status);
 	// }
+	// else
+	// 	g_data->exit_status = WEXITSTATUS(pipex->status);
 	// else
 	// 	wait(&status);
 	// signal(SIGQUIT, sig_handler);
@@ -112,7 +121,8 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 	pid = fork();
 	if (pid == 0)
 	{
-		ign_sig_child();
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
 		pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
 		t_command	*cur;
 		pipex->j = 0;
@@ -120,9 +130,6 @@ void	open_here_doc(t_command *node, t_pipex *pipex)
 		cur = node;
 		while (cur != NULL)
 		{
-			// signal(SIGQUIT, SIG_DFL);
-			// signal(SIGINT, SIG_DFL);
-
 			if (cur->type == HER_DOC)
 			{
 				pipex->pipe_t = malloc(sizeof(int) * 2);
