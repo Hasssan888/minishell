@@ -20,13 +20,20 @@ char	*function(char **env)
 
 char	*slash(char *mycmdargs)
 {
-	if (access(mycmdargs, F_OK) == 0)
+	if (ft_strcmp(mycmdargs, "/") == 0)
+		{
+			ft_putstr_fd("bash: ", 2);
+			ft_putstr_fd(mycmdargs, 2);
+			ft_putstr_fd(":Is a directory", 2);
+			write(2, "\n", 1);
+			exit(126);
+			return(mycmdargs);
+		}
+	else if (access(mycmdargs, F_OK) == 0)
 		return (mycmdargs);
 	else
 	{
-		ft_putstr_fd("zsh: no such file or directory: ", 2);
-		ft_putstr_fd(mycmdargs, 2);
-		write(2, "\n", 1);
+		perror(mycmdargs);
 		return (mycmdargs);
 	}
 }
@@ -76,10 +83,7 @@ void	ft_excute(char **av, char **env)
 	// i = -1;
 	if (ft_strcmp(av[0], "") == 0 || ft_strcmp(av[0], ".") == 0 || ft_strcmp(av[0], " ") == 0
 		/*|| ft_strcmp(av[ft_strlen(av[0]) - 1], " ") == 0*/)
-		{
-			printf("1_error\n");
 			ft_error(av);
-		}
 	else
 	{
 		mycmdargs = av;

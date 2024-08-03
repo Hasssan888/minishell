@@ -67,6 +67,7 @@ void	ft_loop(t_command *cur, t_pipex *p)
 		else if (cur->type == RED_OUT || cur->type == APP)
 		{
 			// printf("cur->args[0] == %s\n", cur->args[0]);
+			
 			if (cur->type == RED_OUT)
 			{
 				p->fd[p->i] = open(cur->args[0], O_WRONLY | O_CREAT | O_TRUNC,
@@ -97,6 +98,7 @@ void	open_outfile(t_command *node, t_pipex *p)
 	t_command	*cur;
 
 	p->b = 0;
+	p->indixe = 0;
 	p->fd = malloc(sizeof(int) * p->count_read_out);
 	p->name_file = malloc(sizeof(char *) * (p->count_read_out + 1));
 	if (p->fd == NULL)
@@ -108,19 +110,22 @@ void	open_outfile(t_command *node, t_pipex *p)
 	cur = node;
 	ft_loop(cur, p);
 	p->name_file[p->i] = NULL;
+	// printf(" p->fd[p->i - 1] = %d\n",  p->fd[p->i - 1]);
 	p->outfile = p->fd[p->i - 1];
-	printf("outfile = %d\n", p->outfile);
+	// printf("outfile = %d\n", p->outfile);
 	p->s = ft_strdup(p->name_file[p->i - 1]);
+	// printf("p->s = %s\n", p->s);
 	free(p->fd);
 	p->i = -1;
 	while (p->name_file[++p->i])
 		free(p->name_file[p->i]);
 	free(p->name_file);
-	free(p->s);
+	// free(p->s);
 }
 
 void	open_infile(t_command *node, t_pipex *p)
 {
+	p->indixe = 0;
 	// printf("d5al openfile\n");
 	t_command	*cur;
 
@@ -139,12 +144,14 @@ void	open_infile(t_command *node, t_pipex *p)
 		if (cur->type == RED_IN)
 		{
 			p->fd[p->i] = open(cur->args[0], O_RDONLY, 0644);
-			// printf("p->fd[%d] = %d\n", p->i,p->fd[p->i]);
+			printf("p->fd[%d] = %d\n", p->i,p->fd[p->i]);
 			if 	(p->fd[p->i] == -1)
 			{
-				// printf("%s: Permission denied\n", cur->args[0]);
 				perror(cur->args[0]);
+				// printf("p->indixe = %d\n", p->indixe );
 				p->indixe = 1;
+				// printf("p->indixe = %d\n", p->indixe );
+
 			}
 			p->i++;
 		}

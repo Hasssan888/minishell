@@ -16,12 +16,12 @@ void	child_process(t_command *node1, char **env, t_pipex *p)
 {
 	if (p->flag == 1)
 	{
-		// printf("infile\n");
+		printf("infile\n");
 		infile(node1, env, p);
 	}
 	else if (p->flag == 2)
 	{
-		// printf("infile\n");
+		// printf("herdoc\n");
 		pipe_heredoc(node1, env, p);
 
 	}
@@ -54,15 +54,9 @@ void ign_sig_child()
 
 pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 {
-	// printf("fork_pipe\n");
-	// int last;
-	// int temp;
-	// pid_t last_pid = 0;
 	if (pipe(p->end) == -1)
 		ft_error_2();
 	p->pid = fork();
-	// if (p->pid != 0)
-	// last_pid = p->pid; 
 	if (p->pid == -1)
 		ft_error_2();
 	else if (p->pid == 0)
@@ -74,8 +68,12 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 	}
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
-	// printf("dup2(end[0])\n");
 	close(p->end[0]);
+	if (ft_strcmp(node1->args[0], "cat") != 0 /*|| (ft_strcmp(node1->args[0],
+				"cat") == 0 && node1->next == NULL)*/)
+	{
+		wait(&p->status);
+
 	// if (ft_strcmp(node1->args[0], "cat") != 0 /*|| (ft_strcmp(node1->args[0],
 	// 			"cat") == 0 && node1->next == NULL)*/)
 	// {
@@ -86,8 +84,8 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		g_data->exit_status = 128 + WTERMSIG(p->status);
 	}
 	else
-		g_data->exit_status = WEXITSTATUS(p->status);
-	// }
+	  g_data->exit_status = WEXITSTATUS(p->status);
+	}
 
 
 		// while (1)
@@ -95,7 +93,7 @@ pid_t	fork_pipe(t_command *node1, char **env, t_pipex *p)
 		// 	last = wait(&temp);
 		// 	if (last == last_pid)
 		// 	{
-		// 		g_data->exit_status  = WEXITSTATUS(temp);
+		// 		data->exit_status  = WEXITSTATUS(temp);
 		// 	}
 		// }
 	
@@ -210,10 +208,16 @@ int	func(t_command *list)
 		
 		open_outfile(list, &pipex);
 	}
-	if (pipex.count_here_doc > 0)
+	if (pipex.count_here_doc > 0 && pipex.count_here_doc <= 16)
 	{
 		// printf("open heredoc\n");
 		open_here_doc(list, &pipex);
+	}
+	else if (pipex.count_here_doc > 16)
+	{
+		perror("bash: maximum here-document count exceeded");
+		g_data->exit_status = 2;
+		exit(2);
 	}
 	ft_pipe(list, g_data->envirenment, &pipex);
 	// free(pipex.s);
@@ -253,7 +257,7 @@ int	func(t_command *list)
 		// p->infile = open(p->cur->args[0], O_RDONLY, 0644);
 		// if (p->infile == -1)
 		// {
-		// 	printf("%s: Permission denied\n", p->cur->args[0]);
+			// printf("%s: Permission denied\n", p->cur->args[0]);
 		// 	p->indixe = 1;
 		// }
 // 		p->flag = 1;

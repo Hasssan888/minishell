@@ -152,7 +152,7 @@ typedef struct s_pipex
 	int					*fd;
 	int					*tb;
 	int					**strs;
-	int					arr[1025];
+	int					arr[16];
 	int					end[2];
 	int					status;
 	int					status_1;
@@ -171,6 +171,7 @@ typedef struct s_pipex
 	t_command			*cur;
 	char 				*s;
 	int					*end_1;
+	int					*pipe_t;
 }						t_pipex;
 
 typedef struct s_path
