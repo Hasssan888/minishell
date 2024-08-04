@@ -26,6 +26,7 @@
 # include <stdlib.h>            // for malloc and free
 # include <sys/types.h>         //
 # include <sys/wait.h>
+#include <sys/stat.h>
 // for wating child process to terminate execution
 # include <unistd.h> // for system calls
 // # include "../exec/main.h"
@@ -321,10 +322,13 @@ void					pipe_heredoc(t_data *data, t_command *node1, char **env, t_pipex *p);
 int						if_is_buil(t_command *command);
 void					excut_butlin(t_data *data, t_command *node1, char **env);
 void					sig_handler(int signal);
-void					skip_pipe_2(t_data *data, char **ev, t_pipex *p);
+void					skip_two(t_data *data, char **ev, t_pipex *p);
 int						check(t_command *node);
 int						check_exit_status(int status);
 void					free_int_array(int **array);
 void					skip_pipe(t_pipex *p);
 void					here_doc_error(char **av);
+int						file_info(char **av);
+int						file_info_2(char **av);
+void					handle_direct(char **av);
 #endif

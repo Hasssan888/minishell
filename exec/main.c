@@ -53,8 +53,10 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[0]);
 	if (ft_strcmp(node1->args[0], "cat") != 0)
+	{
 		wait(&p->status);
-	data->ignore_sig = check_exit_status(p->status);
+		data->ignore_sig = check_exit_status(p->status);
+	}
 	return (p->pid);
 }
 
@@ -76,7 +78,7 @@ void	ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p)
 			skip_pipe(p);
 		else if ((p->cur->type != RED_OUT || p->cur->type != APP)
 			&& p->cur->type == CMD)
-			skip_pipe_2(data, ev, p);
+			skip_two(data, ev, p);
 		p->cur = p->cur->next;
 	}
 }

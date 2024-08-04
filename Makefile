@@ -49,6 +49,7 @@ SRC = 	$(SRCDIR)minishell.c\
 		$(EXECDIR)/strjoin.c\
 		$(EXECDIR)/one_cmd.c\
 		$(EXECDIR)/open_file.c\
+		$(EXECDIR)/utillis.c\
 
 OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC)) # for pathern substitution // $(patsubst pattern,replacement,text)
 

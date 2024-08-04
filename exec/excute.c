@@ -32,21 +32,12 @@ char	*function(char **env)
 
 char	*slash(char *mycmdargs)
 {
-	if (ft_strcmp(mycmdargs, "/") == 0)
-	{
-		ft_putstr_fd("bash: ", 2);
-		ft_putstr_fd(mycmdargs, 2);
-		ft_putstr_fd(":Is a directory", 2);
-		write(2, "\n", 1);
-		exit(126);
-		return (mycmdargs);
-	}
-	else if (access(mycmdargs, F_OK) == 0)
+	if (access(mycmdargs, F_OK) == 0)
 		return (mycmdargs);
 	else
 	{
 		perror(mycmdargs);
-		return (mycmdargs);
+		return (NULL);
 	}
 }
 
@@ -96,6 +87,7 @@ void	ft_excute(char **av, char **env)
 	else
 	{
 		mycmdargs = av;
+		handle_direct(av);
 		path = search_path(mycmdargs[0], env);
 		if (!path)
 			ft_error(av);
