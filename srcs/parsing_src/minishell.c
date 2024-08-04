@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 13:26:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 09:15:31 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	sig_handler(int signal)
 	free(prompt);
 }
 
-void handle_signals(int *ign_sig ,int mode) 
+void handle_signals(int mode) 
 {
     if (mode == 1) 
 	{
@@ -49,7 +49,6 @@ void handle_signals(int *ign_sig ,int mode)
     } 
 	else if (mode == 4)
 	{
-		*ign_sig = mode;
         signal(SIGINT, SIG_DFL);
         signal(SIGQUIT, SIG_IGN);
     }
@@ -124,9 +123,9 @@ int	main(int ac, char **av, char **env)
 	// print_minishell();
 	// data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(&data, ac, av, env);
-	handle_signals(&data.ignore_sig, 1);
+	handle_signals(1);
 	command = readline(data.prompt);
-	handle_signals(&data.ignore_sig, 2);
+	handle_signals(2);
 	while (command != NULL)
 	{
 		pipex.save1 = dup(STDIN_FILENO);
@@ -134,9 +133,9 @@ int	main(int ac, char **av, char **env)
 		parse_command(&data, command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
-		handle_signals(&data.ignore_sig, 1);
+		handle_signals(1);
 		command = readline(data.prompt);
-		handle_signals(&data.ignore_sig, 2);
+		handle_signals(2);
 	}
 	printf("exit\n");
 	clear_history();

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/03 13:13:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 10:27:18 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,18 +116,3 @@ void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 	data->ignore_sig = check_exit_status(pipex->status);
 
 }
-
-// char* random_file(char *r, int i)
-// {
-//     char *str = ttyname(0);
-// 	char *c = ft_itoa(((ft_strlen(r) / 2 + i) * 1000) % 1026 );
-// 	char * a = strjoin1("/tmp/XFILE", c);
-// 	free(c);
-// 	char *d = ft_substr(str, ft_strlen(str) - 1, ft_strlen(str) + 1);
-// 	char *b = strjoin1(r, d);
-// 	free(d);
-// 	char *t = strjoin1(a, b);
-// 	free(a);
-// 	free(b);
-// 	return t;
-// }

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 13:24:17 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 09:11:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,8 @@ int	parse_command(t_data *data, char *line)
 	// print_list(data->list);
 	// printf("\n\n");
 	data->list = expander_command(data, data->list);
-	// print_list(data->list);
-	// printf("\n\n");
+	print_list(data->list);
+	printf("\n\n");
 	// delete_empty_nodes(data->list);
 	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
 	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");

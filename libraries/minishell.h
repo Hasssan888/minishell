@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 13:18:29 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 09:29:52 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,7 @@ void					ft_perror(char *message);
 
 // void					child_sig_handler(int signo);
 // void 				ign_sig_child();
-void					handle_signals(int *ign_sig, int i);
+void					handle_signals(int i);
 int 					check_exit_status(int status);
 
 // envirenement utiles
@@ -288,6 +288,7 @@ char					**ft_split_str(const char *s, char *del);
 t_command				*free_node(t_command **node);
 void					clear_list(t_command **lst);
 void					free_array(char **array);
+void 					free_int_array(int **array);
 
 // execution
 
