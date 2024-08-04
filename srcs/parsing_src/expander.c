@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 15:38:15 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 19:49:13 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,10 +213,10 @@ int	is_empty(char *str)
 
 void	set_error(t_data *data, int err_num, char *str, t_command **cmd)
 {
-	ft_perror(str);
 	data->list->syntxerr = err_num;
 	g_exit_stat = err_num;
 	clear_list(cmd);
+	ft_perror(str);
 }
 
 char	**split_argument(t_command *list, int i)
