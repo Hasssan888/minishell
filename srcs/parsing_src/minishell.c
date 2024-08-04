@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 11:59:50 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 12:41:01 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	sig_handler(int signal)
 	if (signal == SIGINT)
 	{
         rl_replace_line("", 0); // Clear the current input line
-        // rl_on_new_line();       // Move to a new line
-        // rl_redisplay();         // Redisplay the prompt
 		printf("\n%s", prompt);
 		g_exit_stat = 130;
 	}
@@ -49,11 +47,11 @@ void handle_signals(int mode)
     } 
 	else if (mode == 4)
 	{
-        // signal(SIGINT, free_sig);
         signal(SIGINT, SIG_DFL);
         signal(SIGQUIT, SIG_IGN);
     }
 }
+
 
 char	*get_prompt()
 {
@@ -75,13 +73,6 @@ void	init_minishell(t_data *data, int ac, char **av, char **env)
 	data->envirenment = env_to_array_(data->env);
 	data->syntax_error = false;
 	data->prompt = get_prompt();
-	// data->list = NULL;
-	// data->old_pwd = NULL;
-	// data->expanded = NULL;
-	// data->exit_status = 0;
-	// data->current_pwd = NULL;
-	// data->envirenment = NULL;
-	// data->new_command = NULL;
 }
 
 void	clear_env(t_env **env)
@@ -112,7 +103,6 @@ int	main(int ac, char **av, char **env)
 	char	*command;
 
 	// print_minishell();
-	// data = (t_data *)malloc(sizeof(t_data));
 	init_minishell(&data, ac, av, env);
 	handle_signals(1);
 	command = readline(data.prompt);

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:04 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 12:17:04 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 12:38:08 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,8 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[0]);
-	// if (ft_strcmp(node1->args[0], "cat") != 0)
-	// {
-		// wait(&p->status);
-
-	wait(&p->status);
+	if (ft_strcmp(node1->args[0], "cat") != 0)
+		wait(&p->status);
 	data->ignore_sig = check_exit_status(p->status);
 	return (p->pid);
 }

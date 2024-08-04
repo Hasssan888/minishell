@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 12:07:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 14:54:50 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,12 +187,9 @@ int	is_ambiguous(t_command *list)
 	{
 		if (ambigous_red(list->args[0]))
 		{
-			// clear_list(&data->head);
 			ft_perror("ambiguous redirect\n");
 			list->syntxerr = AMPIGOUS;
-			// data->exit_status = 1;
 			g_exit_stat = 1;
-			// return (0);
 		}
 	}
 	return (1);
@@ -214,39 +211,10 @@ int	is_empty(char *str)
 	return (0);
 }
 
-// char	**split_args_(char **exp_args, int i)
-// {
-// 	char	**args;
-// 	char	**splited;
-
-// 	args = NULL;
-// 	splited = NULL;
-// 	if (!exp_args)
-// 		return (NULL);
-// 	while (exp_args[i] != NULL)
-// 	{
-// 		if (is_empty(exp_args[i]))
-// 		{
-// 			i++;
-// 			continue ;
-// 		}
-// 		splited = ft_split_str(exp_args[i], WHITESPACES);
-// 		if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
-// 			args = ft_arr_join(args, splited);
-// 		else
-// 			args = ft_arr_join(args, splited);
-// 		i++;
-// 	}
-// 	free_array(exp_args);
-// 	return (args);
-// }
-
-
 void	set_error(t_data *data, int err_num, char *str, t_command **cmd)
 {
 	ft_perror(str);
 	data->list->syntxerr = err_num;
-	// data->exit_status = err_num;
 	g_exit_stat = err_num;
 	clear_list(cmd);
 }
@@ -268,10 +236,10 @@ char	**split_argument(t_command *list, int i)
 int	get_cmd_if_empty(t_command *list)
 {
 	int	i;
-	// char **splited;
 
 	i = 0;
-	// splited = NULL;
+	if (!list->args || !list->args[0])
+		return 0;
 	if (list->type == TOKEN && is_empty(list->value))
 	{
 		while (list->args[i] != NULL && is_empty(list->args[i]))
@@ -280,19 +248,7 @@ int	get_cmd_if_empty(t_command *list)
 			return (0);
 		free(list->value);
 		list->value = ft_strdup(list->args[0]);
-		printf("====%s===\n", list->value);
 	}
-	// else
-	// {
-	// 	splited = ft_split_str(list->value, WHITESPACES);
-	// 	if (!splited)
-	// 		return (0);
-	// 	free(list->value);
-	// 	list->value = ft_strdup(splited[0]);
-	// 	printf("Hello\n");
-	// 	printf("====%s===\n", list->value);
-	// 	free_array(splited);
-	// }
 	return (1);
 }
 
@@ -300,9 +256,6 @@ char **split_and_join(char **args, char *exp_args)
 {
 	char **splited = NULL;
 	splited = ft_split_str(exp_args, WHITESPACES);
-	// if (splited != NULL && splited[0] != NULL && splited[1] != NULL)
-	// 	args = ft_arr_join(args, splited);
-	// else
 	args = ft_arr_join(args, splited);
 	return args;
 }
@@ -320,55 +273,34 @@ int get_real_len(char **arr)
 	return (len);
 }
 
-char **ft_arrcpy(char **arr, int arr_len)
+char **ft_arr_add_back(char **arr, char *str)
 {
 	int i = -1;
-	int j = 0;
-	if (!arr)
-		return NULL;
 	int len = get_real_len(arr);
-	char **arr_cpy = malloc((len + 1)* sizeof(char *));
+	char **arr_cpy = malloc((len + 2) * sizeof(char *));
 	if (!arr_cpy)
 		return NULL;
-	while(++i < arr_len)
+	if (!arr || !len)
 	{
-		// if (!arr[i][0])
-		// 	arr_cpy[j++] = ft_strdup("");
-		if (!is_empty(arr[i]))
-			arr_cpy[j++] = ft_strdup(arr[i]);
+		arr_cpy[0] = ft_strdup(str);
+		arr_cpy[1] = NULL;
+		return arr_cpy;
 	}
-	arr_cpy[j] = NULL;
+	if (!arr_cpy)
+		return NULL;
+	while(++i < len)
+		arr_cpy[i] = ft_strdup(arr[i]);
+	arr_cpy[i] = ft_strdup(str);
+	arr_cpy[i + 1] = NULL;
+	free_array(arr);
 	return arr_cpy;
 }
-
-
-// char **ft_arrcpy_nempty(char **arr)
-// {
-// 	int i = -1;
-// 	int j = 0;
-// 	if (!arr)
-// 		return NULL;
-// 	int len = get_real_len(arr);
-// 	char **arr_cpy = malloc((len + 1)* sizeof(char *));
-// 	if (!arr_cpy)
-// 		return NULL;
-// 	while(arr[++i])
-// 	{
-// 		// if (!arr[i][0])
-// 		// 	arr_cpy[j++] = ft_strdup("");
-// 		if (!is_empty(arr[i]))
-// 			arr_cpy[j++] = ft_strdup(arr[i]);
-// 	}
-// 	arr_cpy[j] = NULL;
-// 	return arr_cpy;
-// }
 
 int	expander_extended(t_data *data, t_command *list)
 {
 	int i = -1;
 	int SPLIT = 0;
 	char **args = NULL;
-	// list->args = arrcpy_nempty(list->args);
 
 	while (list->value != NULL && list->value[0] && list->args != NULL
 		&& list->args[++i] != NULL)
@@ -379,27 +311,26 @@ int	expander_extended(t_data *data, t_command *list)
 			list->args[i] = expand_vars(data, list->args[i], 0);
 			SPLIT = 1;
 		}
-		// if (is_empty(list->args[i]))
-		// 	continue;
-		if (list->type != HER_DOC)
-			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
-		if (SPLIT)
+		if (!is_empty(list->args[i]))
 		{
-			args = ft_arrcpy(list->args, i);
-			args = split_and_join(args, list->args[i]);
-			SPLIT = 0;
-		}
-		if (data->syntax_error)
-		{
-			set_error(data, SYNTERRR, "syntax error\n", &data->head);
-			return (0);
+			if (list->type != HER_DOC)
+				list->args[i] = unquote_arg(list, list->args[i], 0, 0);
+			if (SPLIT && !list->quoted)
+			{
+				args = split_and_join(args, list->args[i]);
+				SPLIT = 0;
+			}
+			else
+				args = ft_arr_add_back(args, list->args[i]);
+			if (data->syntax_error)
+			{
+				set_error(data, SYNTERRR, "syntax error\n", &data->head);
+				return (0);
+			}
 		}
 	}
-	if (args)
-	{
-		free_array(list->args);
-		list->args = args;
-	}
+	free_array(list->args);
+	list->args = args;
 	if (list->value && list->value[0] && ft_strchr(list->value, '$'))
 		list->value = expand_vars(data, list->value, 0);
 	list->value = unquote_arg(list, list->value, 0, 0);
@@ -409,8 +340,6 @@ int	expander_extended(t_data *data, t_command *list)
 		return (0);
 	}
 	is_ambiguous(list);
-	// if (!is_ambiguous(list))
-	// 	return (0);
 	return (1);
 }
 

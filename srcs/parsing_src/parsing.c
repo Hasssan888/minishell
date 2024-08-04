@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 09:11:46 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 14:15:14 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,29 @@ void	init_parser_var(t_data *data)
 	data->rdrct_head = NULL;
 }
 
+int parser_comtinue(t_data *data)
+{
+	if (data->_tokens_list->type == TOKEN)
+	{
+		data->list_command = get_command_with_args(data);
+		if (!data->list_command)
+			return (0);
+	}
+	else if (data->_tokens_list->type >= 2
+		&& data->_tokens_list->type <= 5)
+		get_redirect_node(data);
+	else
+	{
+		data->_tokens_list = free_node(&data->_tokens_list);
+		if (!data->_tokens_list)
+		{
+			syntax_error(data, data->list_command, data->head);
+			return (0);
+		}
+	}
+	return 1;
+}
+
 t_command	*parser_command(t_data *data, t_command *_tokens_list)
 {
 	data->head = NULL;
@@ -85,21 +108,8 @@ t_command	*parser_command(t_data *data, t_command *_tokens_list)
 			clear_list(&data->head);
 			return (NULL);
 		}
-		if (data->_tokens_list->type == TOKEN)
-		{
-			data->list_command = get_command_with_args(data);
-			if (!data->list_command)
-				return (NULL);
-		}
-		else if (data->_tokens_list->type >= 2
-			&& data->_tokens_list->type <= 5)
-			get_redirect_node(data);
-		else
-		{
-			data->_tokens_list = free_node(&data->_tokens_list);
-			if (!data->_tokens_list)
-				return (syntax_error(data, data->list_command, data->head));
-		}
+		if (!parser_comtinue(data))
+			return (NULL);
 		add_back_list(&data->head, data->list_command);
 		add_back_list(&data->head, data->rdrct_head);
 	}
@@ -110,7 +120,6 @@ int	parse_command(t_data *data, char *line)
 {
 	t_command	*tokens_list;
 
-	// printf("\n++++++++++++++++++ parsing is started +++++++++++++++++\n");
 	data->syntax_error = 0;
 	if (line != NULL && !line[0])
 		return (0);
@@ -119,18 +128,11 @@ int	parse_command(t_data *data, char *line)
 		return (0);
 	tokens_list = tokenzer_command(line);
 	data->list = parser_command(data, tokens_list);
-	// print_list(data->list);
-	// printf("\n\n");
-	data->list = expander_command(data, data->list);
 	print_list(data->list);
 	printf("\n\n");
-	// delete_empty_nodes(data->list);
-	// printf("\n++++++++++++++++++ parsing is done +++++++++++++++++\n");
-	// printf("\n++++++++++++++++++ execution is started +++++++++++++++++\n");
-	// exec_command(data->list);
-	// is_builtin_cmd(data->list);
+	data->list = expander_command(data, data->list);
+	print_list(data->list);
 	func(data, data->list);
-	// printf("\n++++++++++++++++++ execution is done +++++++++++++++++\n");
 	clear_list(&data->list);
 	return (0);
 }
