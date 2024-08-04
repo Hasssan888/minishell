@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 13:27:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/10 13:27:42 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 14:51:38 by hbakrim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,49 @@ char	*strjoin1(char *s1, char *s2)
 	ft_strlcpy(ptr, s1, len_s1 + 1);
 	ft_strlcpy((ptr + len_s1), s2, (len_s2 + 1));
 	return (ptr);
+}
+
+void	free_int_array(int **array)
+{
+	int	i;
+
+	i = 0;
+	if (!array)
+		return ;
+	while (array[i] != NULL)
+	{
+		free(array[i]);
+		array[i] = NULL;
+		i++;
+	}
+	free(array);
+	array = NULL;
+}
+
+int	check_exit_status(int status)
+{
+	if (WIFSIGNALED(status))
+	{
+		write(1, "\n", 1);
+		g_exit_stat = 128 + WTERMSIG(status);
+	}
+	else if (WIFEXITED(status))
+		g_exit_stat = WEXITSTATUS(status);
+	return (g_exit_stat);
+}
+
+int	check(t_command *node)
+{
+	t_command	*c;
+
+	c = node;
+	while (c)
+	{
+		if (c->type == PIPE)
+			return (1);
+		else if (c->type == RED_OUT || c->type == APP)
+			return (2);
+		c = c->next;
+	}
+	return (0);
 }

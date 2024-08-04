@@ -315,16 +315,16 @@ void					ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p);
 int						ft_strcmp(char *s1, char *s2);
 int						func(t_data *data, t_command *list);
 char					*strjoin1(char *s1, char *s2);
-t_command				*lstlast(t_command *lst);
 void   					infile(t_data *data, t_command *node1, char **env, t_pipex *p);
 void					outfile(t_data *data, t_command *node1, char **env, t_pipex *p);
-void    				one_here_doc(t_command *node1, char **env, t_pipex *p);
-void    				heredoc_readout_app(t_command *node1, char **env,t_pipex *p);
 void					pipe_heredoc(t_data *data, t_command *node1, char **env, t_pipex *p);
 int						if_is_buil(t_command *command);
-void    				readout_append(t_command *node1, t_pipex *p);
-void    				readout_append_2(t_command *node1, t_pipex *p);
 void					excut_butlin(t_data *data, t_command *node1, char **env);
 void					sig_handler(int signal);
-
+void					skip_pipe_2(t_data *data, char **ev, t_pipex *p);
+int						check(t_command *node);
+int						check_exit_status(int status);
+void					free_int_array(int **array);
+void					skip_pipe(t_pipex *p);
+void					here_doc_error(char **av);
 #endif

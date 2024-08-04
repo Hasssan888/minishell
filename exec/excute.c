@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   excute.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/04 14:17:43 by hbakrim           #+#    #+#             */
+/*   Updated: 2024/08/04 14:17:48 by hbakrim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../libraries/minishell.h"
 
 char	*function(char **env)
@@ -21,14 +33,14 @@ char	*function(char **env)
 char	*slash(char *mycmdargs)
 {
 	if (ft_strcmp(mycmdargs, "/") == 0)
-		{
-			ft_putstr_fd("bash: ", 2);
-			ft_putstr_fd(mycmdargs, 2);
-			ft_putstr_fd(":Is a directory", 2);
-			write(2, "\n", 1);
-			exit(126);
-			return(mycmdargs);
-		}
+	{
+		ft_putstr_fd("bash: ", 2);
+		ft_putstr_fd(mycmdargs, 2);
+		ft_putstr_fd(":Is a directory", 2);
+		write(2, "\n", 1);
+		exit(126);
+		return (mycmdargs);
+	}
 	else if (access(mycmdargs, F_OK) == 0)
 		return (mycmdargs);
 	else
@@ -78,8 +90,9 @@ void	ft_excute(char **av, char **env)
 	char	**mycmdargs;
 	char	*path;
 
-	if (ft_strcmp(av[0], "") == 0 || ft_strcmp(av[0], ".") == 0 || ft_strcmp(av[0], " ") == 0)
-			ft_error(av);
+	if (ft_strcmp(av[0], "") == 0 || ft_strcmp(av[0], ".") == 0
+		|| ft_strcmp(av[0], " ") == 0)
+		ft_error(av);
 	else
 	{
 		mycmdargs = av;
