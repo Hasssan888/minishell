@@ -10,14 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../../libraries/minishell.h"
 
 void	get_old_current_pwd(t_data *data)
 {
-	t_env *old_pwd = get_env_ele_ptr(data, "OLDPWD");
-	t_env *pwd = get_env_ele_ptr(data, "PWD");
+	t_env	*old_pwd;
+	t_env	*pwd;
 
+	old_pwd = get_env_ele_ptr(data, "OLDPWD");
+	pwd = get_env_ele_ptr(data, "PWD");
 	if (old_pwd != NULL && old_pwd->env_key != NULL)
 		free(old_pwd->env_key);
 	old_pwd->env_key = ft_strdup(pwd->env_key);
@@ -31,12 +32,12 @@ int	change_dir(t_data *data, t_env *env, char *path)
 	if (path != NULL)
 	{
 		if (chdir(path) != 0)
-			return 0;	
+			return (0);
 	}
 	else if (env != NULL)
 	{
 		if (chdir(env->env_key) != 0)
-			return 0;
+			return (0);
 	}
 	free(data->prompt);
 	get_old_current_pwd(data);
@@ -44,7 +45,7 @@ int	change_dir(t_data *data, t_env *env, char *path)
 	return (1);
 }
 
-void	check_cd_errors()
+void	check_cd_errors(void)
 {
 	if (errno == EACCES)
 		ft_perror("minishell: cd: Permission denied\n");
@@ -57,8 +58,9 @@ void	check_cd_errors()
 
 int	cd(t_data *data, char **args)
 {
-	t_env *env = NULL;
+	t_env	*env;
 
+	env = NULL;
 	if (args[0] != NULL && args[1] != NULL)
 	{
 		ft_perror("cd: too many arguments\n");
@@ -118,14 +120,18 @@ void	echo_it(char **cmd, int i)
 	}
 }
 
-bool check_echo_options(char *cmd)
+bool	check_echo_options(char *cmd)
 {
-	int j = 0;
-	bool flag = false;
+	int		j;
+	bool	flag;
+
+	j = 0;
+	flag = false;
 	if (!cmd)
 		return (flag);
 	if (cmd[j] == '-')
-		while(cmd[++j] == 'n');
+		while (cmd[++j] == 'n')
+			;
 	if (!cmd[j])
 		flag = true;
 	return (flag);
@@ -141,7 +147,8 @@ int	echo(char **cmd)
 	if (check_echo_options(cmd[i]))
 	{
 		flag = true;
-		while(check_echo_options(cmd[++i]));
+		while (check_echo_options(cmd[++i]))
+			;
 	}
 	echo_it(cmd, i);
 	if (!flag)
@@ -150,10 +157,12 @@ int	echo(char **cmd)
 	return (0);
 }
 
-int ft_is_str_digit(char *str)
+int	ft_is_str_digit(char *str)
 {
-	int i = -1;
-	while(str[++i])
+	int	i;
+
+	i = -1;
+	while (str[++i])
 	{
 		if (!ft_isdigit(str[i]))
 			return (0);
@@ -161,7 +170,7 @@ int ft_is_str_digit(char *str)
 	return (1);
 }
 
-void exit_(t_data *data, t_command *command)
+void	exit_(t_data *data, t_command *command)
 {
 	if (command->args[1] != NULL && !ft_is_str_digit(command->args[1]))
 	{
@@ -185,7 +194,7 @@ void exit_(t_data *data, t_command *command)
 int	is_builtin_cmd(t_data *data, t_command *command)
 {
 	if (!command)
-		return 0;
+		return (0);
 	if (ft_strcmp(command->value, "echo") == 0)
 		echo(&command->args[1]);
 	else if (ft_strcmp(command->value, "pwd") == 0)

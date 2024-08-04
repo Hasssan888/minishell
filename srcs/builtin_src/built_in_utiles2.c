@@ -12,10 +12,12 @@
 
 #include "../../libraries/minishell.h"
 
-int env_c_len(t_env *env_)
+int	env_c_len(t_env *env_)
 {
-	int len = 0;
-	while(env_ != NULL)
+	int	len;
+
+	len = 0;
+	while (env_ != NULL)
 	{
 		len++;
 		env_ = env_->next;
@@ -23,25 +25,33 @@ int env_c_len(t_env *env_)
 	return (len);
 }
 
-void print_export_env(t_env **env, int env_len)
+void	print_export_env(t_env **env, int env_len)
 {
-	int i = 0;
-	while(i < env_len)
+	int	i;
+
+	i = 0;
+	while (i < env_len)
 	{
 		if (!env[i]->env_key)
 			printf("declare -x %s\n", env[i]->env_value);
 		else if (env[i]->env_key != NULL)
-			printf("declare -x %s=\"%s\"\n", env[i]->env_value, env[i]->env_key);
+			printf("declare -x %s=\"%s\"\n", env[i]->env_value,
+				env[i]->env_key);
 		i++;
 	}
 }
 
-void print_sorted_env(t_env *env)
+void	print_sorted_env(t_env *env)
 {
-	t_env *env_ = env;
-	int env_len = env_c_len(env_);
-	int i = 0;
-	t_env **env__ = malloc((env_len + 1) * sizeof(t_env *));
+	t_env	*env_;
+	int		env_len;
+	int		i;
+	t_env	**env__;
+
+	env_ = env;
+	env_len = env_c_len(env_);
+	i = 0;
+	env__ = malloc((env_len + 1) * sizeof(t_env *));
 	while (i < env_len)
 	{
 		env__[i] = env_;
@@ -54,17 +64,18 @@ void print_sorted_env(t_env *env)
 	free(env__);
 }
 
-
-int valid_identifier(char *str)
+int	valid_identifier(char *str)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	printf("%s\n", str);
 	if (!ft_isalpha(str[i]) && str[i] != '_')
 		return (0);
-	while(str[++i] && str[i] != '=')
+	while (str[++i] && str[i] != '=')
 	{
 		if (str[i] == '+')
-			break;
+			break ;
 		else if (!ft_isalnum(str[i]) && str[i] != '_')
 			return (0);
 	}
@@ -73,11 +84,14 @@ int valid_identifier(char *str)
 	return (1);
 }
 
-t_env **sort_env(t_env **env_, int env_len)
+t_env	**sort_env(t_env **env_, int env_len)
 {
-	int i = 0;
-	int j = 0;
-	
+	int		i;
+	int		j;
+	t_env	*temp;
+
+	i = 0;
+	j = 0;
 	while (i < env_len - 1)
 	{
 		j = 0;
@@ -85,7 +99,7 @@ t_env **sort_env(t_env **env_, int env_len)
 		{
 			if (ft_strcmp(env_[j]->env_value, env_[j + 1]->env_value) > 0)
 			{
-				t_env *temp = env_[j];
+				temp = env_[j];
 				env_[j] = env_[j + 1];
 				env_[j + 1] = temp;
 			}

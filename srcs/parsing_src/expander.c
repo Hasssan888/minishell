@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 19:49:13 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:14:23 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@ char	*expand_digits(t_data *data, char *argument, int *i)
 			return (data->expanded);
 		while (argument[++j] && argument[j] != '$')
 			;
-		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument,
-					i, j));
+		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument, i,
+					j));
 		*i = j;
 	}
 	return (data->expanded);
 }
+
 void	expand_(t_data *data, char *argument, int *i)
 {
 	if (!argument[*i + 1])
@@ -40,8 +41,7 @@ void	expand_(t_data *data, char *argument, int *i)
 	else if (argument[*i + 1] == '?')
 	{
 		*i += 2;
-		data->expanded = ft_strjoin(data->expanded,
-				ft_itoa(g_exit_stat));
+		data->expanded = ft_strjoin(data->expanded, ft_itoa(g_exit_stat));
 	}
 	else if (!ft_isdigit(argument[*i + 1]))
 	{
@@ -239,7 +239,7 @@ int	get_cmd_if_empty(t_command *list)
 
 	i = 0;
 	if (!list->args || !list->args[0])
-		return 0;
+		return (0);
 	if (list->type == TOKEN && is_empty(list->value))
 	{
 		while (list->args[i] != NULL && is_empty(list->args[i]))
@@ -252,20 +252,24 @@ int	get_cmd_if_empty(t_command *list)
 	return (1);
 }
 
-char **split_and_join(char **args, char *exp_args)
+char	**split_and_join(char **args, char *exp_args)
 {
-	char **splited = NULL;
+	char	**splited;
+
+	splited = NULL;
 	splited = ft_split_str(exp_args, WHITESPACES);
 	args = ft_arr_join(args, splited);
-	return args;
+	return (args);
 }
 
-int get_real_len(char **arr)
+int	get_real_len(char **arr)
 {
-	int i = -1;
-	int len = 0;
+	int	i;
+	int	len;
 
-	while(arr && arr[++i])
+	i = -1;
+	len = 0;
+	while (arr && arr[++i])
 	{
 		if (!is_empty(arr[i]))
 			len++;
@@ -273,46 +277,50 @@ int get_real_len(char **arr)
 	return (len);
 }
 
-char **ft_arr_add_back(char **arr, char *str)
+char	**ft_arr_add_back(char **arr, char *str)
 {
-	int i = -1;
-	int len = get_real_len(arr);
-	char **arr_cpy = malloc((len + 2) * sizeof(char *));
+	int		i;
+	int		len;
+	char	**arr_cpy;
+
+	i = -1;
+	len = get_real_len(arr);
+	arr_cpy = malloc((len + 2) * sizeof(char *));
 	if (!arr_cpy)
-		return NULL;
+		return (NULL);
 	if (!arr || !len)
 	{
 		arr_cpy[0] = ft_strdup(str);
 		arr_cpy[1] = NULL;
-		return arr_cpy;
+		return (arr_cpy);
 	}
 	if (!arr_cpy)
-		return NULL;
-	while(++i < len)
+		return (NULL);
+	while (++i < len)
 		arr_cpy[i] = ft_strdup(arr[i]);
 	arr_cpy[i] = ft_strdup(str);
 	arr_cpy[i + 1] = NULL;
 	free_array(arr);
-	return arr_cpy;
+	return (arr_cpy);
 }
 
-char **exp___(t_data *data, t_command *list, char **args, int i)
+char	**exp___(t_data *data, t_command *list, char **args, int i)
 {
-	int SPLIT = 0;
+	data->flag = 0;
 	if (ft_strchr(list->args[i], '$') && list->quoted != 1
-			&& list->type != HER_DOC)
+		&& list->type != HER_DOC)
 	{
 		list->args[i] = expand_vars(data, list->args[i], 0);
-		SPLIT = 1;
+		data->flag = 1;
 	}
 	if (!is_empty(list->args[i]))
 	{
 		if (list->type != HER_DOC)
 			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
-		if (SPLIT && !list->quoted)
+		if (data->flag && !list->quoted)
 		{
 			args = split_and_join(args, list->args[i]);
-			SPLIT = 0;
+			data->flag = 0;
 		}
 		else
 			args = ft_arr_add_back(args, list->args[i]);
@@ -327,15 +335,17 @@ char **exp___(t_data *data, t_command *list, char **args, int i)
 
 int	expander_extended(t_data *data, t_command *list)
 {
-	int i = -1;
-	char **args = NULL;
+	int		i;
+	char	**args;
 
+	i = -1;
+	args = NULL;
 	while (list->value != NULL && list->value[0] && list->args != NULL
 		&& list->args[++i] != NULL)
 	{
 		args = exp___(data, list, args, i);
 		if (!args)
-			return 0;
+			return (0);
 	}
 	free_array(list->args);
 	list->args = args;

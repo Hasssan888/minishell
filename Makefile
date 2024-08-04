@@ -6,7 +6,7 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/08/04 13:07:07 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/08/04 20:16:01 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,6 @@ SRC = 	$(SRCDIR)minishell.c\
 		$(SRCDIR)cleanup.c\
 		$(SRCDIR)expander_utiles.c\
 		$(SRCDIR)parsing.c\
-		$(SRCDIR)execution.c\
 		$(SRCDIR)ft_split_str.c\
 		$(SRCDIR)mini_utiles1.c\
 		$(SRCDIR)parsing_utiles.c\

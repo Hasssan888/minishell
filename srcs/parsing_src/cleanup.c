@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 15:40:03 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:05:41 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_command	*free_node(t_command **node)
 {
 	t_command	*ptr;
 
-	if (!*node)
+	if (!node || !*node)
 		return (NULL);
 	ptr = (*node)->next;
 	free((*node)->value);

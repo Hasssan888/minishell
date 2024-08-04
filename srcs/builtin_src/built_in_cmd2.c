@@ -22,13 +22,17 @@ void	pwd(void)
 	free(cwd);
 }
 
-char **env_to_array_(t_env *env)
+char	**env_to_array_(t_env *env)
 {
-	int i = 0;
-	int env_len = env_c_len(env);
-	char **array = malloc((env_len + 1) *sizeof(char *));
+	int		i;
+	int		env_len;
+	char	**array;
+
+	i = 0;
+	env_len = env_c_len(env);
+	array = malloc((env_len + 1) * sizeof(char *));
 	if (!array || !env)
-		return NULL;
+		return (NULL);
 	while (env != NULL)
 	{
 		if (!env->env_key)
@@ -36,7 +40,8 @@ char **env_to_array_(t_env *env)
 		else if (!env->env_key[0])
 			array[i++] = ft_strjoin(ft_strdup(env->env_value), ft_strdup("="));
 		else
-			array[i++] = ft_strjoin(ft_strjoin(ft_strdup(env->env_value), ft_strdup("=")), ft_strdup(env->env_key));
+			array[i++] = ft_strjoin(ft_strjoin(ft_strdup(env->env_value),
+						ft_strdup("=")), ft_strdup(env->env_key));
 		env = env->next;
 	}
 	array[i] = NULL;
@@ -84,15 +89,16 @@ void	del_node(t_env **env, t_env *env_var)
 
 int	unset(t_data *data, char **env_var, t_env *envirenement)
 {
-	int i = 0;
+	int		i;
 	t_env	*env_ptr;
-	
-	while(env_var[i] != NULL)
+
+	i = 0;
+	while (env_var[i] != NULL)
 	{
 		env_ptr = get_env_ele_ptr(data, env_var[i++]);
 		if (!env_ptr)
-			continue;
-		del_node(&envirenement, env_ptr);		
+			continue ;
+		del_node(&envirenement, env_ptr);
 	}
 	g_exit_stat = 0;
 	return (0);

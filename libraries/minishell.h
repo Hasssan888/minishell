@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 19:41:13 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:14:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ typedef struct s_data
 	int					i;
 	int					j;
 	int					ac;
+	int 				flag;
 	int 				redirect;
 	int					exit_status;
 	t_env				*env;

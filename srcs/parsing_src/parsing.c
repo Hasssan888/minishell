@@ -6,13 +6,14 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 15:39:27 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:06:39 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
-t_command	*syntax_error(t_data *data, t_command *list_command, t_command *head)
+t_command	*syntax_error(t_data *data, t_command *list_command,
+		t_command *head)
 {
 	ft_perror("syntax error\n");
 	data->syntax_error = SYNTERRR;
@@ -51,8 +52,7 @@ t_command	*get_command_with_args(t_data *data)
 			if (data->syntax_error)
 			{
 				clear_list(&data->rdrct_head);
-				clear_list(&data->head);
-				return (NULL);
+				return (syntax_error(data, NULL, data->head));
 			}
 		}
 	}
@@ -69,7 +69,7 @@ void	init_parser_var(t_data *data)
 	data->rdrct_head = NULL;
 }
 
-int parser_comtinue(t_data *data)
+int	parser_comtinue(t_data *data)
 {
 	if (data->_tokens_list->type == TOKEN)
 	{
@@ -77,8 +77,7 @@ int parser_comtinue(t_data *data)
 		if (!data->list_command)
 			return (0);
 	}
-	else if (data->_tokens_list->type >= 2
-		&& data->_tokens_list->type <= 5)
+	else if (data->_tokens_list->type >= 2 && data->_tokens_list->type <= 5)
 		get_redirect_node(data);
 	else
 	{
@@ -89,7 +88,7 @@ int parser_comtinue(t_data *data)
 			return (0);
 		}
 	}
-	return 1;
+	return (1);
 }
 
 t_command	*parser_command(t_data *data, t_command *_tokens_list)

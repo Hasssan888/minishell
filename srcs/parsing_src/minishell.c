@@ -6,20 +6,22 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 12:41:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:15:34 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
-int	g_exit_stat = 0;
+int		g_exit_stat = 0;
 
 void	sig_handler(int signal)
 {
-	char *prompt = get_prompt();
+	char	*prompt;
+
+	prompt = get_prompt();
 	if (signal == SIGINT)
 	{
-        rl_replace_line("", 0); // Clear the current input line
+		rl_replace_line("", 0); // Clear the current input line
 		printf("\n%s", prompt);
 		g_exit_stat = 130;
 	}
@@ -28,32 +30,31 @@ void	sig_handler(int signal)
 	free(prompt);
 }
 
-void handle_signals(int mode) 
+void	handle_signals(int mode)
 {
-    if (mode == 1) 
+	if (mode == 1)
 	{
-        signal(SIGINT, sig_handler);
-        signal(SIGQUIT, SIG_IGN);
-    } 
-	else if (mode == 2) 
+		signal(SIGINT, sig_handler);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (mode == 2)
 	{
-        signal(SIGINT, SIG_IGN);
-        signal(SIGQUIT, SIG_IGN);
-    } 
-	else if (mode == 3) 
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (mode == 3)
 	{
-        signal(SIGINT, SIG_DFL);
-        signal(SIGQUIT, SIG_DFL);
-    } 
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+	}
 	else if (mode == 4)
 	{
-        signal(SIGINT, SIG_DFL);
-        signal(SIGQUIT, SIG_IGN);
-    }
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_IGN);
+	}
 }
 
-
-char	*get_prompt()
+char	*get_prompt(void)
 {
 	char	*prompt1;
 	char	*final_prompt;
@@ -98,11 +99,11 @@ void	clear_env(t_env **env)
 
 int	main(int ac, char **av, char **env)
 {
-	t_data 	data;
+	t_data	data;
 	t_pipex	pipex;
 	char	*command;
 
-	// print_minishell();
+	print_minishell();
 	init_minishell(&data, ac, av, env);
 	handle_signals(1);
 	command = readline(data.prompt);
