@@ -32,7 +32,7 @@ void	skip_pipe(t_pipex *p)
 		p->flag = 2;
 }
 
-void	skip_pipe_2(t_data *data, char **ev, t_pipex *p)
+void	skip_two(t_data *data, char **ev, t_pipex *p)
 {
 	t_command	*c;
 

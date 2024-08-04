@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 13:21:48 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 19:41:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	check_cd_errors()
 		ft_perror("minishell: cd: No such file or directory\n");
 	else if (errno == ENOTDIR)
 		ft_perror("minishell: cd: No such file or directory\n");
-	// data->exit_status = 1;
 	g_exit_stat = 1;
 }
 
@@ -63,7 +62,6 @@ int	cd(t_data *data, char **args)
 	if (args[0] != NULL && args[1] != NULL)
 	{
 		ft_perror("cd: too many arguments\n");
-		// data->exit_status = 1;
 		g_exit_stat = 1;
 		return (0);
 	}
@@ -84,7 +82,6 @@ int	cd(t_data *data, char **args)
 		if (!env || !env->env_key)
 		{
 			ft_perror("cd: HOME not set\n");
-			// data->exit_status = 1;
 			g_exit_stat = 1;
 			return (0);
 		}
@@ -180,7 +177,6 @@ void exit_(t_data *data, t_command *command)
 	}
 	else if (command->args[1] != NULL)
 		exit(ft_atoi(command->args[1]));
-		// exit(ft_atoi(command->args[1]) % 256);
 	printf("exit\n");
 	clear_list(&data->list);
 	exit(g_exit_stat);
