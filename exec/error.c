@@ -43,7 +43,6 @@ void	ft_error(char **av)
 		ft_putstr_fd(".: usage: . filename [arguments]", 2);
 		write(2, "\n", 1);
 		g_exit_stat = 2;
-		// exit(2);
 	}
 	else
 	{
@@ -56,7 +55,6 @@ void	ft_error(char **av)
 		}
 		write(2, "\n", 1);
 		g_exit_stat = 127;
-		// exit(127);
 	}
 }
 

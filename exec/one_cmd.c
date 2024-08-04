@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:01 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/03 13:29:23 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 14:51:15 by hbakrim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,48 +42,48 @@ void	excut_butlin(t_data *data, t_command *node1, char **env)
 		ft_excute(node1->args, env);
 }
 
-void	readout_append(t_command *node1, t_pipex *p)
+void	ft_count_pipe(t_command *list, t_pipex *p)
 {
-	if (node1->next->next && (node1->next->next->type == RED_OUT
-			|| node1->next->next->type == APP))
-		open_outfile(node1, p);
-	else
+	t_command	*cur;
+
+	cur = list;
+	p->count_pipe = 0;
+	while (cur)
 	{
-		if (node1->next->type == APP)
-			p->outfile = open(node1->next->args[0],
-					O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else
-			p->outfile = open(node1->next->args[0],
-					O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (p->outfile == -1)
-		{
-			printf("%s: Permission denied\n", node1->next->args[0]);
-			exit(1);
-		}
+		if (cur->type == PIPE)
+			p->count_pipe++;
+		cur = cur->next;
 	}
 }
 
-void	readout_append_2(t_command *node1, t_pipex *p)
+void	ft_count_read_out(t_command *node, t_pipex *p)
 {
-	printf("node1->arg[0] = %s\n", node1->args[0]);
-	if (node1->next && (node1->next->type == RED_OUT
-			|| node1->next->type == APP))
-		open_outfile(node1, p);
-	else
-	{
-		printf("outfile\n");
-		if (node1->type == APP)
-			p->outfile = open(node1->args[0],
-					O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else
-			p->outfile = open(node1->args[0],
-					O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		printf("p->outfile = %d\n", p->outfile);
-		if (p->outfile == -1)
-		{
-			printf("%s: Permission denied\n", node1->args[0]);
-			exit(1);
-		}
+	t_command	*cur;
 
+	cur = node;
+	p->count_read_out = 0;
+	while (cur)
+	{
+		if (cur->type == PIPE)
+			break ;
+		if (cur->type == RED_OUT || cur->type == APP)
+			p->count_read_out++;
+		cur = cur->next;
+	}
+}
+
+void	ft_count_read_in(t_command *node, t_pipex *p)
+{
+	t_command	*cur;
+
+	cur = node;
+	p->count_read_in = 0;
+	while (cur)
+	{
+		if (cur->type == PIPE)
+			break ;
+		if (cur->type == RED_IN)
+			p->count_read_in++;
+		cur = cur->next;
 	}
 }

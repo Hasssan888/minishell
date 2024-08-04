@@ -49,17 +49,36 @@ void	outfile(t_data *data, t_command *node1, char **env, t_pipex *p)
 
 int	check_redout(t_command *node1)
 {
-	t_command *cur = node1;
+	t_command	*cur;
 
+	cur = node1;
 	while (cur)
 	{
 		if (cur->type == PIPE)
-			break;
+			break ;
 		else if (cur->type == RED_OUT)
-			return(1);
+			return (1);
 		cur = cur->next;
 	}
-	return(0);
+	return (0);
+}
+
+void	dup_outfile(t_command *node1, t_pipex *p)
+{
+	if (p->indixe == 1)
+	{
+		p->indixe = 0;
+		exit(1);
+	}
+	if (check_redout(node1) == 1)
+		open_outfile(node1, p);
+	if (p->b == 1)
+		p->outfile = open(p->s, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else if (p->b == 2)
+		p->outfile = open(p->s, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	free(p->s);
+	dup2(p->outfile, 1);
+	close(p->outfile);
 }
 
 void	pipe_heredoc(t_data *data, t_command *node1, char **env, t_pipex *p)
@@ -71,31 +90,12 @@ void	pipe_heredoc(t_data *data, t_command *node1, char **env, t_pipex *p)
 		dup2(p->strs[p->arr[p->k]][0], 0);
 		close(p->strs[p->arr[p->k]][0]);
 	}
-	if (p->w  == 1)
+	if (p->w == 1)
 	{
 		dup2(p->end[1], 1);
 		close(p->end[1]);
 	}
 	else if (p->w == 2)
-	{
-
-		if (p->indixe == 1)
-		{
-			p->indixe = 0;
-			exit(1);
-		}
-		if (check_redout(node1) == 1)
-			open_outfile(node1, p);
-		if (p->b == 1)
-			p->outfile = open(p->s ,O_WRONLY | O_CREAT | O_TRUNC,
-						0644);
-		else if (p->b == 2)
-			p->outfile = open(p->s ,O_WRONLY | O_CREAT | O_APPEND,
-						0644);
-		free(p->s);
-		dup2(p->outfile, 1);
-		close(p->outfile);
-	}
-
+		dup_outfile(node1, p);
 	excut_butlin(data, node1, env);
 }
