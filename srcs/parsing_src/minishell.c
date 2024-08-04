@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 09:15:31 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 11:59:50 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void handle_signals(int mode)
     } 
 	else if (mode == 4)
 	{
+        // signal(SIGINT, free_sig);
         signal(SIGINT, SIG_DFL);
         signal(SIGQUIT, SIG_IGN);
     }
@@ -102,16 +103,6 @@ void	clear_env(t_env **env)
 		node = ptr;
 	}
 	*env = NULL;
-}
-
-void	clear_all(t_data *data)
-{
-	free(data->prompt);
-	free(data->new_command);
-	if (data->envirenment != NULL)
-		free_array(data->envirenment);
-	clear_env(&data->env);
-	// free(data);
 }
 
 int	main(int ac, char **av, char **env)

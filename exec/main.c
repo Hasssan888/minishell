@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:04 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 10:27:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 12:17:04 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,9 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 	{
 		handle_signals(3);
 		child_process(data, node1, env, p);
+		clear_list(&data->list);
+		clear_all(data);
+		exit(g_exit_stat);
 	}
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
@@ -96,6 +99,11 @@ void	ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p)
 	p->w = check(node1);
 	while (p->cur != NULL)
 	{
+		if (p->cur->next && p->cur->next->syntxerr == AMPIGOUS)
+		{
+			p->cur = p->cur->next;
+			continue;
+		}
 		if (p->cur->type == PIPE || p->cur->type == RED_IN
 			|| p->cur->type == HER_DOC)
 		{
@@ -152,7 +160,11 @@ void free_int_array(int **array)
 	if (!array)
 		return ;
 	while (array[i] != NULL)
-		free(array[i++]);
+	{
+		free(array[i]);
+		array[i] = NULL;
+		i++;
+	}
 	free(array);
 	array = NULL;
 }
@@ -184,18 +196,19 @@ int	func(t_data *data, t_command *list)
 	if (data->ignore_sig == 130 || data->ignore_sig == 130)
 	{
 		data->ignore_sig = 0;
+		free_int_array(pipex.strs);
 		return (g_exit_stat);
 	}
 	else if (pipex.count_pipe == 0 && if_is_buil(list))
 		is_builtin_cmd(data, list);
 	else
 		ft_pipe(data, list, data->envirenment, &pipex);
+	free_int_array(pipex.strs);
 	while (pipex.i != -1)
 	{
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
 		pipex.i = wait(NULL);
 	}
-	free_int_array(pipex.strs);
 	// if (pipex.count_here_doc > 0)
 	return (0);
 }

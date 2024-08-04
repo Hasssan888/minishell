@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/31 09:26:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 12:13:10 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,13 @@ void	ft_loop(t_command *cur, t_pipex *p)
 		{
 			// printf("cur->args[0] == %s\n", cur->args[0]);
 			
-			if (cur->type == RED_OUT)
+			if (cur->type == RED_OUT && cur->args[0] != NULL)
 			{
 				p->fd[p->i] = open(cur->args[0], O_WRONLY | O_CREAT | O_TRUNC,
 						0644);
 				p->b = 1;
 			}
-			else
+			else if (cur->type == APP && cur->args[0] != NULL)
 			{
 				p->fd[p->i] = open(cur->args[0], O_WRONLY | O_CREAT | O_APPEND,
 						0644);

@@ -1,0 +1,12 @@
+as
+compiler
+exec
+libraries
+Makefile
+minishell
+objs
+readline.supp
+README.md
+srcs
+tests
+usless

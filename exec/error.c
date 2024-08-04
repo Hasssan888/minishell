@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:47:09 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/07/16 12:47:12 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/04 11:51:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	ft_error(char **av)
 		write(2, "\n", 1);
 		ft_putstr_fd(".: usage: . filename [arguments]", 2);
 		write(2, "\n", 1);
-		exit(2);
+		g_exit_stat = 2;
+		// exit(2);
 	}
 	else
 	{
@@ -54,7 +55,8 @@ void	ft_error(char **av)
 			free(str);
 		}
 		write(2, "\n", 1);
-		exit(127);
+		g_exit_stat = 127;
+		// exit(127);
 	}
 }
 

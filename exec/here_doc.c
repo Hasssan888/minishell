@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 10:27:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 11:57:58 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,66 +53,152 @@ void	here_doc_error(char **av)
 void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
 {
 	char	*str;
-
-	pipex->line = readline("> ");
-	if (pipex->line == NULL)
-		here_doc_error(node->args);
-	else
-		pipex->line = strjoin1(pipex->line, "\n");
-	str = strjoin1(node->args[0], "\n");
-	str = unquote_arg(node, str, 0, 0);
-	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
+	int pid = fork();
+	if (pid == 0)
 	{
-		if (pipex->line[0] == '$' && !node->quoted)
-			pipex->line = expand_vars(data, pipex->line, 0);
-		write(pipex->strs[pipex->j][1], pipex->line, ft_strlen(pipex->line));
-		free(pipex->line);
+		handle_signals(4);
+		close(pipex->strs[pipex->j][0]);
+		
 		pipex->line = readline("> ");
 		if (pipex->line == NULL)
 			here_doc_error(node->args);
 		else
 			pipex->line = strjoin1(pipex->line, "\n");
+		str = strjoin1(node->args[0], "\n");
+		str = unquote_arg(node, str, 0, 0);
+		while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
+		{
+			if (pipex->line[0] == '$' && !node->quoted)
+				pipex->line = expand_vars(data, pipex->line, 0);
+			write(pipex->strs[pipex->j][1], pipex->line, ft_strlen(pipex->line));
+			free(pipex->line);
+			pipex->line = readline("> ");
+			if (pipex->line == NULL)
+				here_doc_error(node->args);
+			else
+				pipex->line = strjoin1(pipex->line, "\n");
+		}
+		close(pipex->strs[pipex->j][1]);
+		free_int_array(pipex->strs);
+		clear_list(&data->list);
+		clear_all(data);
+		free(pipex->line);
+		free(str);
+		exit(0);
 	}
-	close(pipex->strs[pipex->j][1]);
-	free(pipex->line);
-	free(str);
+	else if (pid > 0) 
+	{
+        close(pipex->strs[pipex->j][1]);
+        pipex->r = pid;
+        wait(&pipex->status);
+        data->ignore_sig = check_exit_status(pipex->status);
+    } 
+	else {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+	pipex->r = pid;
+	wait(&pipex->status);
+	data->ignore_sig = check_exit_status(pipex->status);
 }
 
 void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 {
-
-	pid_t pid;
-	pid = fork();
-	if (pid == 0)
+	pipex->strs = NULL;
+	pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
+	if(!pipex->strs)
+		exit(1);
+	t_command	*cur;
+	pipex->j = 0;
+	pipex->q = 0;
+	cur = node;
+	while (cur != NULL)
 	{
-		handle_signals(&data->ignore_sig, 4);
-		pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
-		t_command	*cur;
-		pipex->j = 0;
-		pipex->q = 0;
-		cur = node;
-		while (cur != NULL)
+		if (data->ignore_sig == 130)
 		{
-			if (cur->type == HER_DOC)
-			{
-				pipex->pipe_t = malloc(sizeof(int) * 2);
-				pipe(pipex->pipe_t);
-				pipex->strs[pipex->j] = pipex->pipe_t;
-				here_doc(data, cur, pipex);
-				pipex->arr[pipex->q] = pipex->j;
-				pipex->j++;
-					
-			}
-			if (cur->type == PIPE)
-				pipex->q++;
-				
-			cur = cur->next;
+			data->ignore_sig = 0;
+			break;
 		}
-		pipex->strs[pipex->j] = NULL;
-
+		if (cur->type == HER_DOC)
+		{
+			pipex->pipe_t = malloc(sizeof(int) * 2);
+			pipe(pipex->pipe_t);
+			pipex->strs[pipex->j] = pipex->pipe_t;
+			here_doc(data, cur, pipex);
+			pipex->arr[pipex->q] = pipex->j;
+			pipex->j++;
+		}
+		if (cur->type == PIPE)
+			pipex->q++;
+		cur = cur->next;
 	}
-	pipex->r = pid;
-	wait(&pipex->status);
-	data->ignore_sig = check_exit_status(pipex->status);
-
+	pipex->strs[pipex->j] = NULL;
 }
+
+
+// void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
+// {
+// 	char	*str;
+
+// 	pipex->line = readline("> ");
+// 	if (pipex->line == NULL)
+// 		here_doc_error(node->args);
+// 	else
+// 		pipex->line = strjoin1(pipex->line, "\n");
+// 	str = strjoin1(node->args[0], "\n");
+// 	str = unquote_arg(node, str, 0, 0);
+// 	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
+// 	{
+// 		if (pipex->line[0] == '$' && !node->quoted)
+// 			pipex->line = expand_vars(data, pipex->line, 0);
+// 		write(pipex->strs[pipex->j][1], pipex->line, ft_strlen(pipex->line));
+// 		free(pipex->line);
+// 		pipex->line = readline("> ");
+// 		if (pipex->line == NULL)
+// 			here_doc_error(node->args);
+// 		else
+// 			pipex->line = strjoin1(pipex->line, "\n");
+// 	}
+// 	close(pipex->strs[pipex->j][1]);
+// 	free(pipex->line);
+// 	free(str);
+// }
+
+// void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
+// {
+
+// 	pid_t pid;
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		handle_signals(&data->ignore_sig, 4);
+// 		pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
+// 		t_command	*cur;
+// 		pipex->j = 0;
+// 		pipex->q = 0;
+// 		cur = node;
+// 		while (cur != NULL)
+// 		{
+// 			if (cur->type == HER_DOC)
+// 			{
+// 				pipex->pipe_t = malloc(sizeof(int) * 2);
+// 				pipe(pipex->pipe_t);
+// 				pipex->strs[pipex->j] = pipex->pipe_t;
+// 				here_doc(data, cur, pipex);
+// 				pipex->arr[pipex->q] = pipex->j;
+// 				pipex->j++;
+					
+// 			}
+// 			if (cur->type == PIPE)
+// 				pipex->q++;
+				
+// 			cur = cur->next;
+// 		}
+// 		pipex->strs[pipex->j] = NULL;
+
+// 	}
+// 	pipex->r = pid;
+// 	wait(&pipex->status);
+// 	data->ignore_sig = check_exit_status(pipex->status);
+
+// }

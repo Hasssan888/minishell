@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 13:22:51 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 12:07:01 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,18 +181,18 @@ int	ambigous_red(char *red_file)
 	return (0);
 }
 
-int	is_ambigous(t_data *data, t_command *list)
+int	is_ambiguous(t_command *list)
 {
 	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
 	{
 		if (ambigous_red(list->args[0]))
 		{
-			clear_list(&data->head);
+			// clear_list(&data->head);
 			ft_perror("ambiguous redirect\n");
-			data->syntax_error = AMPIGOUS;
+			list->syntxerr = AMPIGOUS;
 			// data->exit_status = 1;
 			g_exit_stat = 1;
-			return (0);
+			// return (0);
 		}
 	}
 	return (1);
@@ -408,8 +408,9 @@ int	expander_extended(t_data *data, t_command *list)
 		clear_list(&list);
 		return (0);
 	}
-	if (!is_ambigous(data, list))
-		return (0);
+	is_ambiguous(list);
+	// if (!is_ambiguous(list))
+	// 	return (0);
 	return (1);
 }
 
@@ -426,6 +427,7 @@ t_command	*expander_command(t_data *data, t_command *list)
 	while (list != NULL)
 	{
 		list->quoted = 0;
+		list->syntxerr = 0;
 		if (list->type == -1)
 		{
 			set_error(data, SYNTERRR, "syntax error\n", &data->head);

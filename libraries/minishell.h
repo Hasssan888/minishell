@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 09:29:52 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 10:50:36 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,6 +259,9 @@ char					**env_to_array_(t_env *env);
 void					add_back(t_env **lst, t_env *new);
 t_env					*lstnew(char *env_value, char *env_key);
 t_env					*creat_env(t_data *data, char **env);
+void					clear_all(t_data *data);
+
+
 // parsing utiles
 
 // int 					ft_strisalnum(char *str);
