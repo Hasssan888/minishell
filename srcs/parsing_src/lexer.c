@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:50:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 13:23:16 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:39:48 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ char	*lexer_command(t_data *data, char *line)
 	free(line);
 	if (check_unqoted(data->trimed_line))
 	{
-		// data->exit_status = 2;
 		g_exit_stat = 2;
 		ft_perror("syntax error\n");
 		free(data->trimed_line);

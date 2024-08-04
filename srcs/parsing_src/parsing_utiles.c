@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 13:24:00 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:39:19 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ t_command	*redirect_list(t_data *data, t_command **redirect_head)
 	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		// data->exit_status = 2;
 		g_exit_stat = 2;
 		ft_perror("syntax error\n");
 		free_node(&redirection_node);
@@ -90,11 +89,9 @@ void	fake_here_doc__(t_data *data)
 	{
 		if (WTERMSIG(status) == SIGINT)
 			g_exit_stat = 130;
-			// data->exit_status = 130;
 	}
 	else
 		g_exit_stat = 2;
-		// data->exit_status = 2;
 }
 
 void	get_redirect_node(t_data *data)

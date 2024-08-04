@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 14:15:14 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:39:27 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ t_command	*syntax_error(t_data *data, t_command *list_command, t_command *head)
 {
 	ft_perror("syntax error\n");
 	data->syntax_error = SYNTERRR;
-	// data->exit_status = 2;
 	g_exit_stat = 2;
 	free_node(&list_command);
 	clear_list(&head);

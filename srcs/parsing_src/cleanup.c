@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 10:50:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:40:03 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,4 @@ void	clear_all(t_data *data)
 	if (data->envirenment != NULL)
 		free_array(data->envirenment);
 	clear_env(&data->env);
-	// free(data);
 }

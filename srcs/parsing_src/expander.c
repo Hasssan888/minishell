@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 14:54:50 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:38:15 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,38 +296,46 @@ char **ft_arr_add_back(char **arr, char *str)
 	return arr_cpy;
 }
 
+char **exp___(t_data *data, t_command *list, char **args, int i)
+{
+	int SPLIT = 0;
+	if (ft_strchr(list->args[i], '$') && list->quoted != 1
+			&& list->type != HER_DOC)
+	{
+		list->args[i] = expand_vars(data, list->args[i], 0);
+		SPLIT = 1;
+	}
+	if (!is_empty(list->args[i]))
+	{
+		if (list->type != HER_DOC)
+			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
+		if (SPLIT && !list->quoted)
+		{
+			args = split_and_join(args, list->args[i]);
+			SPLIT = 0;
+		}
+		else
+			args = ft_arr_add_back(args, list->args[i]);
+		if (data->syntax_error)
+		{
+			set_error(data, SYNTERRR, "syntax error\n", &data->head);
+			return (NULL);
+		}
+	}
+	return (args);
+}
+
 int	expander_extended(t_data *data, t_command *list)
 {
 	int i = -1;
-	int SPLIT = 0;
 	char **args = NULL;
 
 	while (list->value != NULL && list->value[0] && list->args != NULL
 		&& list->args[++i] != NULL)
 	{
-		if (ft_strchr(list->args[i], '$') && list->quoted != 1
-			&& list->type != HER_DOC)
-		{
-			list->args[i] = expand_vars(data, list->args[i], 0);
-			SPLIT = 1;
-		}
-		if (!is_empty(list->args[i]))
-		{
-			if (list->type != HER_DOC)
-				list->args[i] = unquote_arg(list, list->args[i], 0, 0);
-			if (SPLIT && !list->quoted)
-			{
-				args = split_and_join(args, list->args[i]);
-				SPLIT = 0;
-			}
-			else
-				args = ft_arr_add_back(args, list->args[i]);
-			if (data->syntax_error)
-			{
-				set_error(data, SYNTERRR, "syntax error\n", &data->head);
-				return (0);
-			}
-		}
+		args = exp___(data, list, args, i);
+		if (!args)
+			return 0;
 	}
 	free_array(list->args);
 	list->args = args;
