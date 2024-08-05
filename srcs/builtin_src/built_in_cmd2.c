@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 13:09:45 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 11:47:36 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,32 +20,6 @@ void	pwd(void)
 	printf("%s\n", cwd);
 	g_exit_stat = 0;
 	free(cwd);
-}
-
-char	**env_to_array_(t_env *env)
-{
-	int		i;
-	int		env_len;
-	char	**array;
-
-	i = 0;
-	env_len = env_c_len(env);
-	array = malloc((env_len + 1) * sizeof(char *));
-	if (!array || !env)
-		return (NULL);
-	while (env != NULL)
-	{
-		if (!env->env_key)
-			array[i++] = ft_strjoin(ft_strdup(env->env_value), ft_strdup(""));
-		else if (!env->env_key[0])
-			array[i++] = ft_strjoin(ft_strdup(env->env_value), ft_strdup("="));
-		else
-			array[i++] = ft_strjoin(ft_strjoin(ft_strdup(env->env_value),
-						ft_strdup("=")), ft_strdup(env->env_key));
-		env = env->next;
-	}
-	array[i] = NULL;
-	return (array);
 }
 
 void	del_one(t_env **env, t_env *env_var)
@@ -99,6 +73,18 @@ int	unset(t_data *data, char **env_var, t_env *envirenement)
 		if (!env_ptr)
 			continue ;
 		del_node(&envirenement, env_ptr);
+	}
+	g_exit_stat = 0;
+	return (0);
+}
+
+int	env(t_env *env)
+{
+	while (env != NULL)
+	{
+		if (env->env_key != NULL)
+			printf("%s=%s\n", env->env_value, env->env_key);
+		env = env->next;
 	}
 	g_exit_stat = 0;
 	return (0);

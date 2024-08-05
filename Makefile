@@ -6,14 +6,14 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/08/04 20:16:01 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/08/05 12:37:32 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address
 RLFLAG = -lreadline
 SRCDIR = ./srcs/parsing_src/
 BLTDIR = ./srcs/builtin_src/
@@ -24,21 +24,26 @@ OBJDIR = ./objs
 
 SRC = 	$(SRCDIR)minishell.c\
 		$(SRCDIR)cleanup.c\
-		$(SRCDIR)expander_utiles.c\
 		$(SRCDIR)parsing.c\
+		$(SRCDIR)parsing_utiles.c\
 		$(SRCDIR)ft_split_str.c\
 		$(SRCDIR)mini_utiles1.c\
-		$(SRCDIR)parsing_utiles.c\
+		$(SRCDIR)mini_utiles2.c\
+		$(SRCDIR)mini_utiles3.c\
+		$(SRCDIR)exp_utiles1.c\
+		$(SRCDIR)exp_utiles2.c\
+		$(SRCDIR)exp_utiles3.c\
+		$(SRCDIR)exp_utiles4.c\
 		$(SRCDIR)tokenizer.c\
 		$(SRCDIR)expander.c\
 		$(SRCDIR)lexer.c\
-		$(SRCDIR)mini_utiles2.c\
 		$(SRCDIR)print_functions.c\
 		$(BLTDIR)built_in_cmd1.c\
 		$(BLTDIR)built_in_cmd2.c\
 		$(BLTDIR)built_in_cmd3.c\
 		$(BLTDIR)built_in_utiles1.c\
 		$(BLTDIR)built_in_utiles2.c\
+		$(BLTDIR)built_in_utiles3.c\
 		$(EXECDIR)/allcmd.c\
 		$(EXECDIR)/error.c\
 		$(EXECDIR)/excute.c\

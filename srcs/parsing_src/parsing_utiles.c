@@ -6,11 +6,22 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 20:09:35 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:06:19 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
+
+t_command	*syntax_error(t_data *data, t_command *list_command,
+		t_command *head)
+{
+	ft_perror("syntax error\n");
+	data->syntax_error = SYNTERRR;
+	g_exit_stat = 2;
+	free_node(&list_command);
+	clear_list(&head);
+	return (NULL);
+}
 
 int	get_args_size(t_command *list)
 {

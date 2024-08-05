@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:47:09 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 11:51:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:41:08 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_putstr_fd(char *s, int fd)
 void	ft_error_2(void)
 {
 	perror("\033[31mError");
-	exit(127);
+	g_exit_stat = 127;
 }
 
 void	ft_error(char **av)

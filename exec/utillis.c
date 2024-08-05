@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utillis.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:21 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 18:32:24 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/05 12:40:18 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,20 @@ int	file_info(char **av)
 	return (2);
 }
 
-void	handle_direct(char **av)
+int	handle_direct(char **av)
 {
 	int	flag;
 
 	flag = file_info(av);
 	if (flag == 0)
-		exit(126);
+	{
+		g_exit_stat = 126;
+		return (0);
+	}
 	else if (flag == 1)
-		exit(127);
+	{
+		g_exit_stat = 127;
+		return (0);
+	}
+	return (1);
 }

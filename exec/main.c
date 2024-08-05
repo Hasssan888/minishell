@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 14:57:05 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:46:56 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,9 @@ void	ft_count(t_data *data, t_command *list, t_pipex *pipex)
 	{
 		perror("minishell: maximum here-document count exceeded");
 		g_exit_stat = 2;
-		exit(2);
+		clear_list(&data->list);
+		clear_all(data);
+		exit(g_exit_stat);
 	}
 }
 

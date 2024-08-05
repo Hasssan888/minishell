@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 20:14:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:40:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,10 +218,12 @@ int					 	valid_identifier(char *str);
 void					print_sorted_env(t_env *env);
 void					print_export_env(t_env **env, int env_len);
 int					 	env_c_len(t_env *env_);
-
-// general purpose utiles
-
-// char 			*skip_command(char *command);
+void					get_old_current_pwd(t_data *data);
+int						change_dir(t_data *data, t_env *env, char *path);
+void					check_cd_errors(void);
+void					echo_it(char **cmd, int i);
+bool					check_echo_options(char *cmd);
+int						ft_is_str_digit(char *str);
 
 // utiles for linked list:
 
@@ -235,10 +237,47 @@ int						parse_command(t_data *data, char *command);
 int						get_args_size(t_command *list);
 t_command				*redirect_list(t_data *data, t_command **redirect_head);
 void					get_redirect_node(t_data *data);
+int						exec_command(t_data *data, t_command *commands_list);
+char					*get_env_element(t_data *data, char *env_var);
+t_command				*syntax_error(t_data *data, t_command *list_command, t_command *head);
+t_env					*get_alternative_env(t_data *data);
+int						parser_continue(t_data *data);
 
 // tokenizer functions
+
 t_command				*tokenzer_command(char *command_line);
 char					*duplicate_word(char *command_line, int *i, int j);
+
+// expander functions
+
+void					what_quote(t_command *list, char *arg, char quote);
+char					*get_var(char *env_var, int *i);
+char					*unquote_arg(t_command *list, char *arg, int j, int k);
+char					*get_word(char *argument, int *i);
+int						get_expanded(t_data *data, char *argument, int *i);
+char					*expand_digits(t_data *data, char *argument, int *i);
+void					expand_(t_data *data, char *argument, int *i);
+char					*expand_vars__(t_data *data, char *argument);
+char					*_get_quoted___word(char *arg, int *i);
+char					*expand_vars(t_data *data, char *argument, int i);
+size_t					ft_len_arr(char **arr);
+char					**ft_arr_join(char **arr1, char **arr2);
+int						ambigous_red(char *red_file);
+int						is_ambiguous(t_command *list);
+int						is_empty(char *str);
+void					set_error(t_data *data, int err_num, char *str, t_command **cmd);
+char					**split_argument(t_command *list, int i);
+int						get_cmd_if_empty(t_command *list);
+char					**split_and_join(char **args, char *exp_args);
+int						get_real_len(char **arr);
+
+// mini utiles
+
+void					init_minishell(t_data *data, int ac, char **av, char **env);
+void					clear_env(t_env **env);
+int						get_token_type(char *token);
+char					*get_prompt(void);
+void					print_list(t_command *table);
 
 // print functions
 
@@ -248,8 +287,6 @@ void					ft_perror(char *message);
 
 // signals hanling
 
-// void					child_sig_handler(int signo);
-// void 				ign_sig_child();
 void					handle_signals(int i);
 int 					check_exit_status(int status);
 
@@ -263,14 +300,6 @@ t_env					*creat_env(t_data *data, char **env);
 void					clear_all(t_data *data);
 
 
-// parsing utiles
-
-// int 					ft_strisalnum(char *str);
-int						exec_command(t_data *data, t_command *commands_list);
-// char					*ft_strnstr_l(const char *big, const char *little,
-// 							size_t len);
-char					*get_env_element(t_data *data, char *env_var);
-
 // lexer functions
 
 int						check_unqoted(char *line);
@@ -280,8 +309,6 @@ char					*lexer_command(t_data *data, char *line);
 
 char					*get_var(char *env_var, int *i);
 char					*unquote_arg(t_command *list, char *arg, int j, int k);
-// char					*ft_strnstr_l(const char *big, const char *little,
-// 							size_t len);
 char					*get_word(char *argument, int *i);
 char					*expand_vars(t_data *data, char *argument, int i);
 t_command				*expander_command(t_data *data, t_command *list);
@@ -293,6 +320,7 @@ t_command				*free_node(t_command **node);
 void					clear_list(t_command **lst);
 void					free_array(char **array);
 void 					free_int_array(int **array);
+void					free_command(t_command *cmd);
 
 // execution
 
@@ -330,5 +358,5 @@ void					skip_pipe(t_pipex *p);
 void					here_doc_error(char **av);
 int						file_info(char **av);
 int						file_info_2(char **av);
-void					handle_direct(char **av);
+int						handle_direct(char **av);
 #endif

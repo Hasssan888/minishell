@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 19:54:08 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:48:25 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
 {
 	int	pid;
+
 	pid = fork();
 	if (pid == 0)
 		here_doc_child_pro(data, node, pipex);

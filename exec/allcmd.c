@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:44:49 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/03 13:16:23 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:42:29 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	infile(t_data *data, t_command *node1, char **env, t_pipex *p)
 	if (p->indixe == 1)
 	{
 		p->indixe = 0;
-		exit(1);
+		g_exit_stat = 1;
+		return ;
 	}
 	close(p->end[0]);
 	dup2(p->infile, STDIN_FILENO);
@@ -40,7 +41,8 @@ void	outfile(t_data *data, t_command *node1, char **env, t_pipex *p)
 	if (p->indixe == 1)
 	{
 		p->indixe = 0;
-		exit(1);
+		g_exit_stat = 1;
+		return ;
 	}
 	dup2(p->outfile, STDOUT_FILENO);
 	close(p->outfile);
@@ -68,7 +70,8 @@ void	dup_outfile(t_command *node1, t_pipex *p)
 	if (p->indixe == 1)
 	{
 		p->indixe = 0;
-		exit(1);
+		g_exit_stat = 1;
+		return ;
 	}
 	if (check_redout(node1) == 1)
 		open_outfile(node1, p);

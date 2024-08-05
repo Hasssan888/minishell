@@ -6,29 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 20:06:39 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:57:48 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
-
-t_command	*syntax_error(t_data *data, t_command *list_command,
-		t_command *head)
-{
-	ft_perror("syntax error\n");
-	data->syntax_error = SYNTERRR;
-	g_exit_stat = 2;
-	free_node(&list_command);
-	clear_list(&head);
-	return (NULL);
-}
-
-void	free_command(t_command *cmd)
-{
-	free(cmd->value);
-	free_array(cmd->args);
-	free(cmd);
-}
 
 t_command	*get_command_with_args(t_data *data)
 {
@@ -69,7 +51,7 @@ void	init_parser_var(t_data *data)
 	data->rdrct_head = NULL;
 }
 
-int	parser_comtinue(t_data *data)
+int	parser_continue(t_data *data)
 {
 	if (data->_tokens_list->type == TOKEN)
 	{
@@ -106,7 +88,7 @@ t_command	*parser_command(t_data *data, t_command *_tokens_list)
 			clear_list(&data->head);
 			return (NULL);
 		}
-		if (!parser_comtinue(data))
+		if (!parser_continue(data))
 			return (NULL);
 		add_back_list(&data->head, data->list_command);
 		add_back_list(&data->head, data->rdrct_head);
@@ -127,9 +109,10 @@ int	parse_command(t_data *data, char *line)
 	tokens_list = tokenzer_command(line);
 	data->list = parser_command(data, tokens_list);
 	print_list(data->list);
-	printf("\n\n");
+	printf("\n----------- expander -------------");
 	data->list = expander_command(data, data->list);
 	print_list(data->list);
+	printf("\n\n");
 	func(data, data->list);
 	clear_list(&data->list);
 	return (0);

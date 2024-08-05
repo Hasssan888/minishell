@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 20:05:41 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:17:14 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ t_command	*free_node(t_command **node)
 	*node = NULL;
 	return (ptr);
 }
+
 void	clear_all(t_data *data)
 {
 	free(data->prompt);
@@ -65,4 +66,11 @@ void	clear_all(t_data *data)
 	if (data->envirenment != NULL)
 		free_array(data->envirenment);
 	clear_env(&data->env);
+}
+
+void	free_command(t_command *cmd)
+{
+	free(cmd->value);
+	free_array(cmd->args);
+	free(cmd);
 }

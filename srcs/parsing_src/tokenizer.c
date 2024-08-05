@@ -6,30 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 20:03:19 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:16:18 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
-
-int	get_token_type(char *token)
-{
-	if (token[0] == '|' && !token[1])
-		return (PIPE);
-	else if (token[0] == '>' && !token[1])
-		return (RED_OUT);
-	else if (token[0] == '<' && !token[1])
-		return (RED_IN);
-	else if (token[0] == '>' && token[1] == '>' && !token[2])
-		return (APP);
-	else if (token[0] == '<' && token[1] == '<' && !token[2])
-		return (HER_DOC);
-	else if ((ft_strchr("|&", token[0]) && ft_strlen(token) > 1)
-		|| (ft_strchr("<>", token[0]) && ft_strlen(token) > 2))
-		return (-1);
-	else
-		return (TOKEN);
-}
 
 int	get_quoted_word_index(char *cmd_line, int j)
 {

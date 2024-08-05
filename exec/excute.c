@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   excute.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:17:43 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 14:17:48 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/05 12:39:36 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ void	ft_excute(char **av, char **env)
 	else
 	{
 		mycmdargs = av;
-		handle_direct(av);
+		if (!handle_direct(av))
+			return ;
 		path = search_path(mycmdargs[0], env);
 		if (!path)
 			ft_error(av);

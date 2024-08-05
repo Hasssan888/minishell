@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   link_list.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbakrim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:47 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 14:38:50 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/05 12:48:50 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,7 @@ void	ft_count_here_doc(t_command *node, t_pipex *p)
 void	here_doc_error(char **av)
 {
 	ft_putstr_fd("minishell: warning: here-document\
-	delimited by end-of-file wanted ",
-		2);
+	delimited by end-of-file wanted ", 2);
 	ft_putstr_fd(av[0], 2);
 	write(2, "\n", 1);
 	exit(1);
