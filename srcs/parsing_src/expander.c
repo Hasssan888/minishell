@@ -79,8 +79,8 @@ int	expander_extended(t_data *data, t_command *list)
 		&& list->args[++i] != NULL)
 	{
 		args = exp___(data, list, args, i);
-		if (!args)
-			return (0);
+		// if (!args)
+		// 	return (0);
 	}
 	free_array(list->args);
 	list->args = args;

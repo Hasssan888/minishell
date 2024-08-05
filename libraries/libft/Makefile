@@ -12,7 +12,7 @@
 
 NAME = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 AR = ar rcs
 
 SRCS_M = ft_atoi.c \

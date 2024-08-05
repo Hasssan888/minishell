@@ -35,14 +35,11 @@ void	free_int_array(int **array)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	if (!array)
 		return ;
-	while (array[i] != NULL)
-	{
+	while (array[++i] != NULL)
 		free(array[i]);
-		i++;
-	}
 	free(array);
 }
 

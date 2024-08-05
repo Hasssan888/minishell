@@ -12,12 +12,12 @@
 
 #include "../../libraries/minishell.h"
 
+
 int	chdir_home_prev(t_data *data, t_env *env, char **args)
 {
 	if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 	{
 		env = get_env_ele_ptr(data, "OLDPWD");
-		printf("path: %s\n", env->env_key);
 		if (env != NULL && env->env_key != NULL)
 		{
 			printf("%s\n", env->env_key);
@@ -51,11 +51,10 @@ int	cd(t_data *data, char **args)
 		g_exit_stat = 1;
 		return (0);
 	}
-	else if ((args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
-		|| ((args[0][0] == '~' && args[0][1] == '\0')))
-	{
+	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 		return (chdir_home_prev(data, env, args));
-	}
+	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
+		return (chdir_home_prev(data, env, args));
 	else if (args != NULL && change_dir(data, NULL, args[0]))
 		return (1);
 	else

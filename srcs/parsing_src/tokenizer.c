@@ -87,7 +87,6 @@ t_command	*list_maker(char *cmd_line, int *i)
 		if (type == -1)
 		{
 			free(token);
-			free(cmd_line);
 			clear_list(&table);
 			g_exit_stat = 2;
 			ft_perror("syntax error\n");

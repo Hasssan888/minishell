@@ -17,6 +17,8 @@ void	pwd(void)
 	char	*cwd;
 
 	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		return ;
 	printf("%s\n", cwd);
 	g_exit_stat = 0;
 	free(cwd);

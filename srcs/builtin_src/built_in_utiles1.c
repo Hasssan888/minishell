@@ -29,12 +29,18 @@ char	*get_word_(char *line, char *del)
 
 t_env	*get_env_ele_ptr(t_data *data, char *env_val)
 {
+	int len = 0;
+	int len1 = 0;
+	int len2 = 0;
 	t_env	*env;
 
 	env = data->env;
 	while (env != NULL)
 	{
-		if (ft_strncmp(env->env_value, env_val, ft_strlen(env_val)) == 0)
+		len1 = ft_strlen(env->env_value);
+		len2 = ft_strlen(env_val);
+		len = len1 > len2 ? len1 : len2;
+		if (ft_strncmp(env->env_value, env_val, len) == 0)
 			return (env);
 		env = env->next;
 	}

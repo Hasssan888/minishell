@@ -12,6 +12,26 @@
 
 #include "../../libraries/minishell.h"
 
+int is_dir_exist(char *path)
+{
+    struct stat statbuf;
+
+    if (stat(path, &statbuf) != 0) {
+        perror("stat");
+        return 1;
+    }
+
+    if (S_ISDIR(statbuf.st_mode)) {
+        printf("'%s' is a directory.\n", path);
+		return 0;
+    } else {
+        printf("'%s' is not a directory.\n", path);
+		return 1;
+    
+	}
+    return 0;
+}
+
 void	get_old_current_pwd(t_data *data)
 {
 	t_env	*old_pwd;

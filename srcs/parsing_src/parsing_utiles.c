@@ -81,7 +81,6 @@ void	get_redirect_node(t_data *data)
 		free_array(data->list_command->args);
 		free_node(&data->list_command);
 		clear_list(&data->_tokens_list);
-		data->list->syntxerr = SYNTERRR;
 		g_exit_stat = SYNTERRR;
 		return ;
 	}

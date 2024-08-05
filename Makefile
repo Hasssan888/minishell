@@ -20,6 +20,7 @@ BLTDIR = ./srcs/builtin_src/
 EXECDIR = ./exec
 
 OBJDIR = ./objs
+LIBFT = ./libraries/libft/libft.a
 
 
 SRC = 	$(SRCDIR)minishell.c\
@@ -57,22 +58,27 @@ SRC = 	$(SRCDIR)minishell.c\
 
 OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC)) # for pathern substitution // $(patsubst pattern,replacement,text)
 
-LIBFT = ./libraries/libft/libft.a
+all: $(NAME)
 
-all: $(NAME) clean
+$(LIBFT):
+	@echo "Building libft ..."
+	@make -C ./libraries/libft
+	@echo "Building libft bonus ..."
+	@make bonus -C ./libraries/libft
+	@echo "Building libft done"
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(OBJDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJ)
+$(NAME): $(LIBFT) $(OBJ)
 	@echo "Building..."
 	@$(CC) $(CFLAGS) $(OBJ) $(RLFLAG) $(LIBFT) -o $@
 	@echo "Building done"
 
 clean:
 	@echo "Removing object files..."
-	@rm -rf $(OBJDIR)/*.o
+	@rm -rf $(OBJDIR)
 	@echo "Removing object files done"
 
 fclean: clean
