@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:14:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 14:46:51 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	**exp___(t_data *data, t_command *list, char **args, int i)
 	{
 		if (list->type != HER_DOC)
 			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
-		if (data->flag && !list->quoted)
+		if (data->flag && !list->quoted && ft_strcmp("export", list->value))
 		{
 			args = split_and_join(args, list->args[i]);
 			data->flag = 0;
@@ -87,7 +87,7 @@ int	expander_extended(t_data *data, t_command *list)
 	if (list->value && list->value[0] && ft_strchr(list->value, '$'))
 		list->value = expand_vars(data, list->value, 0);
 	list->value = unquote_arg(list, list->value, 0, 0);
-	if (!get_cmd_if_empty(list))
+	if (list->type != PIPE && !get_cmd_if_empty(list))
 	{
 		clear_list(&list);
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:57:48 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 13:16:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,7 @@ int	parse_command(t_data *data, char *line)
 		return (0);
 	tokens_list = tokenzer_command(line);
 	data->list = parser_command(data, tokens_list);
-	print_list(data->list);
-	printf("\n----------- expander -------------");
 	data->list = expander_command(data, data->list);
-	print_list(data->list);
-	printf("\n\n");
 	func(data, data->list);
 	clear_list(&data->list);
 	return (0);

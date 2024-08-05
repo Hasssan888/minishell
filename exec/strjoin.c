@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 13:27:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 18:33:41 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/05 14:27:00 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ char	*strjoin1(char *s1, char *s2)
 	size_t	len_s2;
 	char	*ptr;
 
+	ptr = NULL;
 	if (!s1 && !s2)
 		return (NULL);
 	len_s1 = ft_strlen(s1);
@@ -40,11 +41,9 @@ void	free_int_array(int **array)
 	while (array[i] != NULL)
 	{
 		free(array[i]);
-		array[i] = NULL;
 		i++;
 	}
 	free(array);
-	array = NULL;
 }
 
 int	check_exit_status(int status)

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/05 12:48:25 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/05 14:29:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 {
 	char	*str;
 
+	str = NULL;
 	handle_signals(4);
 	close(pipex->strs[pipex->j][0]);
 	pipex->line = readline("> ");
@@ -83,13 +84,13 @@ void	type_here_doc(t_data *data, t_command *cur, t_pipex *pipex)
 	here_doc(data, cur, pipex);
 	pipex->arr[pipex->q] = pipex->j;
 	pipex->j++;
+	pipex->strs[pipex->j] = NULL;
 }
 
 void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 {
 	t_command	*cur;
 
-	pipex->strs = NULL;
 	pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
 	if (!pipex->strs)
 		exit(1);
