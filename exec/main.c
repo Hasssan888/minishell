@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 10:21:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 14:59:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,5 +123,7 @@ int	func(t_data *data, t_command *list)
 		pipex.i = waitpid(pipex.r, &pipex.status, 0);
 		pipex.i = wait(NULL);
 	}
+	if (pipex.s)
+		free(pipex.s);
 	return (0);
 }

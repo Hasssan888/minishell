@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 10:19:58 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 20:49:28 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,18 @@ void	del_one(t_env **env, t_env *env_var)
 
 	current = env_var->next;
 	free(env_var->env_value);
+	free(env_var->env_key);
 	free(env_var);
 	*env = current;
 }
 
-void	del_node(t_env **env, t_env *env_var)
+void	del_node(t_data *data, t_env *env_var)
 {
+	t_env	**env;
 	t_env	*current;
 	t_env	*previous;
 
+	env = &data->env;
 	if (!env || !*env || !env_var)
 		return ;
 	if (*env == env_var)
@@ -53,9 +56,7 @@ void	del_node(t_env **env, t_env *env_var)
 		if (current == env_var)
 		{
 			previous->next = current->next;
-			free(current->env_value);
-			free(current->env_key);
-			free(current);
+			free_env_ptr(&current);
 			return ;
 		}
 		previous = current;
@@ -63,18 +64,18 @@ void	del_node(t_env **env, t_env *env_var)
 	}
 }
 
-int	unset(t_data *data, char **env_var, t_env *envirenement)
+int	unset(t_data *data, char **env_var)
 {
 	int		i;
 	t_env	*env_ptr;
 
-	i = 0;
-	while (env_var[i] != NULL)
+	i = -1;
+	while (env_var[++i] != NULL)
 	{
-		env_ptr = get_env_ele_ptr(data->env, env_var[i++]);
+		env_ptr = get_env_ele_ptr(data->env, env_var[i]);
 		if (!env_ptr)
 			continue ;
-		del_node(&envirenement, env_ptr);
+		del_node(data, env_ptr);
 	}
 	free_array(data->envirenment);
 	data->envirenment = env_to_array_(data->env);
@@ -86,7 +87,7 @@ int	env(t_env *env)
 {
 	while (env != NULL)
 	{
-		if (env->env_key != NULL)
+		if (env->env_value != NULL && env->env_key != NULL)
 			printf("%s=%s\n", env->env_value, env->env_key);
 		env = env->next;
 	}

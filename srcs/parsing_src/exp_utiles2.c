@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:12:16 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:16:52 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 14:53:25 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,11 @@ char	*_get_quoted___word(char *arg, int *i)
 	if (arg[j] == '\'' || arg[j] == '"')
 		quote = arg[j++];
 	while (arg[j] && arg[j] != quote)
+	{
+		if (quote == 0 && (arg[j] == '\'' || arg[j] == '"'))
+			break ;
 		j++;
+	}
 	if (arg[j] && arg[j] == quote)
 		j++;
 	_quoted_word = ft_calloc(j - *i + 1, sizeof(char));
@@ -106,7 +110,7 @@ char	*expand_vars(t_data *data, char *argument, int i)
 	while (argument[i])
 	{
 		word = _get_quoted___word(argument, &i);
-		if (word != NULL && word[0] != '\'')
+		if (ft_strchr(word, '$') && word != NULL && word[0] != '\'')
 		{
 			expand_vars__(data, word);
 			free(word);

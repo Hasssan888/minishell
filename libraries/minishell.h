@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 11:07:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 20:50:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef enum s_types
 	HER_DOC
 }						t_types;
 
+#define MAX_LONG "9223372036854775808"
 # define WHITESPACES " \t\v\n"
 # define SYNTERRR 2
 # define AMPIGOUS 1
@@ -108,6 +109,7 @@ typedef struct s_data
 	t_command			*_tokens_list;
 	t_command			*rdrct_head;
 	int					ignore_sig;
+	long 				k;
 	bool				syntax_error;
 }						t_data;
 
@@ -199,8 +201,7 @@ char					*get_word_(char *line, char *del);
 t_env					*get_env_ele_ptr(t_env *env, char *env_val);
 void					print_array(char **array);
 int						export(t_data *data, t_command *cmd, t_env *env);
-int						unset(t_data *data, char **env_var,
-							t_env *envirenement);
+int						unset(t_data *data, char **env_var);
 t_env					**sort_env(t_env **env_, int env_len);
 int						valid_identifier(char *str);
 void					print_sorted_env(t_env *env);
@@ -214,6 +215,7 @@ bool					check_echo_options(char *cmd);
 int						ft_is_str_digit(char *str);
 void					export__cnt(t_data *data, t_env *env_ptr,
 							t_command *cmd, int i);
+int	check_exit(char *str, long k);
 
 // utiles for linked list:
 
@@ -291,6 +293,7 @@ void					add_back(t_env **lst, t_env *new);
 t_env					*lstnew(char *env_value, char *env_key);
 t_env					*creat_env(t_data *data, char **env);
 void					clear_all(t_data *data);
+void					free_env_ptr(t_env **env_ptr);
 
 // lexer functions
 

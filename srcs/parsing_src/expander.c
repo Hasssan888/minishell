@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 08:06:46 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 20:51:03 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ char	**ft_arr_add_back(char **arr, char *str)
 
 char	**exp___(t_data *data, t_command *list, char **args, int i)
 {
-	data->flag = 0;
+	if (list->type != HER_DOC)
+		list->args[i] = unquote_arg(list, list->args[i], 0, 0);
 	if (ft_strchr(list->args[i], '$') && list->quoted != 1
 		&& list->type != HER_DOC)
 	{
@@ -50,9 +51,8 @@ char	**exp___(t_data *data, t_command *list, char **args, int i)
 	}
 	if (!is_empty(list->args[i]))
 	{
-		if (list->type != HER_DOC)
-			list->args[i] = unquote_arg(list, list->args[i], 0, 0);
-		if (data->flag && !list->quoted && ft_strcmp("export", list->value))
+		if (data->flag && list->type != RED_OUT && !list->quoted
+			&& ft_strcmp("export", list->value))
 		{
 			args = split_and_join(args, list->args[i]);
 			data->flag = 0;
@@ -78,20 +78,20 @@ int	expander_extended(t_data *data, t_command *list)
 	while (list->value != NULL && list->value[0] && list->args != NULL
 		&& list->args[++i] != NULL)
 	{
+		data->flag = 0;
 		args = exp___(data, list, args, i);
 		if (data->syntax_error)
 			return (0);
 	}
-	free_array(list->args);
-	list->args = args;
+	if (args != NULL)
+	{
+		free_array(list->args);
+		list->args = args;
+	}
+	list->value = unquote_arg(list, list->value, 0, 0);
 	if (list->value && list->value[0] && ft_strchr(list->value, '$'))
 		list->value = expand_vars(data, list->value, 0);
-	list->value = unquote_arg(list, list->value, 0, 0);
-	if (list->type != PIPE && !get_cmd_if_empty(list))
-	{
-		clear_list(&list);
-		return (0);
-	}
+	get_cmd_if_empty(list);
 	is_ambiguous(list);
 	return (1);
 }

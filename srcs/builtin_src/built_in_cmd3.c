@@ -6,11 +6,31 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:09:15 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 10:16:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 20:48:47 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
+
+int	check_exit(char *str, long k)
+{
+	return ((k < 0 && str[0] != '-') || (k > 0 && str[0] == '-'));
+}
+
+void	free_env_ptr(t_env **env_ptr)
+{
+	t_env	*ptr;
+
+	if (env_ptr != NULL && *env_ptr != NULL)
+	{
+		ptr = *env_ptr;
+		if (ptr->env_value != NULL)
+			free(ptr->env_value);
+		if (ptr->env_value != NULL)
+			free(ptr->env_key);
+		free(ptr);
+	}
+}
 
 void	export_var_app(t_data *data, t_env *env_ptr, char **splited)
 {

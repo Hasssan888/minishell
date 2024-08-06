@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 13:27:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 14:27:00 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 12:23:30 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,14 @@ void	free_int_array(int **array)
 {
 	int	i;
 
-	i = -1;
+	i = 0;
 	if (!array)
 		return ;
-	while (array[++i] != NULL)
-		free(array[i]);
+	while (array[i] != NULL)
+	{
+		printf("%p\n", array[i]);
+		free(array[i++]);
+	}
 	free(array);
 }
 

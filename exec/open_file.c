@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 14:50:23 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/06 15:17:51 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_loop(t_command *cur, t_pipex *p)
 	{
 		if (cur->type == PIPE)
 			break ;
-		else if (cur->type == RED_OUT || cur->type == APP)
+		else if (cur->syntxerr != AMPIGOUS && (cur->type == RED_OUT || cur->type == APP))
 			out_app(cur, p);
 		cur = cur->next;
 	}
@@ -62,8 +62,11 @@ void	open_outfile(t_command *node, t_pipex *p)
 	cur = node;
 	ft_loop(cur, p);
 	p->name_file[p->i] = NULL;
-	p->outfile = p->fd[p->i - 1];
-	p->s = ft_strdup(p->name_file[p->i - 1]);
+	if (p->i > 0)
+	{
+		p->outfile = p->fd[p->i - 1];
+		p->s = ft_strdup(p->name_file[p->i - 1]);	
+	}
 	free(p->fd);
 	p->i = -1;
 	while (p->name_file[++p->i])

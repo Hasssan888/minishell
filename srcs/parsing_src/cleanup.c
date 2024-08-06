@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:17:14 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 19:29:34 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,7 @@ void	clear_all(t_data *data)
 {
 	free(data->prompt);
 	free(data->new_command);
-	if (data->envirenment != NULL)
-		free_array(data->envirenment);
+	free_array(data->envirenment);
 	clear_env(&data->env);
 }
 

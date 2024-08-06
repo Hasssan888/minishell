@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/05 14:29:05 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 12:26:34 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
 
 void	type_here_doc(t_data *data, t_command *cur, t_pipex *pipex)
 {
-	pipex->pipe_t = malloc(sizeof(int) * 2);
+	pipex->pipe_t = ft_calloc(2, sizeof(int));
 	pipe(pipex->pipe_t);
 	pipex->strs[pipex->j] = pipex->pipe_t;
 	here_doc(data, cur, pipex);
@@ -91,7 +91,7 @@ void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 {
 	t_command	*cur;
 
-	pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
+	pipex->strs = ft_calloc((pipex->count_here_doc + 1), sizeof(int *));
 	if (!pipex->strs)
 		exit(1);
 	pipex->j = 0;

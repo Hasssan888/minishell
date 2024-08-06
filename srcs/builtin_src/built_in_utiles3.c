@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:44:30 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 10:17:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 20:47:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,14 @@ void	get_old_current_pwd(t_data *data)
 	t_env	*pwd;
 
 	old_pwd = get_env_ele_ptr(data->env, "OLDPWD");
+	if (!old_pwd)
+		return ;
 	pwd = get_env_ele_ptr(data->env, "PWD");
+	if (!pwd)
+	{
+		free_env_ptr(&old_pwd);
+		return ;
+	}
 	if (old_pwd != NULL && old_pwd->env_key != NULL)
 		free(old_pwd->env_key);
 	old_pwd->env_key = ft_strdup(pwd->env_key);

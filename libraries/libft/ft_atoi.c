@@ -6,15 +6,15 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 21:49:14 by aelkheta          #+#    #+#             */
-/*   Updated: 2023/11/22 20:05:31 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 17:30:03 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-long int	ft_atoi(const char *str)
+long long	ft_atoi(const char *str)
 {
-	long int	result;
+	long long	result;
 	int			sign;
 
 	result = 0;

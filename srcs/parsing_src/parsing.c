@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 13:16:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 20:20:29 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,11 @@ int	parse_command(t_data *data, char *line)
 	data->syntax_error = 0;
 	if (line != NULL && !line[0])
 		return (0);
+	if (is_empty(line))
+	{
+		free(line);
+		return (0);
+	}
 	line = lexer_command(data, line);
 	if (!line)
 		return (0);

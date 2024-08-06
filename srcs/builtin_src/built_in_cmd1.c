@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 10:16:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 20:50:16 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,18 +85,25 @@ void	exit_(t_data *data, t_command *command)
 {
 	if (command->args[1] != NULL && !ft_is_str_digit(command->args[1]))
 	{
-		printf("exit\n");
 		ft_perror("minishell: exit: numeric argument required\n");
-		exit(2);
+		g_exit_stat = 2;
+	}
+	else if (command->args[1] != NULL)
+	{
+		data->k = ft_atoi(command->args[1]);
+		if (ft_strlen(command->args[1]) > ft_strlen(MAX_LONG) + 1
+			|| check_exit(command->args[1], data->k))
+		{
+			ft_perror("minishell: exit: numeric argument required\n");
+			exit(2);
+		}
+		g_exit_stat = data->k;
 	}
 	else if (command->args[1] != NULL && command->args[2] != NULL)
 	{
 		ft_perror("minishell: exit: too many arguments\n");
 		g_exit_stat = 1;
-		return ;
 	}
-	else if (command->args[1] != NULL)
-		g_exit_stat = ft_atoi(command->args[1]);
 	printf("exit\n");
 	clear_list(&data->list);
 	exit(g_exit_stat);
@@ -117,7 +124,7 @@ int	is_builtin_cmd(t_data *data, t_command *command)
 	else if (ft_strcmp(command->value, "export") == 0)
 		export(data, command, data->env);
 	else if (ft_strcmp(command->value, "unset") == 0)
-		unset(data, &command->args[1], data->env);
+		unset(data, &command->args[1]);
 	else if (ft_strcmp(command->value, "exit") == 0)
 		exit_(data, command);
 	else
