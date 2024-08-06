@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:09:15 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 11:40:39 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:16:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	export__cnt(t_data *data, t_env *env_ptr, t_command *cmd, int i)
 	splited = ft_split(cmd->args[i], '=');
 	data->str1 = ft_strchr(cmd->args[i], '=');
 	trimed = ft_strtrim(splited[0], "+");
-	env_ptr = get_env_ele_ptr(data, trimed);
+	env_ptr = get_env_ele_ptr(data->env, trimed);
 	if (env_ptr != NULL && splited != NULL && splited[0] != NULL
 		&& data->str1 != NULL)
 		export_var_app(data, env_ptr, splited);

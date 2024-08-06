@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:40:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:42:45 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 // # include "../exec/main.h"
 
 #define COLOR BBLU
-# define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
+// # define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
 
 typedef enum s_types
 {
@@ -209,7 +209,7 @@ int						echo(char **cmd);
 int						is_builtin_cmd(t_data *data, t_command *command);
 char					*get_cmd_path(t_data *data, char *cmd_);
 char					*get_word_(char *line, char *del);
-t_env					*get_env_ele_ptr(t_data *data, char *env_val);
+t_env					*get_env_ele_ptr(t_env *env, char *env_val);
 void					print_array(char **array);
 int						export(t_data *data, t_command *cmd, t_env *env);
 int						unset(t_data *data, char **env_var, t_env *envirenement);

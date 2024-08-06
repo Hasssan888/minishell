@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:46:56 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:21:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,13 +113,7 @@ int	func(t_data *data, t_command *list)
 	if (!list)
 		return (0);
 	ft_count(data, list, &pipex);
-	if (data->ignore_sig == 130 || data->ignore_sig == 130)
-	{
-		data->ignore_sig = 0;
-		free_int_array(pipex.strs);
-		return (g_exit_stat);
-	}
-	else if (pipex.count_pipe == 0 && if_is_buil(list))
+	if (pipex.count_pipe == 0 && if_is_buil(list))
 		is_builtin_cmd(data, list);
 	else
 		ft_pipe(data, list, data->envirenment, &pipex);

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 11:47:36 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:19:58 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,13 @@ int	unset(t_data *data, char **env_var, t_env *envirenement)
 	i = 0;
 	while (env_var[i] != NULL)
 	{
-		env_ptr = get_env_ele_ptr(data, env_var[i++]);
+		env_ptr = get_env_ele_ptr(data->env, env_var[i++]);
 		if (!env_ptr)
 			continue ;
 		del_node(&envirenement, env_ptr);
 	}
+	free_array(data->envirenment);
+	data->envirenment = env_to_array_(data->env);
 	g_exit_stat = 0;
 	return (0);
 }

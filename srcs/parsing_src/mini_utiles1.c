@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:05:27 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:21:02 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ t_env	*get_alternative_env(t_data *data)
 
 	head = NULL;
 	new = NULL;
-	new = lstnew(ft_strdup("PATH"), ft_strdup(DEFAULT_PATH));
-	add_back(&head, new);
 	cwd = getcwd(NULL, 0);
 	new = lstnew(ft_strdup("PWD"), ft_strdup(cwd));
 	data->current_pwd = &(new->env_value);

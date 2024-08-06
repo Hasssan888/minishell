@@ -6,18 +6,17 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 11:55:08 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:16:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
-
 int	chdir_home_prev(t_data *data, t_env *env, char **args)
 {
 	if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 	{
-		env = get_env_ele_ptr(data, "OLDPWD");
+		env = get_env_ele_ptr(data->env, "OLDPWD");
 		if (env != NULL && env->env_key != NULL)
 		{
 			printf("%s\n", env->env_key);
@@ -27,7 +26,7 @@ int	chdir_home_prev(t_data *data, t_env *env, char **args)
 	}
 	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
 	{
-		env = get_env_ele_ptr(data, "HOME");
+		env = get_env_ele_ptr(data->env, "HOME");
 		if (!env || !env->env_key)
 		{
 			ft_perror("cd: HOME not set\n");
@@ -97,7 +96,7 @@ void	exit_(t_data *data, t_command *command)
 		return ;
 	}
 	else if (command->args[1] != NULL)
-		exit(ft_atoi(command->args[1]));
+		g_exit_stat = ft_atoi(command->args[1]);
 	printf("exit\n");
 	clear_list(&data->list);
 	exit(g_exit_stat);

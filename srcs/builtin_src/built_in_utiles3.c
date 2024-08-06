@@ -6,39 +6,19 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:44:30 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 11:45:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:17:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
-
-int is_dir_exist(char *path)
-{
-    struct stat statbuf;
-
-    if (stat(path, &statbuf) != 0) {
-        perror("stat");
-        return 1;
-    }
-
-    if (S_ISDIR(statbuf.st_mode)) {
-        printf("'%s' is a directory.\n", path);
-		return 0;
-    } else {
-        printf("'%s' is not a directory.\n", path);
-		return 1;
-    
-	}
-    return 0;
-}
 
 void	get_old_current_pwd(t_data *data)
 {
 	t_env	*old_pwd;
 	t_env	*pwd;
 
-	old_pwd = get_env_ele_ptr(data, "OLDPWD");
-	pwd = get_env_ele_ptr(data, "PWD");
+	old_pwd = get_env_ele_ptr(data->env, "OLDPWD");
+	pwd = get_env_ele_ptr(data->env, "PWD");
 	if (old_pwd != NULL && old_pwd->env_key != NULL)
 		free(old_pwd->env_key);
 	old_pwd->env_key = ft_strdup(pwd->env_key);

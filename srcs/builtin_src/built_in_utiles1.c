@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 10:31:33 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 11:48:42 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:45:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,17 @@ char	*get_word_(char *line, char *del)
 	return (word);
 }
 
-t_env	*get_env_ele_ptr(t_data *data, char *env_val)
+t_env	*get_env_ele_ptr(t_env *env, char *env_val)
 {
-	int len = 0;
-	int len1 = 0;
-	int len2 = 0;
-	t_env	*env;
+	t_env	*env_;
 
-	env = data->env;
-	while (env != NULL)
+	env_ = env;
+	while (env_ != NULL)
 	{
-		len1 = ft_strlen(env->env_value);
-		len2 = ft_strlen(env_val);
-		len = len1 > len2 ? len1 : len2;
-		if (ft_strncmp(env->env_value, env_val, len) == 0)
-			return (env);
-		env = env->next;
+		if (ft_strncmp(env_->env_value, env_val, ft_strlen(env_->env_value)
+				+ ft_strlen(env_val)) == 0)
+			return (env_);
+		env_ = env_->next;
 	}
 	return (NULL);
 }

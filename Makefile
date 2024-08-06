@@ -6,7 +6,7 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/08/05 14:30:03 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/08/06 10:44:49 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,9 @@ RLFLAG = -lreadline
 SRCDIR = ./srcs/parsing_src/
 BLTDIR = ./srcs/builtin_src/
 EXECDIR = ./exec
+LIBFT = ./libraries/libft/libft.a
 
 OBJDIR = ./objs
-LIBFT = ./libraries/libft/libft.a
 
 
 SRC = 	$(SRCDIR)minishell.c\
@@ -58,27 +58,21 @@ SRC = 	$(SRCDIR)minishell.c\
 
 OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC)) # for pathern substitution // $(patsubst pattern,replacement,text)
 
-all: $(NAME)
 
-$(LIBFT):
-	@echo "Building libft ..."
-	@make -C ./libraries/libft
-	@echo "Building libft bonus ..."
-	@make bonus -C ./libraries/libft
-	@echo "Building libft done"
+all: $(NAME) clean
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(OBJDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(LIBFT) $(OBJ)
+$(NAME): $(OBJ)
 	@echo "Building..."
 	@$(CC) $(CFLAGS) $(OBJ) $(RLFLAG) $(LIBFT) -o $@
 	@echo "Building done"
 
 clean:
 	@echo "Removing object files..."
-	@rm -rf $(OBJDIR)
+	@rm -rf $(OBJDIR)/*.o
 	@echo "Removing object files done"
 
 fclean: clean

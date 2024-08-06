@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:47:09 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/05 12:41:08 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:42:36 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,16 @@ void	ft_error(char **av)
 	i = -1;
 	if (ft_strcmp(av[0], ".") == 0)
 	{
-		ft_putstr_fd(".: filename argument required", 2);
-		write(2, "\n", 1);
-		ft_putstr_fd(".: usage: . filename [arguments]", 2);
-		write(2, "\n", 1);
+		ft_putstr_fd(".: filename argument required\n", 2);
+		ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
 		g_exit_stat = 2;
 	}
 	else
 	{
 		ft_putstr_fd("Command not found: ", 2);
-		while (av[++i])
-		{
-			str = strjoin1(av[i], " ");
-			ft_putstr_fd(str, 2);
-			free(str);
-		}
-		write(2, "\n", 1);
+		str = strjoin1(av[0], " \n");
+		ft_putstr_fd(str, 2);
+		free(str);
 		g_exit_stat = 127;
 	}
 }

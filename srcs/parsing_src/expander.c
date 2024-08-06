@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 14:46:51 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 08:06:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ int	expander_extended(t_data *data, t_command *list)
 		&& list->args[++i] != NULL)
 	{
 		args = exp___(data, list, args, i);
-		// if (!args)
-		// 	return (0);
+		if (data->syntax_error)
+			return (0);
 	}
 	free_array(list->args);
 	list->args = args;

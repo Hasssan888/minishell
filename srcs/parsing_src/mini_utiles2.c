@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:05:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 09:59:57 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,35 +31,6 @@ char	*get_env_element(t_data *data, char *env_var)
 		env = env->next;
 	}
 	return (ft_strdup(""));
-}
-
-char	*get_cmd_path(t_data *data, char *cmd_)
-{
-	int		i;
-	char	*cmd_path;
-	char	*env_ele;
-	char	**path;
-
-	i = 0;
-	if (access(cmd_, X_OK) == 0)
-		return (ft_strdup(cmd_));
-	env_ele = get_env_element(data, "PATH");
-	path = ft_split(env_ele, ':');
-	free(env_ele);
-	while (path[i])
-	{
-		cmd_path = ft_strjoin(ft_strdup(path[i]), ft_strjoin(ft_strdup("/"),
-					ft_strdup(cmd_)));
-		if (access(cmd_path, X_OK) == 0)
-		{
-			free_array(path);
-			return (cmd_path);
-		}
-		free(cmd_path);
-		i++;
-	}
-	free_array(path);
-	return (NULL);
 }
 
 void	env_maker(char *env, t_env **head)

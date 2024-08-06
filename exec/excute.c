@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:17:43 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/05 12:39:36 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:44:20 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ char	*without_slash(char **env, char *mycmdargs)
 
 	path.path_from_envp = function(env);
 	if (!(path.path_from_envp))
+	{
 		ft_error(&mycmdargs);
+		return (0);
+	}
 	path.mypaths = ft_split(path.path_from_envp, ':');
 	free(path.path_from_envp);
 	path.i = 0;
