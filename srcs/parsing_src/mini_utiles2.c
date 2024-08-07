@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 09:59:57 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 13:03:50 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 void	ft_perror(char *message)
 {
 	ft_putstr_fd(message, 2);
+}
+
+t_command	*lstlastcmd(t_command *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
 }
 
 char	*get_env_element(t_data *data, char *env_var)

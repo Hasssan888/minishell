@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 20:50:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 13:16:06 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,30 +24,14 @@
 # include <stdbool.h>           // for boolean vars
 # include <stdio.h>             // for printf
 # include <stdlib.h>            // for malloc and free
-# include <sys/stat.h>
-# include <sys/types.h> //
-# include <sys/wait.h>  // for wating child process to terminate execution
-# include <unistd.h>    // for system calls
+# include <sys/stat.h>			// for file and dir info
+# include <sys/types.h> 		//
+# include <sys/wait.h>  		// for wating child process to terminate execution
+# include <unistd.h>    		// for system calls
 
 # define COLOR BBLU
 // # define DEFAULT_PATH 
 // "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
-
-typedef enum s_types
-{
-	CMD,
-	RED_OUT,
-	RED_IN,
-	PIPE,
-	LIST,
-	BACK,
-	ARG,
-	OR_OP,
-	AND_OP,
-	FLE,
-	APP,
-	HER_DOC
-}						t_types;
 
 #define MAX_LONG "9223372036854775808"
 # define WHITESPACES " \t\v\n"
@@ -175,12 +159,7 @@ typedef struct s_path
 	char				*path_from_envp;
 }						t_path;
 
-// extern t_data *g_data; // for use this global var from all files
-
 extern int	g_exit_stat; // for use this global var from all files
-
-// # include <termios.h>
-// # include <sys/stat.h>
 
 void					print_minishell(void);
 void					print_prompt(void);
@@ -222,7 +201,7 @@ int	check_exit(char *str, long k);
 void					add_back_list(t_command **lst, t_command *new);
 t_command				*new_node(int type, char *value);
 void					clear_list(t_command **lst);
-
+t_command				*lstlastcmd(t_command *lst);
 // parsing functions
 
 int						parse_command(t_data *data, char *command);

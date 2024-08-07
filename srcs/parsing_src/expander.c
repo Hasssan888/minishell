@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 10:30:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:45:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	**exp___(t_data *data, t_command *list, char **args, int i)
 		list->args[i] = expand_vars(data, list->args[i], 0);
 		data->flag = 1;
 	}
-	if (list->type != HER_DOC)
+	if (list->type != HER_DOC && ft_strcmp("export", list->value))
 		list->args[i] = unquote_arg(list, list->args[i], 0, 0);
 	if (!is_empty(list->args[i]))
 	{

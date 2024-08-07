@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 14:59:46 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 13:03:20 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	child_process(t_data *data, t_command *node1, char **env, t_pipex *p)
 		pipe_heredoc(data, node1, env, p);
 	else if (p->w == 2)
 		outfile(data, node1, env, p);
-	else if (node1->type == CMD && node1->next == NULL)
+	else if (node1->type == TOKEN && node1->next == NULL)
 		excut_butlin(data, node1, env);
 	else
 	{
@@ -52,7 +52,9 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[0]);
-	if (ft_strcmp(node1->args[0], "cat") != 0)
+	if (!(ft_strcmp(node1->args[0], "cat") == 0 && node1->next
+			&& node1->next->type == PIPE
+			&& ft_strcmp(lstlastcmd(node1)->args[0], "ls") == 0))
 	{
 		wait(&p->status);
 		data->ignore_sig = check_exit_status(p->status);
@@ -77,7 +79,7 @@ void	ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p)
 			|| p->cur->type == HER_DOC)
 			skip_pipe(p);
 		else if ((p->cur->type != RED_OUT || p->cur->type != APP)
-			&& p->cur->type == CMD)
+			&& p->cur->type == TOKEN)
 			skip_two(data, ev, p);
 		p->cur = p->cur->next;
 	}

@@ -24,7 +24,8 @@ char	*expand_digits(t_data *data, char *argument, int *i)
 			return (data->expanded);
 		while (argument[++j] && argument[j] != '$')
 			;
-		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument, i, j));
+		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument, i,
+					j));
 		*i = j;
 	}
 	return (data->expanded);

@@ -39,7 +39,8 @@ void	ft_loop(t_command *cur, t_pipex *p)
 	{
 		if (cur->type == PIPE)
 			break ;
-		else if (cur->syntxerr != AMPIGOUS && (cur->type == RED_OUT || cur->type == APP))
+		else if (cur->syntxerr != AMPIGOUS && (cur->type == RED_OUT
+				|| cur->type == APP))
 			out_app(cur, p);
 		cur = cur->next;
 	}
@@ -65,7 +66,7 @@ void	open_outfile(t_command *node, t_pipex *p)
 	if (p->i > 0)
 	{
 		p->outfile = p->fd[p->i - 1];
-		p->s = ft_strdup(p->name_file[p->i - 1]);	
+		p->s = ft_strdup(p->name_file[p->i - 1]);
 	}
 	free(p->fd);
 	p->i = -1;
