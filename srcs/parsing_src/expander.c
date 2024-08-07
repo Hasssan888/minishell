@@ -101,13 +101,18 @@ t_command	*expander_command(t_data *data, t_command *list)
 	data->head = list;
 	if (!list)
 		return (NULL);
+	if (list->type == PIPE)
+	{
+		set_error(data, SYNTERRR, "minishell: syntax error\n", &data->head);
+		return (NULL);
+	}
 	while (list != NULL)
 	{
 		list->quoted = 0;
 		list->syntxerr = 0;
 		if (list->type == -1)
 		{
-			set_error(data, SYNTERRR, "syntax error\n", &data->head);
+			set_error(data, SYNTERRR, "minishell: syntax error\n", &data->head);
 			return (NULL);
 		}
 		if (!expander_extended(data, list))

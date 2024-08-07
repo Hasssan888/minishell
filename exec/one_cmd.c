@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:01 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 14:51:15 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/07 19:06:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	excut_butlin(t_data *data, t_command *node1, char **env)
 	if (if_is_buil(node1))
 	{
 		is_builtin_cmd(data, node1);
+		clear_list(&data->list);
+		clear_all(data);
 		exit(0);
 	}
 	else

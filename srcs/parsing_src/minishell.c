@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 17:26:12 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 13:32:34 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,11 @@ void	sig_handler(int signal)
 {
 	char	*prompt;
 
+	(void)signal;
 	prompt = get_prompt();
-	if (signal == SIGINT)
-	{
-		rl_replace_line("", 0);
-		printf("\n%s", prompt);
-		g_exit_stat = 130;
-	}
-	else if (signal == SIGQUIT)
-		g_exit_stat = 131;
+	rl_replace_line("", 0);
+	printf("\n%s", prompt);
+	g_exit_stat = 130;
 	free(prompt);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:06:19 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 19:08:37 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ t_command	*redirect_list(t_data *data, t_command **redirect_head)
 		free_array(data->list_command->args);
 		free_node(&data->list_command);
 		clear_list(&data->_tokens_list);
-		data->list->syntxerr = SYNTERRR;
 		return (NULL);
 	}
 	redirection_node->args = malloc(2 * sizeof(char *));
