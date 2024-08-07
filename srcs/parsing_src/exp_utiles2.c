@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:12:16 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 14:53:25 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 10:43:11 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ char	*expand_digits(t_data *data, char *argument, int *i)
 			return (data->expanded);
 		while (argument[++j] && argument[j] != '$')
 			;
-		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument, i,
-					j));
+		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument, i, j));
 		*i = j;
 	}
 	return (data->expanded);

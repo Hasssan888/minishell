@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:12:03 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/29 09:34:36 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 09:50:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int	valid_identifier(char *str)
 	int	i;
 
 	i = 0;
-	printf("%s\n", str);
 	if (!ft_isalpha(str[i]) && str[i] != '_')
 		return (0);
 	while (str[++i] && str[i] != '=')

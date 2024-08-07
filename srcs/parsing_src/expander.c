@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 20:51:03 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 10:30:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ char	**ft_arr_add_back(char **arr, char *str)
 
 char	**exp___(t_data *data, t_command *list, char **args, int i)
 {
-	if (list->type != HER_DOC)
-		list->args[i] = unquote_arg(list, list->args[i], 0, 0);
 	if (ft_strchr(list->args[i], '$') && list->quoted != 1
 		&& list->type != HER_DOC)
 	{
 		list->args[i] = expand_vars(data, list->args[i], 0);
 		data->flag = 1;
 	}
+	if (list->type != HER_DOC)
+		list->args[i] = unquote_arg(list, list->args[i], 0, 0);
 	if (!is_empty(list->args[i]))
 	{
 		if (data->flag && list->type != RED_OUT && !list->quoted
@@ -88,9 +88,9 @@ int	expander_extended(t_data *data, t_command *list)
 		free_array(list->args);
 		list->args = args;
 	}
-	list->value = unquote_arg(list, list->value, 0, 0);
 	if (list->value && list->value[0] && ft_strchr(list->value, '$'))
 		list->value = expand_vars(data, list->value, 0);
+	list->value = unquote_arg(list, list->value, 0, 0);
 	get_cmd_if_empty(list);
 	is_ambiguous(list);
 	return (1);
@@ -101,11 +101,6 @@ t_command	*expander_command(t_data *data, t_command *list)
 	data->head = list;
 	if (!list)
 		return (NULL);
-	if (list != NULL && list->type == PIPE)
-	{
-		set_error(data, SYNTERRR, "syntax error\n", &data->head);
-		return (NULL);
-	}
 	while (list != NULL)
 	{
 		list->quoted = 0;
