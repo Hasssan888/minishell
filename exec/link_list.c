@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:47 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/08 10:20:56 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:55:44 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ void	skip_pipe(t_pipex *p)
 		if (p->count_read_in > 0)
 			open_infile(p->cur->next, p);
 		ft_count_read_out(p->cur->next, p);
+		if (p->s)
+		{
+			free(p->s);
+			p->s = NULL;
+		}
 		if (p->count_read_out > 0)
 			open_outfile(p->cur->next, p);
 		p->k++;

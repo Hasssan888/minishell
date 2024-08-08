@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 10:18:50 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:39:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,10 @@ void	panic(char *error_str)
 
 void	sig_handler(int signal)
 {
-	char	*prompt;
-
 	(void)signal;
-	prompt = get_prompt();
 	rl_replace_line("", 0);
-	printf("\n%s", prompt);
+	printf("\n%s", "minishell$ ");
 	g_exit_stat = 130;
-	free(prompt);
 }
 
 void	handle_signals(int mode)
@@ -65,7 +61,7 @@ int	main(int ac, char **av, char **env)
 	print_minishell();
 	init_minishell(&data, ac, av, env);
 	handle_signals(1);
-	command = readline(data.prompt);
+	command = readline("minishell$ ");
 	handle_signals(2);
 	while (command != NULL)
 	{
@@ -75,7 +71,7 @@ int	main(int ac, char **av, char **env)
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
 		handle_signals(1);
-		command = readline(data.prompt);
+		command = readline("minishell$ ");
 		handle_signals(2);
 	}
 	printf("exit\n");

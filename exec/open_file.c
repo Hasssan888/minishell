@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/07 21:35:10 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:17:02 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,10 +104,7 @@ void	open_infile(t_command *node, t_pipex *p)
 	p->indixe = 0;
 	p->fd = malloc(sizeof(int) * p->count_read_in);
 	if (p->fd == NULL)
-	{
-		perror("malloc");
-		exit(1);
-	}
+		panic("malloc fail\n");
 	p->i = 0;
 	cur = node;
 	while (cur && p->i < p->count_read_in)

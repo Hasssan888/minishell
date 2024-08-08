@@ -46,7 +46,7 @@ void	env_maker(char *env, t_env **head)
 	splited = NULL;
 	splited = ft_split(env, '=');
 	if (!splited)
-		return ;
+		exit(EXIT_FAILURE);
 	if (splited[0] != NULL && splited[1] != NULL)
 		new = lstnew(ft_strdup(splited[0]), ft_strdup(splited[1]));
 	else if (splited[0] != NULL && !splited[1] && ft_strchr(env, '='))

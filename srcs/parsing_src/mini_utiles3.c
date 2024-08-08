@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:10:40 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:16:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:55:25 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,6 @@ void	print_list(t_command *table)
 	}
 }
 
-char	*get_prompt(void)
-{
-	char	*prompt1;
-	char	*final_prompt;
-
-	prompt1 = ft_strjoin(ft_strdup("┌──(aziz㉿aelkheta)-["), getcwd(NULL, 0));
-	final_prompt = ft_strjoin(prompt1, ft_strdup("]\n└─$ "));
-	return (final_prompt);
-}
-
 void	init_minishell(t_data *data, int ac, char **av, char **env)
 {
 	ft_bzero(data, sizeof(t_data));
@@ -48,7 +38,6 @@ void	init_minishell(t_data *data, int ac, char **av, char **env)
 	data->env = creat_env(data, env);
 	data->envirenment = env_to_array_(data->env);
 	data->syntax_error = false;
-	data->prompt = get_prompt();
 }
 
 void	clear_env(t_env **env)

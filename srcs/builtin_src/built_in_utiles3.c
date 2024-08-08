@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:44:30 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 10:24:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 15:15:22 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ int	change_dir(t_data *data, t_env *env, char *path)
 	}
 	free(data->prompt);
 	get_old_current_pwd(data);
-	data->prompt = get_prompt();
 	return (1);
 }
 
@@ -80,17 +79,6 @@ char	**get_exp_splited(char *str, char del)
 	}
 	return (arr);
 }
-
-// void	check_cd_errors(void)
-// {
-// 	if (errno == EACCES)
-// 		perror("minishell: cd: Permission denied\n");
-// 	else if (errno == ENOENT)
-// 		perror("minishell: cd: No such file or directory\n");
-// 	else if (errno == ENOTDIR)
-// 		perror("minishell: cd: No such file or directory\n");
-// 	g_exit_stat = 1;
-// }
 
 void	echo_it(char **cmd, int i)
 {

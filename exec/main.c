@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 22:12:13 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:54:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,6 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[0]);
-	if (!(ft_strcmp(node1->args[0], "cat") == 0 && node1->next
-			&& node1->next->type == PIPE
-			&& ft_strcmp(lstlastcmd(node1)->args[0], "ls") == 0))
-	{
-		wait(&p->status);
-		data->ignore_sig = check_exit_status(p->status);
-	}
 	return (p->pid);
 }
 
@@ -123,11 +116,10 @@ int	func(t_data *data, t_command *list)
 	else
 		ft_pipe(data, list, data->envirenment, &pipex);
 	free_int_array(pipex.strs);
-	while (pipex.i != -1)
-	{
-		pipex.i = waitpid(pipex.r, &pipex.status, 0);
-		pipex.i = wait(NULL);
-	}
+	waitpid(pipex.r, &pipex.status, 0);
+	data->ignore_sig = check_exit_status(pipex.status);
+	while (wait(NULL) != -1)
+		;
 	if (pipex.s)
 		free(pipex.s);
 	return (0);
