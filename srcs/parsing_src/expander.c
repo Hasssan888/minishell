@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 12:45:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:20:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ char	**ft_arr_add_back(char **arr, char *str)
 
 char	**exp___(t_data *data, t_command *list, char **args, int i)
 {
-	if (ft_strchr(list->args[i], '$') && list->quoted != 1
-		&& list->type != HER_DOC)
+	if (ft_strchr(list->args[i], '$') && list->type != HER_DOC)
 	{
 		list->args[i] = expand_vars(data, list->args[i], 0);
 		data->flag = 1;
@@ -61,7 +60,7 @@ char	**exp___(t_data *data, t_command *list, char **args, int i)
 			args = ft_arr_add_back(args, list->args[i]);
 		if (data->syntax_error)
 		{
-			set_error(data, SYNTERRR, "syntax error\n", &data->head);
+			set_error(data, SYNTERRR, "minishell: syntax error\n", &data->head);
 			return (NULL);
 		}
 	}

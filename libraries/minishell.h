@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 13:16:06 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:36:11 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,17 @@
 # include <stdbool.h>           // for boolean vars
 # include <stdio.h>             // for printf
 # include <stdlib.h>            // for malloc and free
-# include <sys/stat.h>			// for file and dir info
-# include <sys/types.h> 		//
-# include <sys/wait.h>  		// for wating child process to terminate execution
-# include <unistd.h>    		// for system calls
+# include <sys/stat.h>          // for file and dir info
+# include <sys/types.h>         //
+# include <sys/wait.h>         
+	// for wating child process to terminate execution
+# include <unistd.h>            // for system calls
 
 # define COLOR BBLU
-// # define DEFAULT_PATH 
+// # define DEFAULT_PATH
 // "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
 
-#define MAX_LONG "9223372036854775808"
+# define MAX_LONG "9223372036854775808"
 # define WHITESPACES " \t\v\n"
 # define SYNTERRR 2
 # define AMPIGOUS 1
@@ -93,7 +94,8 @@ typedef struct s_data
 	t_command			*_tokens_list;
 	t_command			*rdrct_head;
 	int					ignore_sig;
-	long 				k;
+	long				k;
+	int					error_num;
 	bool				syntax_error;
 }						t_data;
 
@@ -148,6 +150,7 @@ typedef struct s_pipex
 	char				*s;
 	int					*end_1;
 	int					*pipe_t;
+	int					save_in;
 }						t_pipex;
 
 typedef struct s_path
@@ -192,9 +195,11 @@ void					check_cd_errors(void);
 void					echo_it(char **cmd, int i);
 bool					check_echo_options(char *cmd);
 int						ft_is_str_digit(char *str);
-void					export__cnt(t_data *data, t_env *env_ptr,
-							t_command *cmd, int i);
-int	check_exit(char *str, long k);
+void					export__cnt(t_data *data, t_env *env_ptr, char *arg);
+int						check_exit(char *str, long k);
+void					panic(char *error_str);
+char					**get_exp_splited(char *str, char del);
+void					panic(char *error_str);
 
 // utiles for linked list:
 

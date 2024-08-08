@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 19:08:37 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:20:21 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_command	*syntax_error(t_data *data, t_command *list_command,
 		t_command *head)
 {
-	ft_perror("syntax error\n");
+	perror("minishell: syntax error\n");
 	data->syntax_error = SYNTERRR;
 	g_exit_stat = 2;
 	free_node(&list_command);
@@ -53,7 +53,7 @@ t_command	*redirect_list(t_data *data, t_command **redirect_head)
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
 		g_exit_stat = SYNTERRR;
-		ft_perror("syntax error\n");
+		perror("minishell: syntax error\n");
 		free_node(&redirection_node);
 		free_array(data->list_command->args);
 		free_node(&data->list_command);
@@ -76,7 +76,7 @@ void	get_redirect_node(t_data *data)
 	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		ft_perror("syntax error\n");
+		perror("minishell: syntax error\n");
 		free_array(data->list_command->args);
 		free_node(&data->list_command);
 		clear_list(&data->_tokens_list);

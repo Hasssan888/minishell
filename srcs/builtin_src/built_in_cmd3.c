@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:09:15 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 20:48:47 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:21:21 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,15 @@ void	export_var_app(t_data *data, t_env *env_ptr, char **splited)
 	}
 }
 
-void	export__cnt(t_data *data, t_env *env_ptr, t_command *cmd, int i)
+void	export__cnt(t_data *data, t_env *env_ptr, char *arg)
 {
 	char	**splited;
 	char	*trimed;
 
 	trimed = NULL;
 	splited = NULL;
-	splited = ft_split(cmd->args[i], '=');
-	data->str1 = ft_strchr(cmd->args[i], '=');
+	splited = get_exp_splited(arg, '=');
+	data->str1 = ft_strchr(arg, '=');
 	trimed = ft_strtrim(splited[0], "+");
 	env_ptr = get_env_ele_ptr(data->env, trimed);
 	if (env_ptr != NULL && splited != NULL && splited[0] != NULL
@@ -82,7 +82,7 @@ void	export__cnt(t_data *data, t_env *env_ptr, t_command *cmd, int i)
 		else if (data->str1 != NULL)
 			add_back(&data->env, lstnew(ft_strdup(trimed), ft_strdup("")));
 		else
-			add_back(&data->env, lstnew(ft_strdup(cmd->args[i]), NULL));
+			add_back(&data->env, lstnew(ft_strdup(arg), NULL));
 	}
 	free_array(splited);
 	free(trimed);
@@ -103,13 +103,16 @@ int	export(t_data *data, t_command *cmd, t_env *env)
 	}
 	while (cmd->args[++i] != NULL)
 	{
+		cmd->args[i] = unquote_arg(data->list, cmd->args[i], 0, 0);
 		if (!valid_identifier(cmd->args[i]))
 		{
-			ft_perror("minishell: export: not a valid identifier\n");
+			perror("minishell: export: not a valid identifier\n");
 			g_exit_stat = 1;
 			continue ;
 		}
-		export__cnt(data, env_ptr, cmd, i);
+		export__cnt(data, env_ptr, cmd->args[i]);
 	}
+	free_array(data->envirenment);
+	data->envirenment = env_to_array_(data->env);
 	return (0);
 }

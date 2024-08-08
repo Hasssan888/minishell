@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:13:28 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 08:06:28 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:19:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	set_error(t_data *data, int err_num, char *str, t_command **cmd)
 	data->syntax_error = err_num;
 	g_exit_stat = err_num;
 	clear_list(cmd);
-	ft_perror(str);
+	perror(str);
 }
 
 char	**split_argument(t_command *list, int i)

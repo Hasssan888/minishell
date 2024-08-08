@@ -6,16 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 13:03:50 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:22:55 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
-
-void	ft_perror(char *message)
-{
-	ft_putstr_fd(message, 2);
-}
 
 t_command	*lstlastcmd(t_command *lst)
 {

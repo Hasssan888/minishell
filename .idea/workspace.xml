@@ -18,17 +18,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bdd58c77-69a3-491e-9333-11f1f8e9e3a3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs000000000b5207fa00000388" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs000000000b520844000003bc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs000000000b520856000003bd" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec/allcmd.c" beforeDir="false" afterPath="$PROJECT_DIR$/exec/allcmd.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec/error.c" beforeDir="false" afterPath="$PROJECT_DIR$/exec/error.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/exec/excute.c" beforeDir="false" afterPath="$PROJECT_DIR$/exec/excute.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec/link_list.c" beforeDir="false" afterPath="$PROJECT_DIR$/exec/link_list.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/exec/main.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/exec/one_cmd.c" beforeDir="false" afterPath="$PROJECT_DIR$/exec/one_cmd.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/exec/open_file.c" beforeDir="false" afterPath="$PROJECT_DIR$/exec/open_file.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraries/minishell.h" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/minishell.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minishell" beforeDir="false" afterPath="$PROJECT_DIR$/minishell" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/builtin_src/built_in_cmd1.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/builtin_src/built_in_cmd1.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/builtin_src/built_in_cmd3.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/builtin_src/built_in_cmd3.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/builtin_src/built_in_utiles2.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/builtin_src/built_in_utiles2.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/builtin_src/built_in_utiles3.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/builtin_src/built_in_utiles3.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/parsing_src/exp_utiles3.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/parsing_src/exp_utiles3.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/parsing_src/exp_utiles4.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/parsing_src/exp_utiles4.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srcs/parsing_src/expander.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/parsing_src/expander.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/parsing_src/lexer.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/parsing_src/lexer.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/parsing_src/mini_utiles2.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/parsing_src/mini_utiles2.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srcs/parsing_src/minishell.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/parsing_src/minishell.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/parsing_src/parsing.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/parsing_src/parsing.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srcs/parsing_src/parsing_utiles.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/parsing_src/parsing_utiles.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/parsing_src/tokenizer.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/parsing_src/tokenizer.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,26 +113,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Native Application.all.executor": "Debug",
-    "RunOnceActivity.RadMigrateCodeStyle": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Native Application.all.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Native Application.all">
-    <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="hassan" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./minishell">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="hassan" TARGET_NAME="all" CONFIG_NAME="all" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
@@ -173,7 +194,8 @@
       <option name="presentableId" value="Default" />
       <updated>1723051247151</updated>
       <workItem from="1723051249006" duration="83000" />
-      <workItem from="1723051498342" duration="4230000" />
+      <workItem from="1723051498342" duration="12384000" />
+      <workItem from="1723104148252" duration="4550000" />
     </task>
     <servers />
   </component>
@@ -185,7 +207,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/srcs/parsing_src/minishell.c</url>
-          <line>53</line>
+          <line>60</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

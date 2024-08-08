@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:43:58 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 20:50:16 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:31:35 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	chdir_home_prev(t_data *data, t_env *env, char **args)
 		env = get_env_ele_ptr(data->env, "HOME");
 		if (!env || !env->env_key)
 		{
-			ft_perror("cd: HOME not set\n");
+			perror("cd: HOME not set\n");
 			g_exit_stat = 1;
 			return (0);
 		}
@@ -46,7 +46,7 @@ int	cd(t_data *data, char **args)
 	env = NULL;
 	if (args[0] != NULL && args[1] != NULL)
 	{
-		ft_perror("cd: too many arguments\n");
+		perror("cd: too many arguments\n");
 		g_exit_stat = 1;
 		return (0);
 	}
@@ -57,7 +57,11 @@ int	cd(t_data *data, char **args)
 	else if (args != NULL && change_dir(data, NULL, args[0]))
 		return (1);
 	else
-		check_cd_errors();
+	{
+		perror("minishell: cd: ");
+		strerror(errno);
+		g_exit_stat = 1;
+	}
 	return (0);
 }
 
@@ -85,7 +89,7 @@ void	exit_(t_data *data, t_command *command)
 {
 	if (command->args[1] != NULL && !ft_is_str_digit(command->args[1]))
 	{
-		ft_perror("minishell: exit: numeric argument required\n");
+		perror("minishell: exit: numeric argument required\n");
 		g_exit_stat = 2;
 	}
 	else if (command->args[1] != NULL)
@@ -94,14 +98,14 @@ void	exit_(t_data *data, t_command *command)
 		if (ft_strlen(command->args[1]) > ft_strlen(MAX_LONG) + 1
 			|| check_exit(command->args[1], data->k))
 		{
-			ft_perror("minishell: exit: numeric argument required\n");
+			perror("minishell: exit: numeric argument required\n");
 			exit(2);
 		}
 		g_exit_stat = data->k;
 	}
 	else if (command->args[1] != NULL && command->args[2] != NULL)
 	{
-		ft_perror("minishell: exit: too many arguments\n");
+		perror("minishell: exit: too many arguments\n");
 		g_exit_stat = 1;
 	}
 	printf("exit\n");

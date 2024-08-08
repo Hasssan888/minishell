@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/05 12:16:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:20:25 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_command	*list_maker(char *cmd_line, int *i)
 			free(token);
 			clear_list(&table);
 			g_exit_stat = 2;
-			ft_perror("syntax error\n");
+			perror("minishell: syntax error\n");
 			return (NULL);
 		}
 		node = new_node(type, token);

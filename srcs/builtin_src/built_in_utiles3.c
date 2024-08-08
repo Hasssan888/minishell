@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 11:44:30 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 20:47:59 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:24:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,45 @@ int	change_dir(t_data *data, t_env *env, char *path)
 	return (1);
 }
 
-void	check_cd_errors(void)
+char	**get_exp_splited(char *str, char del)
 {
-	if (errno == EACCES)
-		ft_perror("minishell: cd: Permission denied\n");
-	else if (errno == ENOENT)
-		ft_perror("minishell: cd: No such file or directory\n");
-	else if (errno == ENOTDIR)
-		ft_perror("minishell: cd: No such file or directory\n");
-	g_exit_stat = 1;
+	char	*ch_str;
+	char	**arr;
+
+	ch_str = ft_strchr(str, del);
+	if (!str)
+		return (NULL);
+	if (ch_str)
+	{
+		arr = ft_calloc(3, sizeof(char *));
+		if (!arr)
+			panic("malloc fail\n");
+		arr[0] = ft_substr(str, 0, ft_strlen(str) - ft_strlen(ch_str));
+		arr[1] = ft_substr(str, ft_strlen(str) - ft_strlen(ch_str) + 1,
+				ft_strlen(str));
+		arr[2] = NULL;
+	}
+	else
+	{
+		arr = ft_calloc(2, sizeof(char *));
+		if (!arr)
+			panic("malloc fail\n");
+		arr[0] = ft_strdup(str);
+		arr[1] = NULL;
+	}
+	return (arr);
 }
+
+// void	check_cd_errors(void)
+// {
+// 	if (errno == EACCES)
+// 		perror("minishell: cd: Permission denied\n");
+// 	else if (errno == ENOENT)
+// 		perror("minishell: cd: No such file or directory\n");
+// 	else if (errno == ENOTDIR)
+// 		perror("minishell: cd: No such file or directory\n");
+// 	g_exit_stat = 1;
+// }
 
 void	echo_it(char **cmd, int i)
 {
@@ -81,7 +110,7 @@ bool	check_echo_options(char *cmd)
 
 	j = 0;
 	flag = false;
-	if (!cmd)
+	if (!cmd || !cmd[0])
 		return (flag);
 	if (cmd[j] == '-')
 		while (cmd[++j] == 'n')

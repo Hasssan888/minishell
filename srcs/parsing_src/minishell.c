@@ -6,13 +6,19 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 13:32:34 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 10:18:50 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
 int		g_exit_stat = 0;
+
+void	panic(char *error_str)
+{
+	perror(error_str);
+	exit(EXIT_FAILURE);
+}
 
 void	sig_handler(int signal)
 {

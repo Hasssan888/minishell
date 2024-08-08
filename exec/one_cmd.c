@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:01 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/07 19:06:59 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 21:59:21 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	if_is_buil(t_command *command)
 {
+	if (!command || !command->value)
+		return (0);
 	if (ft_strcmp(command->value, "echo") == 0)
 		return (1);
 	else if (ft_strcmp(command->value, "pwd") == 0)

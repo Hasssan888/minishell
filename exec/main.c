@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 19:41:03 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/07 22:12:13 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,7 @@
 void	child_process(t_data *data, t_command *node1, char **env, t_pipex *p)
 {
 	if (p->flag == 1)
-	{
-		printf("infile\n");
 		infile(data, node1, env, p);
-	}
 	else if (p->flag == 2)
 		pipe_heredoc(data, node1, env, p);
 	else if (p->w == 2)
@@ -47,6 +44,7 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 		child_process(data, node1, env, p);
 		clear_list(&data->list);
 		clear_all(data);
+		free(p->s);
 		exit(g_exit_stat);
 	}
 	close(p->end[1]);
@@ -70,6 +68,11 @@ void	ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p)
 	p->w = check(node1);
 	while (p->cur != NULL)
 	{
+		if (data->ignore_sig == 130 || data->ignore_sig == 131)
+		{
+			data->ignore_sig = 0;
+			return ;
+		}
 		if (p->cur->next && p->cur->next->syntxerr == AMPIGOUS)
 		{
 			p->cur = p->cur->next;
@@ -112,7 +115,7 @@ int	func(t_data *data, t_command *list)
 {
 	t_pipex	pipex;
 
-	if (!list)
+	if (!list || !list->value)
 		return (0);
 	ft_count(data, list, &pipex);
 	if (pipex.count_pipe == 0 && if_is_buil(list))
