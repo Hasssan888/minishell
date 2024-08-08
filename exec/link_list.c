@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:47 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/08 14:55:44 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 22:22:24 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,33 @@ void	here_doc_error(char **av)
 	ft_putstr_fd(av[0], 2);
 	write(2, "\n", 1);
 	exit(1);
+}
+
+void	exec_built_in(t_pipex *pipex, t_data *data, t_command *list)
+{
+	pipex->d = 1;
+	pipex->w = check(list);
+	pipex->cur = list;
+	while (pipex->cur)
+	{
+		if (pipex->cur->type == RED_IN)
+			pipex->flag = 1;
+		else if (pipex->cur->type == HER_DOC)
+			pipex->flag = 2;
+		else if (pipex->cur->type == TOKEN && pipex->cur->type != RED_OUT
+			&& pipex->cur->type != APP)
+		{
+			pipex->c = pipex->cur->next;
+			while (pipex->c)
+			{
+				if (pipex->c && pipex->c->type == HER_DOC)
+					pipex->flag = 2;
+				if (pipex->c && pipex->c->type == RED_IN)
+					pipex->flag = 1;
+				pipex->c = pipex->c->next;
+			}
+			child_process(data, pipex->cur, data->envirenment, pipex);
+		}
+		pipex->cur = pipex->cur->next;
+	}
 }

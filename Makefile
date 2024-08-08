@@ -6,11 +6,11 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/08/08 10:35:13 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/08/08 22:26:58 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-
+MAKEFLAGS += --no-print-directory
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address
@@ -21,7 +21,6 @@ EXECDIR = ./exec
 LIBFT = ./libraries/libft/libft.a
 
 OBJDIR = ./objs
-
 
 SRC = 	$(SRCDIR)minishell.c\
 		$(SRCDIR)cleanup.c\
@@ -39,12 +38,14 @@ SRC = 	$(SRCDIR)minishell.c\
 		$(SRCDIR)expander.c\
 		$(SRCDIR)lexer.c\
 		$(SRCDIR)print_functions.c\
-		$(BLTDIR)built_in_cmd1.c\
-		$(BLTDIR)built_in_cmd2.c\
-		$(BLTDIR)built_in_cmd3.c\
-		$(BLTDIR)built_in_utiles1.c\
-		$(BLTDIR)built_in_utiles2.c\
-		$(BLTDIR)built_in_utiles3.c\
+		$(BLTDIR)built_in_.c\
+		$(BLTDIR)echo_.c\
+		$(BLTDIR)exit_.c\
+		$(BLTDIR)export_utls.c\
+		$(BLTDIR)cd_.c\
+		$(BLTDIR)env_.c\
+		$(BLTDIR)export_.c\
+		$(BLTDIR)pwd_unset.c\
 		$(EXECDIR)/allcmd.c\
 		$(EXECDIR)/error.c\
 		$(EXECDIR)/excute.c\
@@ -60,23 +61,33 @@ OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC)) # for pathern substitution 
 
 
 all: $(NAME)
-	valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all ./minishell
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(OBJDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
+# $(LIBFT):
+# 	@echo "Compiling libft..."
+# 	@make -C ./libraries/libft
+# 	@make bonus -C ./libraries/libft
+# 	@echo "Compiling libft done"
+
+# $(NAME): $(LIBFT) $(OBJ)
 $(NAME): $(OBJ)
 	@echo "Building..."
 	@$(CC) $(CFLAGS) $(OBJ) $(RLFLAG) $(LIBFT) -o $@
 	@echo "Building done"
 
 clean:
+	@echo "Removing libft obj files..."
+	# @make clean -C ./libraries/libft
+	@echo "Removing libft obj files..."
 	@echo "Removing object files..."
 	@rm -rf $(OBJDIR)/*.o
 	@echo "Removing object files done"
 
 fclean: clean
+	# @make fclean -C ./libraries/libft
 	@echo "Removing program name..."
 	@rm -f $(NAME)
 	@echo "Removing program name done"

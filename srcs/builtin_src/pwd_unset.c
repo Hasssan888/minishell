@@ -1,16 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_in_cmd2.c                                    :+:      :+:    :+:   */
+/*   pwd_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/28 14:17:53 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 20:49:28 by aelkheta         ###   ########.fr       */
+/*   Created: 2024/08/08 22:09:11 by aelkheta          #+#    #+#             */
+/*   Updated: 2024/08/08 22:09:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
+
+void	print_array(char **array)
+{
+	int	i;
+
+	i = 0;
+	if (!array || !array[0])
+		return ;
+	while (array != NULL && array[i] != NULL)
+		printf("%s\n", array[i++]);
+}
 
 void	pwd(void)
 {
@@ -79,18 +90,6 @@ int	unset(t_data *data, char **env_var)
 	}
 	free_array(data->envirenment);
 	data->envirenment = env_to_array_(data->env);
-	g_exit_stat = 0;
-	return (0);
-}
-
-int	env(t_env *env)
-{
-	while (env != NULL)
-	{
-		if (env->env_value != NULL && env->env_key != NULL)
-			printf("%s=%s\n", env->env_value, env->env_key);
-		env = env->next;
-	}
 	g_exit_stat = 0;
 	return (0);
 }

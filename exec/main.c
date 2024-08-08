@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 14:54:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 21:45:55 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ void	child_process(t_data *data, t_command *node1, char **env, t_pipex *p)
 	else if (p->w == 2)
 		outfile(data, node1, env, p);
 	else if (node1->type == TOKEN && node1->next == NULL)
-		excut_butlin(data, node1, env);
+		excut_butlin(data, node1, env, p);
 	else
 	{
 		close(p->end[0]);
 		dup2(p->end[1], STDOUT_FILENO);
 		close(p->end[1]);
-		excut_butlin(data, node1, env);
+		excut_butlin(data, node1, env, p);
 	}
 }
 
@@ -108,11 +108,13 @@ int	func(t_data *data, t_command *list)
 {
 	t_pipex	pipex;
 
+	pipex.d = 0;
+	pipex.c = NULL;
 	if (!list || !list->value)
 		return (0);
 	ft_count(data, list, &pipex);
 	if (pipex.count_pipe == 0 && if_is_buil(list))
-		is_builtin_cmd(data, list);
+		exec_built_in(&pipex, data, list);
 	else
 		ft_pipe(data, list, data->envirenment, &pipex);
 	free_int_array(pipex.strs);

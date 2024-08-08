@@ -1,16 +1,59 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_in_utiles2.c                                 :+:      :+:    :+:   */
+/*   export_utiles1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 09:12:03 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 09:28:44 by aelkheta         ###   ########.fr       */
+/*   Created: 2024/07/29 09:09:15 by aelkheta          #+#    #+#             */
+/*   Updated: 2024/08/08 22:07:03 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
+
+void	free_env_ptr(t_env **env_ptr)
+{
+	t_env	*ptr;
+
+	if (env_ptr != NULL && *env_ptr != NULL)
+	{
+		ptr = *env_ptr;
+		if (ptr->env_value != NULL)
+			free(ptr->env_value);
+		if (ptr->env_value != NULL)
+			free(ptr->env_key);
+		free(ptr);
+	}
+}
+
+void	export_var_app(t_data *data, t_env *env_ptr, char **splited)
+{
+	if (env_ptr->env_key != NULL && splited[0][ft_strlen(splited[0])
+		- 1] == '+')
+	{
+		if (splited[1] != NULL)
+			env_ptr->env_key = ft_strjoin(env_ptr->env_key,
+					ft_strdup(splited[1]));
+		else
+		{
+			if (env_ptr->env_key != NULL)
+				free(env_ptr->env_key);
+			env_ptr->env_key = ft_strdup("");
+		}
+	}
+	else
+	{
+		if (env_ptr->env_key != NULL)
+			free(env_ptr->env_key);
+		if (splited[1] != NULL)
+			env_ptr->env_key = ft_strdup(splited[1]);
+		else if (data->str1 != NULL)
+			env_ptr->env_key = ft_strdup("");
+		else
+			env_ptr->env_key = NULL;
+	}
+}
 
 int	env_c_len(t_env *env_)
 {
@@ -39,48 +82,6 @@ void	print_export_env(t_env **env, int env_len)
 				env[i]->env_key);
 		i++;
 	}
-}
-
-void	print_sorted_env(t_env *env)
-{
-	t_env	*env_;
-	int		env_len;
-	int		i;
-	t_env	**env__;
-
-	env_ = env;
-	env_len = env_c_len(env_);
-	i = 0;
-	env__ = malloc((env_len + 1) * sizeof(t_env *));
-	while (i < env_len)
-	{
-		env__[i] = env_;
-		env_ = env_->next;
-		i++;
-	}
-	env__[i] = NULL;
-	env__ = sort_env(env__, env_len);
-	print_export_env(env__, env_len);
-	free(env__);
-}
-
-int	valid_identifier(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!ft_isalpha(str[i]) && str[i] != '_')
-		return (0);
-	while (str[++i] && str[i] != '=')
-	{
-		if (str[i] == '+')
-			break ;
-		else if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (0);
-	}
-	if (str[i] && str[i] == '+' && str[i + 1] != '=')
-		return (0);
-	return (1);
 }
 
 t_env	**sort_env(t_env **env_, int env_len)

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:44:49 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/07 19:29:19 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 21:37:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	infile(t_data *data, t_command *node1, char **env, t_pipex *p)
 		dup2(p->outfile, STDOUT_FILENO);
 		close(p->outfile);
 	}
-	excut_butlin(data, node1, env);
+	excut_butlin(data, node1, env, p);
 }
 
 void	outfile(t_data *data, t_command *node1, char **env, t_pipex *p)
@@ -46,7 +46,7 @@ void	outfile(t_data *data, t_command *node1, char **env, t_pipex *p)
 	}
 	dup2(p->outfile, STDOUT_FILENO);
 	close(p->outfile);
-	excut_butlin(data, node1, env);
+	excut_butlin(data, node1, env, p);
 }
 
 int	check_redout(t_command *node1)
@@ -100,5 +100,5 @@ void	pipe_heredoc(t_data *data, t_command *node1, char **env, t_pipex *p)
 	}
 	else if (p->w == 2)
 		dup_outfile(node1, p);
-	excut_butlin(data, node1, env);
+	excut_butlin(data, node1, env, p);
 }

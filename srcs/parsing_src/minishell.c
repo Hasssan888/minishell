@@ -6,19 +6,13 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 14:39:17 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 22:20:58 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
 int		g_exit_stat = 0;
-
-void	panic(char *error_str)
-{
-	perror(error_str);
-	exit(EXIT_FAILURE);
-}
 
 void	sig_handler(int signal)
 {
@@ -52,28 +46,38 @@ void	handle_signals(int mode)
 	}
 }
 
-int	main(int ac, char **av, char **env)
+void	shell_loop(t_data *data)
 {
-	t_data	data;
-	t_pipex	pipex;
 	char	*command;
+	t_pipex	pipex;
 
-	print_minishell();
-	init_minishell(&data, ac, av, env);
+	command = NULL;
 	handle_signals(1);
 	command = readline("minishell$ ");
 	handle_signals(2);
 	while (command != NULL)
 	{
 		pipex.save1 = dup(STDIN_FILENO);
+		pipex.save2 = dup(STDOUT_FILENO);
 		add_history(command);
-		parse_command(&data, command);
+		parse_command(data, command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);
+		dup2(pipex.save2, STDOUT_FILENO);
+		close(pipex.save2);
 		handle_signals(1);
 		command = readline("minishell$ ");
 		handle_signals(2);
 	}
+}
+
+int	main(int ac, char **av, char **env)
+{
+	t_data	data;
+
+	print_minishell();
+	init_minishell(&data, ac, av, env);
+	shell_loop(&data);
 	printf("exit\n");
 	clear_history();
 	clear_all(&data);

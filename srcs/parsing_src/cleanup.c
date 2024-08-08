@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 19:29:34 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/08 16:23:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ t_command	*free_node(t_command **node)
 
 void	clear_all(t_data *data)
 {
-	free(data->prompt);
 	free(data->new_command);
 	free_array(data->envirenment);
 	clear_env(&data->env);

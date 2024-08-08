@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_in_utiles1.c                                 :+:      :+:    :+:   */
+/*   env_.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 10:31:33 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/06 17:50:35 by aelkheta         ###   ########.fr       */
+/*   Created: 2024/08/08 22:03:32 by aelkheta          #+#    #+#             */
+/*   Updated: 2024/08/08 22:08:50 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,6 @@ t_env	*get_env_ele_ptr(t_env *env, char *env_val)
 		env_ = env_->next;
 	}
 	return (NULL);
-}
-
-void	print_array(char **array)
-{
-	int	i;
-
-	i = 0;
-	if (!array || !array[0])
-		return ;
-	while (array != NULL && array[i] != NULL)
-		printf("%s\n", array[i++]);
 }
 
 char	**env_to_array_(t_env *env)
@@ -92,4 +81,16 @@ int	ft_is_str_digit(char *str)
 			return (0);
 	}
 	return (1);
+}
+
+int	env(t_env *env)
+{
+	while (env != NULL)
+	{
+		if (env->env_value != NULL && env->env_key != NULL)
+			printf("%s=%s\n", env->env_value, env->env_key);
+		env = env->next;
+	}
+	g_exit_stat = 0;
+	return (0);
 }

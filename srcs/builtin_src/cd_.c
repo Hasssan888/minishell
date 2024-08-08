@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_in_utiles3.c                                 :+:      :+:    :+:   */
+/*   cd_.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/05 11:44:30 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 15:15:22 by aelkheta         ###   ########.fr       */
+/*   Created: 2024/08/08 22:02:24 by aelkheta          #+#    #+#             */
+/*   Updated: 2024/08/08 22:17:39 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,59 +51,55 @@ int	change_dir(t_data *data, t_env *env, char *path)
 	return (1);
 }
 
-char	**get_exp_splited(char *str, char del)
+int	chdir_home_prev(t_data *data, t_env *env, char **args)
 {
-	char	*ch_str;
-	char	**arr;
-
-	ch_str = ft_strchr(str, del);
-	if (!str)
-		return (NULL);
-	if (ch_str)
+	if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 	{
-		arr = ft_calloc(3, sizeof(char *));
-		if (!arr)
-			panic("malloc fail\n");
-		arr[0] = ft_substr(str, 0, ft_strlen(str) - ft_strlen(ch_str));
-		arr[1] = ft_substr(str, ft_strlen(str) - ft_strlen(ch_str) + 1,
-				ft_strlen(str));
-		arr[2] = NULL;
+		env = get_env_ele_ptr(data->env, "OLDPWD");
+		if (env != NULL && env->env_key != NULL)
+		{
+			printf("%s\n", env->env_key);
+			change_dir(data, env, NULL);
+		}
+		return (1);
 	}
+	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
+	{
+		env = get_env_ele_ptr(data->env, "HOME");
+		if (!env || !env->env_key)
+		{
+			ft_putstr_fd("cd: HOME not set\n", 2);
+			g_exit_stat = 1;
+			return (0);
+		}
+		change_dir(data, env, NULL);
+		return (1);
+	}
+	return (0);
+}
+
+int	cd(t_data *data, char **args)
+{
+	t_env	*env;
+
+	env = NULL;
+	if (args[0] != NULL && args[1] != NULL)
+	{
+		ft_putstr_fd("cd: too many arguments\n", 2);
+		g_exit_stat = 1;
+		return (0);
+	}
+	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
+		return (chdir_home_prev(data, env, args));
+	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
+		return (chdir_home_prev(data, env, args));
+	else if (args != NULL && change_dir(data, NULL, args[0]))
+		return (1);
 	else
 	{
-		arr = ft_calloc(2, sizeof(char *));
-		if (!arr)
-			panic("malloc fail\n");
-		arr[0] = ft_strdup(str);
-		arr[1] = NULL;
+		ft_putstr_fd("minishell: cd: ", 2);
+		strerror(errno);
+		g_exit_stat = 1;
 	}
-	return (arr);
-}
-
-void	echo_it(char **cmd, int i)
-{
-	while (cmd[i] != NULL)
-	{
-		printf("%s", cmd[i]);
-		if (cmd[i + 1] != NULL)
-			printf(" ");
-		i++;
-	}
-}
-
-bool	check_echo_options(char *cmd)
-{
-	int		j;
-	bool	flag;
-
-	j = 0;
-	flag = false;
-	if (!cmd || !cmd[0])
-		return (flag);
-	if (cmd[j] == '-')
-		while (cmd[++j] == 'n')
-			;
-	if (!cmd[j])
-		flag = true;
-	return (flag);
+	return (0);
 }
