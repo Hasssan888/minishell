@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:44:49 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/08 21:37:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:52:10 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	infile(t_data *data, t_command *node1, char **env, t_pipex *p)
 {

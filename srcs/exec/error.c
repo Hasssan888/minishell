@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:47:09 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/08 17:36:04 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:52:20 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	ft_putstr_fd(char *s, int fd)
 {
@@ -26,7 +26,7 @@ void	ft_putstr_fd(char *s, int fd)
 
 void	ft_error_2(void)
 {
-	perror("\033[31mError");
+	ft_putstr_fd("Error\n", 2);
 	g_exit_stat = 127;
 }
 

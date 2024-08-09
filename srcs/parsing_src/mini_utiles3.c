@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:10:40 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 14:55:25 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 11:36:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,8 @@ void	init_minishell(t_data *data, int ac, char **av, char **env)
 	ft_bzero(data, sizeof(t_data));
 	data->av = av;
 	data->ac = ac;
-	data->redirect = 0;
 	data->env = creat_env(data, env);
 	data->envirenment = env_to_array_(data->env);
-	data->syntax_error = false;
 }
 
 void	clear_env(t_env **env)

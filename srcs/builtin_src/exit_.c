@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:01:31 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 22:21:05 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 10:11:10 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	panic(char *error_str, int exit_stat)
 {
-	perror(error_str);
+	ft_putstr_fd(error_str, 2);
 	exit(exit_stat);
 }
 

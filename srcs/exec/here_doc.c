@@ -6,17 +6,17 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/07 19:37:48 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:52:31 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	w_loop(t_data *data, t_command *node, t_pipex *pipex, char *str)
 {
 	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
 	{
-		if (pipex->line[0] == '$' && !node->quoted)
+		if (pipex->line[0] == '$' && !pipex->quoted)
 			pipex->line = expand_vars(data, pipex->line, 0);
 		write(pipex->strs[pipex->j][1], pipex->line, ft_strlen(pipex->line));
 		free(pipex->line);
@@ -33,6 +33,7 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 	char	*str;
 
 	str = NULL;
+	pipex->quoted = 0;
 	handle_signals(4);
 	close(pipex->strs[pipex->j][0]);
 	pipex->line = readline("> ");
@@ -41,6 +42,8 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 	else
 		pipex->line = strjoin1(pipex->line, "\n");
 	str = strjoin1(node->args[0], "\n");
+	if (ft_strchr(str, '\'') || ft_strchr(str, '"'))
+		pipex->quoted = 1;
 	str = unquote_arg(node, str, 0, 0);
 	w_loop(data, node, pipex, str);
 	close(pipex->strs[pipex->j][1]);
@@ -50,7 +53,7 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 	free(pipex->s);
 	free(pipex->line);
 	free(str);
-	exit(0);
+	exit(g_exit_stat);
 }
 
 void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
@@ -68,10 +71,7 @@ void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
 		data->ignore_sig = check_exit_status(pipex->status);
 	}
 	else
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
+		panic("fork fail\n", 1);
 	pipex->r = pid;
 	wait(&pipex->status);
 	data->ignore_sig = check_exit_status(pipex->status);

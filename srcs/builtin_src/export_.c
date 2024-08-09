@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:03:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 22:06:44 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 10:11:19 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	print_sorted_env(t_env *env)
 	env_len = env_c_len(env_);
 	i = 0;
 	env__ = malloc((env_len + 1) * sizeof(t_env *));
+	if (!env__)
+		panic("malloc fail\n", 1);
 	while (i < env_len)
 	{
 		env__[i] = env_;
@@ -129,7 +131,7 @@ int	export(t_data *data, t_command *cmd, t_env *env)
 		cmd->args[i] = unquote_arg(data->list, cmd->args[i], 0, 0);
 		if (!valid_identifier(cmd->args[i]))
 		{
-			perror("minishell: export: not a valid identifier\n");
+			ft_putstr_fd("minishell: export: not a valid identifier\n", 2);
 			g_exit_stat = 1;
 			continue ;
 		}

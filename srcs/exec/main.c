@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 21:45:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:52:42 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	child_process(t_data *data, t_command *node1, char **env, t_pipex *p)
 {
@@ -96,7 +96,7 @@ void	ft_count(t_data *data, t_command *list, t_pipex *pipex)
 		open_here_doc(data, list, pipex);
 	else if (pipex->count_here_doc > 16)
 	{
-		perror("minishell: maximum here-document count exceeded");
+		ft_putstr_fd("minishell: maximum here-document count exceeded\n", 2);
 		g_exit_stat = 2;
 		clear_list(&data->list);
 		clear_all(data);
@@ -116,12 +116,14 @@ int	func(t_data *data, t_command *list)
 	if (pipex.count_pipe == 0 && if_is_buil(list))
 		exec_built_in(&pipex, data, list);
 	else
+	{
 		ft_pipe(data, list, data->envirenment, &pipex);
-	free_int_array(pipex.strs);
-	waitpid(pipex.r, &pipex.status, 0);
-	data->ignore_sig = check_exit_status(pipex.status);
-	while (wait(NULL) != -1)
-		;
+		free_int_array(pipex.strs);
+		waitpid(pipex.r, &pipex.status, 0);
+		data->ignore_sig = check_exit_status(pipex.status);
+		while (wait(NULL) != -1)
+			;
+	}
 	if (pipex.s)
 		free(pipex.s);
 	return (0);

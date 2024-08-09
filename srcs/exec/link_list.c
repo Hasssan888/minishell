@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:47 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/08 22:22:24 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:52:36 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	skip_pipe(t_pipex *p)
 {

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:03:32 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 22:08:50 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 10:14:00 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ char	*get_word_(char *line, char *del)
 	while (line[i] && !ft_strchr(del, line[i]))
 		i++;
 	word = malloc((i + 1) * sizeof(char));
+	if (!word)
+		panic("malloc fail\n", 1);
 	ft_strlcpy(word, line, i + 1);
 	return (word);
 }

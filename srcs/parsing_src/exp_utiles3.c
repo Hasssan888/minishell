@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:13:31 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 10:19:34 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 10:11:25 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ char	**ft_arr_join(char **arr1, char **arr2)
 	len1 = ft_len_arr(arr1);
 	len2 = ft_len_arr(arr2);
 	joined = malloc((len1 + len2 + 1) * sizeof(char *));
+	if (!joined)
+		panic("malloc fail\n", 1);
 	while (arr1 != NULL && arr1[j] != NULL)
 		joined[i++] = ft_strdup(arr1[j++]);
 	j = 0;
@@ -81,7 +83,7 @@ int	is_ambiguous(t_command *list)
 	{
 		if (list->args != NULL && ambigous_red(list->args[0]))
 		{
-			perror("minishell: ambiguous redirect\n");
+			ft_putstr_fd("minishell: ambiguous redirect\n", 2);
 			list->syntxerr = AMPIGOUS;
 			g_exit_stat = 1;
 		}

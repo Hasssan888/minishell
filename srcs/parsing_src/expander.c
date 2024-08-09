@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 10:20:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 09:39:47 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	**ft_arr_add_back(char **arr, char *str)
 	len = get_real_len(arr);
 	arr_cpy = malloc((len + 2) * sizeof(char *));
 	if (!arr_cpy)
-		return (NULL);
+		panic("malloc fail\n", 1);
 	if (!arr || !len)
 	{
 		arr_cpy[0] = ft_strdup(str);

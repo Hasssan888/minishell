@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:21 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/05 12:40:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:53:03 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 int	file_info_2(char **av)
 {

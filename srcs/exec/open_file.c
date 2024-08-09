@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/08 21:36:27 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:52:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	out_app(t_command *cur, t_pipex *p)
 {
@@ -30,7 +30,7 @@ void	out_app(t_command *cur, t_pipex *p)
 		}
 		if (p->fd[p->i] == -1)
 		{
-			perror(cur->args[0]);
+			ft_putstr_fd(cur->args[0], 2);
 			p->indixe = 1;
 		}
 		p->name_file[p->i] = ft_strdup(cur->args[0]);
@@ -60,10 +60,7 @@ void	open_outfile(t_command *node, t_pipex *p)
 	p->fd = malloc(sizeof(int) * p->count_read_out);
 	p->name_file = malloc(sizeof(char *) * (p->count_read_out + 1));
 	if (p->fd == NULL)
-	{
-		perror("malloc");
-		exit(1);
-	}
+		panic("malloc fail", 1);
 	p->i = 0;
 	cur = node;
 	ft_loop(cur, p);
@@ -87,7 +84,7 @@ void	red_in(t_command *cur, t_pipex *p)
 		p->fd[p->i] = open(cur->args[0], O_RDONLY, 0644);
 		if (p->fd[p->i] == -1)
 		{
-			perror(cur->args[0]);
+			ft_putstr_fd(cur->args[0], 2);
 			p->indixe = 1;
 		}
 		p->i++;

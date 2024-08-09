@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 13:27:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 10:08:38 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:52:47 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 char	*strjoin1(char *s1, char *s2)
 {

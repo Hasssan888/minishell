@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 22:21:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:50:54 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
 # include <stdlib.h>            // for malloc and free
 # include <sys/stat.h>          // for file and dir info
 # include <sys/types.h>         //
-# include <sys/wait.h>         
-	// for wating child process to terminate execution
-# include <unistd.h>            // for system calls
+# include <sys/wait.h>
+// for wating child process to terminate execution
+# include <unistd.h> // for system calls
 
 # define COLOR BBLU
 // # define DEFAULT_PATH
@@ -90,7 +90,7 @@ typedef struct s_data
 	char				*unquoted_line;
 	char				*special_chars;
 	char				**envirenment;
-	t_command			*list_command;
+	t_command			*list_cmd;
 	t_command			*_tokens_list;
 	t_command			*rdrct_head;
 	int					ignore_sig;
@@ -153,6 +153,7 @@ typedef struct s_pipex
 	int					*pipe_t;
 	int					save_in;
 	int					d;
+	int					quoted;
 	t_command			*c;
 }						t_pipex;
 
@@ -175,38 +176,39 @@ void					print_list(t_command *table);
 
 // buit-in commands:
 
-int	is_builtin_cmd(t_data *data, t_command *command);
-void	get_old_current_pwd(t_data *data);
-int	change_dir(t_data *data, t_env *env, char *path);
-int	chdir_home_prev(t_data *data, t_env *env, char **args);
-int	cd(t_data *data, char **args);
-void	echo_it(char **cmd, int i);
-bool	check_echo_options(char *cmd);
-int	echo(char **cmd);
-char	*get_word_(char *line, char *del);
-t_env	*get_env_ele_ptr(t_env *env, char *env_val);
-char	**env_to_array_(t_env *env);
-int	ft_is_str_digit(char *str);
-int	env(t_env *env);
-int	check_exit_overflow(char *str, int exit_num);
-void	check_exit(t_data *data, t_command *command);
-void	exit_(t_data *data, t_command *command);
-void	print_sorted_env(t_env *env);
-int	valid_identifier(char *str);
-char	**get_exp_splited(char *str, char del);
-void	export__cnt(t_data *data, t_env *env_ptr, char *arg);
-int	export(t_data *data, t_command *cmd, t_env *env);
-void	free_env_ptr(t_env **env_ptr);
-void	export_var_app(t_data *data, t_env *env_ptr, char **splited);
-int	env_c_len(t_env *env_);
-void	print_export_env(t_env **env, int env_len);
-t_env	**sort_env(t_env **env_, int env_len);
-int	unset(t_data *data, char **env_var);
-void	del_node(t_data *data, t_env *env_var);
-void	del_one(t_env **env, t_env *env_var);
-void	pwd(void);
-void	print_array(char **array);
-void	panic(char *error_str, int exit_stat);
+int						is_builtin_cmd(t_data *data, t_command *command);
+void					get_old_current_pwd(t_data *data);
+int						change_dir(t_data *data, t_env *env, char *path);
+int						chdir_home_prev(t_data *data, t_env *env, char **args);
+int						cd(t_data *data, char **args);
+void					echo_it(char **cmd, int i);
+bool					check_echo_options(char *cmd);
+int						echo(char **cmd);
+char					*get_word_(char *line, char *del);
+t_env					*get_env_ele_ptr(t_env *env, char *env_val);
+char					**env_to_array_(t_env *env);
+int						ft_is_str_digit(char *str);
+int						env(t_env *env);
+int						check_exit_overflow(char *str, int exit_num);
+void					check_exit(t_data *data, t_command *command);
+void					exit_(t_data *data, t_command *command);
+void					print_sorted_env(t_env *env);
+int						valid_identifier(char *str);
+char					**get_exp_splited(char *str, char del);
+void					export__cnt(t_data *data, t_env *env_ptr, char *arg);
+int						export(t_data *data, t_command *cmd, t_env *env);
+void					free_env_ptr(t_env **env_ptr);
+void					export_var_app(t_data *data, t_env *env_ptr,
+							char **splited);
+int						env_c_len(t_env *env_);
+void					print_export_env(t_env **env, int env_len);
+t_env					**sort_env(t_env **env_, int env_len);
+int						unset(t_data *data, char **env_var);
+void					del_node(t_data *data, t_env *env_var);
+void					del_one(t_env **env, t_env *env_var);
+void					pwd(void);
+void					print_array(char **array);
+void					panic(char *error_str, int exit_stat);
 
 // utiles for linked list:
 
@@ -340,8 +342,8 @@ void					outfile(t_data *data, t_command *node1, char **env,
 void					pipe_heredoc(t_data *data, t_command *node1, char **env,
 							t_pipex *p);
 int						if_is_buil(t_command *command);
-void					excut_butlin(t_data *data, t_command *node1,
-							char **env, t_pipex *p);
+void					excut_butlin(t_data *data, t_command *node1, char **env,
+							t_pipex *p);
 void					sig_handler(int signal);
 void					skip_two(t_data *data, char **ev, t_pipex *p);
 int						check(t_command *node);
@@ -352,7 +354,9 @@ void					here_doc_error(char **av);
 int						file_info(char **av);
 int						file_info_2(char **av);
 int						handle_direct(char **av);
-void					exec_built_in(t_pipex *pipex, t_data *data, t_command *list);
-void					child_process(t_data *data, t_command *node1, char **env, t_pipex *p);
+void					exec_built_in(t_pipex *pipex, t_data *data,
+							t_command *list);
+void					child_process(t_data *data, t_command *node1,
+							char **env, t_pipex *p);
 
 #endif

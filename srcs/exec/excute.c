@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:17:43 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/08 17:36:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 12:52:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 char	*function(char **env)
 {
@@ -36,7 +36,7 @@ char	*slash(char *mycmdargs)
 		return (mycmdargs);
 	else
 	{
-		perror(mycmdargs);
+		ft_putstr_fd(mycmdargs, 2);
 		return (NULL);
 	}
 }
