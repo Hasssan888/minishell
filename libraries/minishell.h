@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 12:50:54 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:28:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,15 +320,16 @@ void					open_infile(t_command *node, t_pipex *p);
 void					ft_count_here_doc(t_command *node, t_pipex *p);
 char					*function(char **env);
 char					*slash(char *mycmdargs);
-char					*without_slash(char **env, char *mycmdargs);
-char					*search_path(char *mycmdargs, char **env);
-void					ft_error(char **av);
+char					*without_slash(t_data *data, char **env,
+							char *mycmdargs);
+char					*search_path(t_data *data, char *mycmdargs, char **env);
+void					ft_error(t_data *data, char **av);
 pid_t					fork_pipe(t_data *data, t_command *node1, char **env,
 							t_pipex *p);
 void					open_here_doc(t_data *data, t_command *node,
 							t_pipex *pipex);
 void					here_doc(t_data *data, t_command *node, t_pipex *pipex);
-void					ft_excute(char **av, char **env);
+void					ft_excute(t_data *data, char **av, char **env);
 void					ft_error_2(void);
 void					ft_pipe(t_data *data, t_command *node1, char **ev,
 							t_pipex *p);

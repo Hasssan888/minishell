@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 12:52:59 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:11:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	out_app(t_command *cur, t_pipex *p)
 			ft_putstr_fd(cur->args[0], 2);
 			p->indixe = 1;
 		}
-		p->name_file[p->i] = ft_strdup(cur->args[0]);
+		p->s = cur->args[0];
 		p->i++;
 	}
 }
@@ -66,15 +66,9 @@ void	open_outfile(t_command *node, t_pipex *p)
 	ft_loop(cur, p);
 	p->name_file[p->i] = NULL;
 	if (p->i > 0)
-	{
 		p->outfile = p->fd[p->i - 1];
-		p->s = ft_strdup(p->name_file[p->i - 1]);
-	}
 	free(p->fd);
 	p->i = -1;
-	while (p->name_file[++p->i])
-		free(p->name_file[p->i]);
-	free(p->name_file);
 }
 
 void	red_in(t_command *cur, t_pipex *p)

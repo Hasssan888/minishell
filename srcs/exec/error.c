@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:47:09 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 12:52:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 15:10:44 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_error_2(void)
 	g_exit_stat = 127;
 }
 
-void	ft_error(char **av)
+void	ft_error(t_data *data, char **av)
 {
 	if (ft_strcmp(av[0], ".") == 0)
 	{
@@ -49,6 +49,9 @@ void	ft_error(char **av)
 		ft_putstr_fd(av[0], 2);
 		ft_putstr_fd("\n", 2);
 		g_exit_stat = 127;
+		clear_list(&data->list);
+		clear_all(data);
+		exit(g_exit_stat);
 	}
 }
 

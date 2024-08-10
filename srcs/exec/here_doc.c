@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 12:52:31 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:29:04 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 	free_int_array(pipex->strs);
 	clear_list(&data->list);
 	clear_all(data);
-	free(pipex->s);
 	free(pipex->line);
 	free(str);
 	exit(g_exit_stat);

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:01 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 12:52:52 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 14:26:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ void	excut_butlin(t_data *data, t_command *node1, char **env, t_pipex *p)
 			is_builtin_cmd(data, node1);
 			clear_list(&data->list);
 			clear_all(data);
-			exit(0);
+			exit(g_exit_stat);
 		}
 		else
-			ft_excute(node1->args, env);
+			ft_excute(data, node1->args, env);
 	}
 }
 

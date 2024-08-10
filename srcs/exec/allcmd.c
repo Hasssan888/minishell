@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:44:49 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 12:52:10 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:23:56 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	dup_outfile(t_command *node1, t_pipex *p)
 		p->outfile = open(p->s, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (p->b == 2)
 		p->outfile = open(p->s, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	free(p->s);
 	dup2(p->outfile, 1);
 	close(p->outfile);
 }

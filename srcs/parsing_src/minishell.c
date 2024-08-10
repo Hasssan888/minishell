@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 22:20:58 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/10 08:48:44 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ int		g_exit_stat = 0;
 void	sig_handler(int signal)
 {
 	(void)signal;
+	printf("before replace line: %s\n", rl_line_buffer);
 	rl_replace_line("", 0);
+	printf("after replace line: %s\n", rl_line_buffer);
 	printf("\n%s", "minishell$ ");
 	g_exit_stat = 130;
 }

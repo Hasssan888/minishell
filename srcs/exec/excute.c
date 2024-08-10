@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:17:43 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 12:52:26 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:55:13 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ char	*slash(char *mycmdargs)
 	}
 }
 
-char	*without_slash(char **env, char *mycmdargs)
+char	*without_slash(t_data *data, char **env, char *mycmdargs)
 {
 	t_path	path;
 
 	path.path_from_envp = function(env);
 	if (!(path.path_from_envp))
-		return (ft_error(&mycmdargs), NULL);
+		return (ft_error(data, &mycmdargs), NULL);
 	path.mypaths = ft_split(path.path_from_envp, ':');
 	free(path.path_from_envp);
 	path.i = 0;
@@ -68,30 +68,30 @@ char	*without_slash(char **env, char *mycmdargs)
 	return (0);
 }
 
-char	*search_path(char *mycmdargs, char **env)
+char	*search_path(t_data *data, char *mycmdargs, char **env)
 {
 	if (ft_strchr(mycmdargs, '/') != 0)
 		return (slash(mycmdargs));
 	else
-		return (without_slash(env, mycmdargs));
+		return (without_slash(data, env, mycmdargs));
 }
 
-void	ft_excute(char **av, char **env)
+void	ft_excute(t_data *data, char **av, char **env)
 {
 	char	**mycmdargs;
 	char	*path;
 
-	if (ft_strcmp(av[0], "") == 0 || ft_strcmp(av[0], ".") == 0
-		|| ft_strcmp(av[0], "..") == 0 || ft_strcmp(av[0], " ") == 0)
-		ft_error(av);
+	if (av[0] && (ft_strcmp(av[0], "") == 0 || ft_strcmp(av[0], ".") == 0
+			|| ft_strcmp(av[0], "..") == 0 || ft_strcmp(av[0], " ") == 0))
+		ft_error(data, av);
 	else
 	{
 		mycmdargs = av;
 		if (!handle_direct(av))
 			return ;
-		path = search_path(mycmdargs[0], env);
+		path = search_path(data, mycmdargs[0], env);
 		if (!path)
-			ft_error(av);
+			ft_error(data, av);
 		else
 			execve(path, mycmdargs, env);
 	}

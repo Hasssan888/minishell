@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 12:52:42 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:55:41 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,17 @@ int	func(t_data *data, t_command *list)
 {
 	t_pipex	pipex;
 
-	pipex.d = 0;
-	pipex.c = NULL;
-	if (!list || !list->value)
+	pipex.s = NULL;
+	if (!list || (!list->value && !list->next))
 		return (0);
+	if (!list->value && list->next && list->next->type == PIPE)
+		list = list->next;
 	ft_count(data, list, &pipex);
 	if (pipex.count_pipe == 0 && if_is_buil(list))
+	{
 		exec_built_in(&pipex, data, list);
+		free_int_array(pipex.strs);
+	}
 	else
 	{
 		ft_pipe(data, list, data->envirenment, &pipex);
@@ -124,7 +128,5 @@ int	func(t_data *data, t_command *list)
 		while (wait(NULL) != -1)
 			;
 	}
-	if (pipex.s)
-		free(pipex.s);
 	return (0);
 }
