@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 23:02:52 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:10:50 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_command	*get_command_with_args(t_data *data)
 				clear_list(&data->head);
 				return (NULL);
 				// return (syntax_error(data, NULL, data->head,
-						"minishell: syntax error near unexpected token `aziz'\n"));
+						// "minishell: syntax error near unexpected token `aziz'\n"));
 			}
 		}
 	}
