@@ -6,7 +6,7 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/08/10 16:24:16 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/08/11 15:14:35 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -89,16 +89,19 @@ $(OBJDIR)/%.o: $(EXEDIR)/%.c
 $(NAME): $(LIBFT) $(OBJ_P) $(OBJ_B) $(OBJ_E)
 	@echo "Building..."
 	@$(CC) $(CFLAGS) $(OBJ_P) $(OBJ_B) $(OBJ_E) $(RLFLAG) $(LIBFT) -o $@
+#	@./compiling Building 2
 	@echo "Building done"
 
 clean:
 	@echo "Removing object files..."
 	@rm -rf $(OBJDIR)/*.o
+#	@./compiling Cleaning 2
 	@echo "Removing object files done"
 
 fclean: clean
 	@echo "Removing program name..."
 	@rm -f $(NAME)
+#	@./compiling Cleaning 2
 	@echo "Removing program name done"
 
 re: fclean all

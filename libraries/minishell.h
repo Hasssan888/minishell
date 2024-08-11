@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 16:28:59 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 15:33:22 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ t_env					**sort_env(t_env **env_, int env_len);
 int						unset(t_data *data, char **env_var);
 void					del_node(t_data *data, t_env *env_var);
 void					del_one(t_env **env, t_env *env_var);
-void					pwd(void);
+void					pwd(t_data *data);
 void					print_array(char **array);
 void					panic(char *error_str, int exit_stat);
 

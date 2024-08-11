@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/10 16:04:35 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 13:34:44 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	sig_handler(int signal)
 {
 	(void)signal;
 	rl_replace_line("", 0);
-	printf("\n%s", "minishell$ ");
+	printf("\n%s", ">>> ");
 	g_exit_stat = 130;
 }
 
@@ -53,7 +53,7 @@ void	shell_loop(t_data *data)
 
 	command = NULL;
 	handle_signals(1);
-	command = readline("minishell$ ");
+	command = readline(">>> ");
 	handle_signals(2);
 	while (command != NULL)
 	{
@@ -67,7 +67,7 @@ void	shell_loop(t_data *data)
 		dup2(pipex.save2, STDOUT_FILENO);
 		close(pipex.save2);
 		handle_signals(1);
-		command = readline("minishell$ ");
+		command = readline(">>> ");
 		handle_signals(2);
 	}
 }

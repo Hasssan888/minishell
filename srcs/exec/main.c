@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/10 15:52:20 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 15:57:09 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,7 @@ int	func(t_data *data, t_command *list)
 	if (!list->value && list->next && list->next->type == PIPE)
 		list = list->next;
 	ft_count(data, list, &pipex);
-
-	if (pipex.count_pipe == 0 && if_is_buil(list) && list->syntxerr == AMPIGOUS)
+	if (pipex.count_pipe == 0 && if_is_buil(list))
 	{
 		exec_built_in(&pipex, data, list);
 		free_int_array(pipex.strs);

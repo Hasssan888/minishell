@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:09:11 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 22:09:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:08:20 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,21 @@ void	print_array(char **array)
 		printf("%s\n", array[i++]);
 }
 
-void	pwd(void)
+void	pwd(t_data *data)
 {
-	char	*cwd;
-
+	char *cwd;
+	t_env *env_ptr = NULL;
 	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		return ;
-	printf("%s\n", cwd);
-	g_exit_stat = 0;
+	if (cwd)
+		printf("%s\n", cwd);
+	else
+	{
+		env_ptr = get_env_ele_ptr(data->env, "PWD");
+		if (env_ptr && env_ptr->env_key)
+			printf("%s\n", env_ptr->env_key);	
+	}
 	free(cwd);
+	g_exit_stat = 0;
 }
 
 void	del_one(t_env **env, t_env *env_var)

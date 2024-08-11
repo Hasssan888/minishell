@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:02:24 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/10 16:14:38 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:19:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	get_old_current_pwd(t_data *data)
 	pwd = get_env_ele_ptr(data->env, "PWD");
 	if (!pwd)
 	{
-		free_env_ptr(&old_pwd);
+		// free_env_ptr(&old_pwd);
 		return ;
 	}
 	if (old_pwd != NULL && old_pwd->env_key != NULL)
@@ -89,18 +89,19 @@ int	cd(t_data *data, char **args)
 		g_exit_stat = 1;
 		return (0);
 	}
+	else if (args[0] && args[0][0] != '~' && args[0][0] != '-' && access(args[0], F_OK) == -1)
+	{
+		// strerror(errno);
+		perror("minishell: cd");
+		// ft_putstr_fd("minishell: cd: ", 2);
+		// perror(args[0]);
+		g_exit_stat = 1;
+	}
 	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 		return (chdir_home_prev(data, env, args));
 	else if (args[0] == NULL || (args[0][0] == '~' && args[0][1] == '\0'))
 		return (chdir_home_prev(data, env, args));
 	else if (args != NULL && change_dir(data, NULL, args[0]))
 		return (1);
-	else
-	{
-		// strerror(errno);
-		ft_putstr_fd("minishell: cd: ", 2);
-		perror(args[0]);
-		g_exit_stat = 1;
-	}
 	return (0);
 }
