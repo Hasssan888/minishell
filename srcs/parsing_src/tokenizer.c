@@ -6,9 +6,10 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 22:43:32 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:39:41 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../../libraries/minishell.h"
 

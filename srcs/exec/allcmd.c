@@ -85,6 +85,12 @@ void	dup_outfile(t_command *node1, t_pipex *p)
 
 void	pipe_heredoc(t_data *data, t_command *node1, char **env, t_pipex *p)
 {
+	if (p->indixe == 1)
+	{
+		p->indixe = 0;
+		g_exit_stat = 1;
+		return ;
+	}
 	close(p->end[0]);
 	if (p->strs != NULL)
 	{

@@ -6,55 +6,60 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:21 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/10 16:43:37 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:48:42 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "../../libraries/minishell.h"
 
-int	file_info_2(char **av)
+void	file_info_2(char **av, int *flag, struct stat file_start)
 {
-	if (ft_strchr(av[0], '/') != NULL && access(av[0], F_OK) == -1)
+	if (av[0][ft_strlen(av[0]) - 1] == '/' && !S_ISDIR(file_start.st_mode))
 	{
-		ft_putstr_fd(av[0], 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-		return (1);
+		perror(av[0]);
+		*flag = 0;
 	}
-	return (0);
+	else
+	{
+		perror(av[0]);
+		*flag = 1;
+	}
 }
-
-int	file_info(char **av)
+void	file_info(char **av, int *flag)
 {
 	struct stat	file_start;
 
-	if (file_info_2(av))
-		return (1);
-	if (ft_strchr(av[0], '/') != NULL && access(av[0], F_OK) != -1)
+	stat(av[0], &file_start);
+	if (ft_strchr(av[0], '/') != NULL && access(av[0], F_OK) == -1)
+		file_info_2(av, flag, file_start);
+	else	if (ft_strchr(av[0], '/') != NULL && access(av[0], F_OK) != -1)
 	{
-		stat(av[0], &file_start);
 		if (S_ISREG(file_start.st_mode) && access(av[0], X_OK) != -1)
-			return (2);
+			*flag = 2;
 		else if (S_ISREG(file_start.st_mode) && access(av[0], X_OK) == -1)
 		{
 			ft_putstr_fd(av[0], 2);
 			ft_putstr_fd(": Permission denied\n", 2);
-			return (0);
+			*flag = 0;
 		}
 		else if (S_ISDIR(file_start.st_mode))
 		{
 			ft_putstr_fd(av[0], 2);
 			ft_putstr_fd(": Is a directory\n", 2);
-			return (0);
+			*flag = 0;
 		}
 	}
-	return (2);
+	else
+		*flag = 2;
 }
 
 int	handle_direct(char **av)
 {
 	int	flag;
 
-	flag = file_info(av);
+	flag = 0;
+	file_info(av, &flag);
 	if (flag == 0)
 	{
 		g_exit_stat = 126;

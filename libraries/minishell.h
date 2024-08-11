@@ -6,9 +6,10 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 22:43:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:52:53 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -232,6 +233,7 @@ int						exec_command(t_data *data, t_command *commands_list);
 char					*get_env_element(t_data *data, char *env_var);
 t_command				*syntax_error(t_data *data, t_command *list_command,
 							t_command *head, char *str);
+
 t_env					*get_alternative_env(t_data *data);
 int						parser_continue(t_data *data);
 
@@ -358,8 +360,8 @@ int						check_exit_status(int status);
 void					free_int_array(int **array);
 void					skip_pipe(t_pipex *p);
 void					here_doc_error(char **av);
-int						file_info(char **av);
-int						file_info_2(char **av);
+void					file_info_2(char **av, int *flag, struct stat file_start);
+void					file_info(char **av, int *flag);
 int						handle_direct(char **av);
 void					exec_built_in(t_pipex *pipex, t_data *data,
 							t_command *list);
