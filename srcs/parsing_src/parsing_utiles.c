@@ -6,18 +6,18 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 11:16:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:01:36 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
 t_command	*syntax_error(t_data *data, t_command *list_command,
-		t_command *head)
+		t_command *head, char *str)
 {
-	ft_putstr_fd("minishell: syntax error\n", 2);
+	ft_putstr_fd(str, 2);
 	data->syntax_error = SYNTERRR;
-	g_exit_stat = 2;
+	g_exit_stat = SYNTERRR;
 	free_node(&list_command);
 	clear_list(&head);
 	return (NULL);
@@ -51,11 +51,11 @@ t_command	*redirect_list(t_data *data, t_command **redirect_head)
 	data->_tokens_list = free_node(&data->_tokens_list);
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
-		g_exit_stat = SYNTERRR;
-		ft_putstr_fd("minishell: syntax error\n", 2);
+		check_synt_err(red_node->value);
 		free_node(&red_node);
 		free_array(data->list_cmd->args);
 		free_node(&data->list_cmd);
+		g_exit_stat = SYNTERRR;
 		clear_list(&data->_tokens_list);
 		return (NULL);
 	}
@@ -75,10 +75,12 @@ void	get_redirect_node(t_data *data)
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
 		g_exit_stat = SYNTERRR;
-		ft_putstr_fd("minishell: syntax error\n", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
+			2);
 		free_array(data->list_cmd->args);
 		free_node(&data->list_cmd);
 		clear_list(&data->_tokens_list);
+		clear_list(&data->head);
 		return ;
 	}
 	data->list_cmd->args = malloc(2 * sizeof(char *));

@@ -82,12 +82,13 @@ int	cd(t_data *data, char **args)
 {
 	t_env	*env;
 
-	env = NULL;	
-	if (args[0] && args[0][0] != '-' && args[0][0] != '~'&& access(args[0], F_OK) != 0)
+	env = NULL;
+	if (args[0] && args[0][0] != '-' && args[0][0] != '~' && access(args[0],
+			F_OK) != 0)
 	{
 		perror("minishell: cd");
 		g_exit_stat = 1;
-		return 0;
+		return (0);
 	}
 	if (args[0] != NULL && args[1] != NULL)
 	{

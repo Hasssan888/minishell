@@ -25,8 +25,10 @@ void	print_array(char **array)
 
 void	pwd(t_data *data)
 {
-	char *cwd;
-	t_env *env_ptr = NULL;
+	char	*cwd;
+	t_env	*env_ptr;
+
+	env_ptr = NULL;
 	cwd = getcwd(NULL, 0);
 	if (cwd)
 		printf("%s\n", cwd);
@@ -34,7 +36,7 @@ void	pwd(t_data *data)
 	{
 		env_ptr = get_env_ele_ptr(data->env, "PWD");
 		if (env_ptr && env_ptr->env_key)
-			printf("%s\n", env_ptr->env_key);	
+			printf("%s\n", env_ptr->env_key);
 	}
 	free(cwd);
 	g_exit_stat = 0;

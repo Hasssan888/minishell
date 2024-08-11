@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 15:20:09 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:02:52 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,12 @@ t_command	*get_command_with_args(t_data *data)
 			data->_tokens_list = redirect_list(data, &data->rdrct_head);
 			if (data->syntax_error)
 			{
+				check_synt_err(data->_tokens_list->value);
 				clear_list(&data->rdrct_head);
-				return (syntax_error(data, NULL, data->head));
+				clear_list(&data->head);
+				return (NULL);
+				// return (syntax_error(data, NULL, data->head,
+						"minishell: syntax error near unexpected token `aziz'\n"));
 			}
 		}
 	}
@@ -66,7 +70,8 @@ int	parser_continue(t_data *data)
 		data->_tokens_list = free_node(&data->_tokens_list);
 		if (!data->_tokens_list)
 		{
-			syntax_error(data, data->list_cmd, data->head);
+			syntax_error(data, data->list_cmd, data->head,
+				"minishell: syntax error near unexpected token `|'\n");
 			return (0);
 		}
 	}

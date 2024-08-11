@@ -71,7 +71,8 @@ void	ft_count_here_doc(t_command *node, t_pipex *p)
 void	here_doc_error(char **av)
 {
 	ft_putstr_fd("minishell: warning: here-document \
-	delimited by end-of-file wanted ", 2);
+	delimited by end-of-file wanted ",
+					2);
 	ft_putstr_fd(av[0], 2);
 	write(2, "\n", 1);
 	g_exit_stat = 1;

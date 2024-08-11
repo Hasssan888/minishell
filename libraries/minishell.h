@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 21:04:17 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 22:43:49 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,10 @@ void					print_type(int type);
 void					print_args(char **args);
 void					print_list(t_command *table);
 
+// errors
+
+void check_synt_err(char *str);
+
 // buit-in commands:
 
 int						is_builtin_cmd(t_data *data, t_command *command);
@@ -227,7 +231,7 @@ void					get_redirect_node(t_data *data);
 int						exec_command(t_data *data, t_command *commands_list);
 char					*get_env_element(t_data *data, char *env_var);
 t_command				*syntax_error(t_data *data, t_command *list_command,
-							t_command *head);
+							t_command *head, char *str);
 t_env					*get_alternative_env(t_data *data);
 int						parser_continue(t_data *data);
 

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/10 15:56:55 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 22:27:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	red_in(t_command *cur, t_pipex *p)
 		p->fd[p->i] = open(cur->args[0], O_RDONLY, 0644);
 		if (p->fd[p->i] == -1)
 		{
-			perror(cur->args[0]);
+			perror("minishell");
 			p->indixe = 1;
 		}
 		p->i++;

@@ -60,7 +60,8 @@ int	ambigous_red(char *red_file)
 	i = 0;
 	if (!red_file)
 		return (1);
-	while (red_file != NULL && red_file[i] && ft_strchr(WHITESPACES, red_file[i]))
+	while (red_file != NULL && red_file[i] && ft_strchr(WHITESPACES,
+			red_file[i]))
 		i++;
 	while (red_file != NULL && red_file[i])
 	{

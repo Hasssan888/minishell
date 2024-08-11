@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 11:39:21 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 22:43:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,16 @@ char	*get_token(char *cmd_line, int *i)
 	return (NULL);
 }
 
+void	check_synt_err(char *str)
+{
+	if (str && str[0] == '>')
+		ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
+	if (str && str[0] == '|')
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+	if (str && str[0] == '<')
+		ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
+}
+
 t_command	*list_maker(char *cmd_line, int *i)
 {
 	int			type;
@@ -86,10 +96,10 @@ t_command	*list_maker(char *cmd_line, int *i)
 		type = get_token_type(token);
 		if (type == -1)
 		{
+			check_synt_err(token);
 			free(token);
 			clear_list(&table);
 			g_exit_stat = 2;
-			ft_putstr_fd("minishell: syntax error\n", 2);
 			return (NULL);
 		}
 		node = new_node(type, token);

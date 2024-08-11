@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:50:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 11:37:39 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:02:14 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*lexer_command(t_data *data, char *line)
 	if (check_unqoted(data->trimed_line))
 	{
 		g_exit_stat = 2;
-		ft_putstr_fd("minishell: syntax error\n", 2);
+		ft_putstr_fd("minishell: syntax error unclosed quotes\n", 2);
 		free(data->trimed_line);
 		data->trimed_line = NULL;
 	}
