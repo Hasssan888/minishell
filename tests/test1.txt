@@ -1,4 +1,0 @@
-"'"$PWD5jg"'"
-$2
-"$ $ $ $ "
-ls > $a // ambigous error if the a have a space in the middle

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_utiles.c                                  :+:      :+:    :+:   */
+/*   exp_utiles1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 12:15:41 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 09:39:14 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ char	*get_var(char *env_var, int *i)
 		k++;
 	*i += k;
 	env_val = malloc((k + 1) * sizeof(char));
+	if (!env_val)
+		panic("malloc fail\n", 1);
 	ft_strlcpy(env_val, env_var, k + 1);
 	return (env_val);
 }
@@ -76,6 +78,8 @@ char	*get_word(char *argument, int *i)
 	while (argument[j] && argument[j] != '$')
 		j++;
 	str = malloc((j - *i + 1) * sizeof(char));
+	if (!str)
+		panic("malloc fail\n", 1);
 	ft_strlcpy(str, &argument[*i], (j - *i + 1));
 	*i = j;
 	return (str);

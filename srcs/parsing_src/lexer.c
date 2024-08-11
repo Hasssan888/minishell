@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:50:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 13:23:16 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 11:37:39 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,12 @@ void	get_quoted_index(t_data *data, int *i, int *j, int quote)
 
 char	*lexer_command(t_data *data, char *line)
 {
-	data->trimed_line = ft_strtrim(line, " \t\n\v");
+	data->trimed_line = ft_strtrim(line, WHITESPACES);
 	free(line);
 	if (check_unqoted(data->trimed_line))
 	{
-		// data->exit_status = 2;
 		g_exit_stat = 2;
-		ft_perror("syntax error\n");
+		ft_putstr_fd("minishell: syntax error\n", 2);
 		free(data->trimed_line);
 		data->trimed_line = NULL;
 	}

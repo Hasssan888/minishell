@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:09:06 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/03 12:10:56 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 09:40:08 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ t_env	*get_alternative_env(t_data *data)
 
 	head = NULL;
 	new = NULL;
-	new = lstnew(ft_strdup("PATH"), ft_strdup(DEFAULT_PATH));
-	add_back(&head, new);
 	cwd = getcwd(NULL, 0);
 	new = lstnew(ft_strdup("PWD"), ft_strdup(cwd));
 	data->current_pwd = &(new->env_value);
@@ -91,43 +89,5 @@ t_env	*get_alternative_env(t_data *data)
 	data->old_pwd = &(new->env_value);
 	add_back(&head, new);
 	free(cwd);
-	return (head);
-}
-
-void	env_maker(char *env, t_env **head)
-{
-	t_env	*new;
-	char	**splited;
-
-	new = NULL;
-	splited = NULL;
-	splited = ft_split(env, '=');
-	if (!splited)
-		return ;
-	if (splited[0] != NULL && splited[1] != NULL)
-		new = lstnew(ft_strdup(splited[0]), ft_strdup(splited[1]));
-	else if (splited[0] != NULL && !splited[1] && ft_strchr(env, '='))
-		new = lstnew((ft_strdup(splited[0])), ft_strdup(""));
-	else
-		new = lstnew(ft_strdup(splited[0]), NULL);
-	free_array(splited);
-	add_back(head, new);
-}
-
-t_env	*creat_env(t_data *data, char **env)
-{
-	int		i;
-	t_env	*head;
-
-	i = 0;
-	head = NULL;
-	if (!env || !*env)
-		return (get_alternative_env(data));
-	else
-	{
-		i = -1;
-		while (env[++i] != NULL)
-			env_maker(env[i], &head);
-	}
 	return (head);
 }

@@ -6,11 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:47:09 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 11:51:40 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 15:10:44 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	ft_putstr_fd(char *s, int fd)
 {
@@ -26,35 +26,32 @@ void	ft_putstr_fd(char *s, int fd)
 
 void	ft_error_2(void)
 {
-	perror("\033[31mError");
-	exit(127);
+	ft_putstr_fd("Error\n", 2);
+	g_exit_stat = 127;
 }
 
-void	ft_error(char **av)
+void	ft_error(t_data *data, char **av)
 {
-	int		i;
-	char	*str;
-
-	i = -1;
 	if (ft_strcmp(av[0], ".") == 0)
 	{
-		ft_putstr_fd(".: filename argument required", 2);
-		write(2, "\n", 1);
-		ft_putstr_fd(".: usage: . filename [arguments]", 2);
-		write(2, "\n", 1);
+		ft_putstr_fd(".: filename argument required\n", 2);
+		ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
 		g_exit_stat = 2;
+	}
+	else if (ft_strcmp(av[0], "..") == 0)
+	{
+		ft_putstr_fd("command not found: ..\n", 2);
+		g_exit_stat = 127;
 	}
 	else
 	{
-		ft_putstr_fd("Command not found: ", 2);
-		while (av[++i])
-		{
-			str = strjoin1(av[i], " ");
-			ft_putstr_fd(str, 2);
-			free(str);
-		}
-		write(2, "\n", 1);
+		ft_putstr_fd("command not found: ", 2);
+		ft_putstr_fd(av[0], 2);
+		ft_putstr_fd("\n", 2);
 		g_exit_stat = 127;
+		clear_list(&data->list);
+		clear_all(data);
+		exit(g_exit_stat);
 	}
 }
 

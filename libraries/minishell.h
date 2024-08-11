@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/04 10:50:36 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:28:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,63 +24,33 @@
 # include <stdbool.h>           // for boolean vars
 # include <stdio.h>             // for printf
 # include <stdlib.h>            // for malloc and free
+# include <sys/stat.h>          // for file and dir info
 # include <sys/types.h>         //
 # include <sys/wait.h>
-#include <sys/stat.h>
 // for wating child process to terminate execution
 # include <unistd.h> // for system calls
-// # include "../exec/main.h"
 
-#define COLOR BBLU
-# define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
+# define COLOR BBLU
+// # define DEFAULT_PATH
+// "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
 
-typedef enum s_types
-{
-	CMD,
-	RED_OUT,
-	RED_IN,
-	PIPE,
-	LIST,
-	BACK,
-	ARG,
-	OR_OP,
-	AND_OP,
-	FLE,
-	APP,
-	HER_DOC
-}						t_types;
+# define MAX_LONG "9223372036854775808"
+# define WHITESPACES " \t\v\n"
+# define SYNTERRR 2
+# define AMPIGOUS 1
 
-// # define	CMD 			0
-// # define EXEC 			1
-// # define LIST 			5
-// # define BACK 			6
-// # define ARG 			7
-// # define OR_OP 			8
-// # define AND_OP 			9
-// # define FLE				10
-
-# define WHITESPACES 	" \t\v\n"
-# define SYNTERRR 		2
-# define AMPIGOUS 		1
-
-
-
-# define TOKEN 			0
-# define PIPE 			1
-# define RED_OUT 		2
-# define RED_IN 		3
-# define APP 			4
-# define HER_DOC 		5
-
-// #define  sigact;
-
-typedef struct sigaction sigact;
+# define TOKEN 0
+# define PIPE 1
+# define RED_OUT 2
+# define RED_IN 3
+# define APP 4
+# define HER_DOC 5
 
 typedef struct s_env
 {
 	// char				*value;
-	char				*env_key;
 	char				*env_value;
+	char				*env_key;
 	struct s_env		*next;
 }						t_env;
 
@@ -101,7 +71,8 @@ typedef struct s_data
 	int					i;
 	int					j;
 	int					ac;
-	int 				redirect;
+	int					flag;
+	int					redirect;
 	int					exit_status;
 	t_env				*env;
 	char				**av;
@@ -109,31 +80,37 @@ typedef struct s_data
 	char				*str2;
 	t_command			*list;
 	t_command			*head;
-	// struct sigaction 	sa_child;
 	char				*prompt;
-	char				*expanded;	
+	char				*expanded;
 	char				**old_pwd;
 	char				**shell_lvl;
 	char				*new_command;
 	char				*trimed_line;
 	char				**current_pwd;
-	char 				*unquoted_line;
+	char				*unquoted_line;
 	char				*special_chars;
 	char				**envirenment;
-	t_command			*list_command;
+	t_command			*list_cmd;
 	t_command			*_tokens_list;
 	t_command			*rdrct_head;
 	int					ignore_sig;
-	bool 				syntax_error; 	// boolean variable for syntax_error
+	long				k;
+	int					error_num;
+	bool				syntax_error;
 }						t_data;
 
 typedef struct s_token
 {
-	int					i;				// just a normal index for reading the input character by character
-	int 				prev_type; 		// this variable for tracking the type of the previous node
-	int 				index;     		// to point to the location of the next token
-	int 				type;      		// for the type of the token PIPE REDER ...
-	char 				*value;   		// token value if it's a pipe the value is "|"
+	int					i;
+	// just a normal index for reading the input character by character
+	int					prev_type;
+	// this variable for tracking the type of the previous node
+	int					index;
+	// to point to the location of the next token
+	int					type;
+	// for the type of the token PIPE REDER ...
+	char				*value;
+	// token value if it's a pipe the value is "|"
 }						t_token;
 
 typedef struct s_pipex
@@ -162,6 +139,7 @@ typedef struct s_pipex
 	int					infile;
 	int					infile_here_doc;
 	int					save1;
+	int					save2;
 	int					count_pipe;
 	int					count_read_in;
 	int					count_read_out;
@@ -170,9 +148,13 @@ typedef struct s_pipex
 	int					b;
 	char				*line;
 	t_command			*cur;
-	char 				*s;
+	char				*s;
 	int					*end_1;
 	int					*pipe_t;
+	int					save_in;
+	int					d;
+	int					quoted;
+	t_command			*c;
 }						t_pipex;
 
 typedef struct s_path
@@ -184,14 +166,7 @@ typedef struct s_path
 	char				*path_from_envp;
 }						t_path;
 
-// extern t_data *g_data; // for use this global var from all files
-
-extern int g_exit_stat; // for use this global var from all files
-extern int flag;
-
-
-// # include <termios.h>
-// # include <sys/stat.h>
+extern int	g_exit_stat; // for use this global var from all files
 
 void					print_minishell(void);
 void					print_prompt(void);
@@ -201,44 +176,96 @@ void					print_list(t_command *table);
 
 // buit-in commands:
 
-int						cd(t_data *data, char **args);
-char					*get_prompt(void);
-void					pwd(void);
-int						env(t_env *env);
-int						echo(char **cmd);
 int						is_builtin_cmd(t_data *data, t_command *command);
-char					*get_cmd_path(t_data *data, char *cmd_);
+void					get_old_current_pwd(t_data *data);
+int						change_dir(t_data *data, t_env *env, char *path);
+int						chdir_home_prev(t_data *data, t_env *env, char **args);
+int						cd(t_data *data, char **args);
+void					echo_it(char **cmd, int i);
+bool					check_echo_options(char *cmd);
+int						echo(char **cmd);
 char					*get_word_(char *line, char *del);
-t_env					*get_env_ele_ptr(t_data *data, char *env_val);
-void					print_array(char **array);
-int						export(t_data *data, t_command *cmd, t_env *env);
-int						unset(t_data *data, char **env_var, t_env *envirenement);
-t_env					**sort_env(t_env **env_, int env_len);
-int					 	valid_identifier(char *str);
+t_env					*get_env_ele_ptr(t_env *env, char *env_val);
+char					**env_to_array_(t_env *env);
+int						ft_is_str_digit(char *str);
+int						env(t_env *env);
+int						check_exit_overflow(char *str, int exit_num);
+void					check_exit(t_data *data, t_command *command);
+void					exit_(t_data *data, t_command *command);
 void					print_sorted_env(t_env *env);
+int						valid_identifier(char *str);
+char					**get_exp_splited(char *str, char del);
+void					export__cnt(t_data *data, t_env *env_ptr, char *arg);
+int						export(t_data *data, t_command *cmd, t_env *env);
+void					free_env_ptr(t_env **env_ptr);
+void					export_var_app(t_data *data, t_env *env_ptr,
+							char **splited);
+int						env_c_len(t_env *env_);
 void					print_export_env(t_env **env, int env_len);
-int					 	env_c_len(t_env *env_);
-
-// general purpose utiles
-
-// char 			*skip_command(char *command);
+t_env					**sort_env(t_env **env_, int env_len);
+int						unset(t_data *data, char **env_var);
+void					del_node(t_data *data, t_env *env_var);
+void					del_one(t_env **env, t_env *env_var);
+void					pwd(void);
+void					print_array(char **array);
+void					panic(char *error_str, int exit_stat);
 
 // utiles for linked list:
 
 void					add_back_list(t_command **lst, t_command *new);
 t_command				*new_node(int type, char *value);
 void					clear_list(t_command **lst);
-
+t_command				*lstlastcmd(t_command *lst);
 // parsing functions
 
 int						parse_command(t_data *data, char *command);
 int						get_args_size(t_command *list);
 t_command				*redirect_list(t_data *data, t_command **redirect_head);
 void					get_redirect_node(t_data *data);
+int						exec_command(t_data *data, t_command *commands_list);
+char					*get_env_element(t_data *data, char *env_var);
+t_command				*syntax_error(t_data *data, t_command *list_command,
+							t_command *head);
+t_env					*get_alternative_env(t_data *data);
+int						parser_continue(t_data *data);
 
 // tokenizer functions
+
 t_command				*tokenzer_command(char *command_line);
 char					*duplicate_word(char *command_line, int *i, int j);
+
+// expander functions
+
+void					what_quote(t_command *list, char *arg, char quote);
+char					*get_var(char *env_var, int *i);
+char					*unquote_arg(t_command *list, char *arg, int j, int k);
+char					*get_word(char *argument, int *i);
+int						get_expanded(t_data *data, char *argument, int *i);
+char					*expand_digits(t_data *data, char *argument, int *i);
+void					expand_(t_data *data, char *argument, int *i);
+char					*expand_vars__(t_data *data, char *argument);
+char					*_get_quoted___word(char *arg, int *i);
+char					*expand_vars(t_data *data, char *argument, int i);
+size_t					ft_len_arr(char **arr);
+char					**ft_arr_join(char **arr1, char **arr2);
+int						ambigous_red(char *red_file);
+int						is_ambiguous(t_command *list);
+int						is_empty(char *str);
+void					set_error(t_data *data, int err_num, char *str,
+							t_command **cmd);
+char					**split_argument(t_command *list, int i);
+int						get_cmd_if_empty(t_command *list);
+char					**split_and_join(char **args, char *exp_args);
+int						get_real_len(char **arr);
+
+// mini utiles
+
+void					init_minishell(t_data *data, int ac, char **av,
+							char **env);
+void					clear_env(t_env **env);
+int						get_token_type(char *token);
+char					*get_prompt(void);
+void					print_list(t_command *table);
 
 // print functions
 
@@ -248,28 +275,18 @@ void					ft_perror(char *message);
 
 // signals hanling
 
-// void					child_sig_handler(int signo);
-// void 				ign_sig_child();
 void					handle_signals(int i);
-int 					check_exit_status(int status);
+int						check_exit_status(int status);
 
 // envirenement utiles
 
-void 					clear_env(t_env **env);
+void					clear_env(t_env **env);
 char					**env_to_array_(t_env *env);
 void					add_back(t_env **lst, t_env *new);
 t_env					*lstnew(char *env_value, char *env_key);
 t_env					*creat_env(t_data *data, char **env);
 void					clear_all(t_data *data);
-
-
-// parsing utiles
-
-// int 					ft_strisalnum(char *str);
-int						exec_command(t_data *data, t_command *commands_list);
-// char					*ft_strnstr_l(const char *big, const char *little,
-// 							size_t len);
-char					*get_env_element(t_data *data, char *env_var);
+void					free_env_ptr(t_env **env_ptr);
 
 // lexer functions
 
@@ -280,8 +297,6 @@ char					*lexer_command(t_data *data, char *line);
 
 char					*get_var(char *env_var, int *i);
 char					*unquote_arg(t_command *list, char *arg, int j, int k);
-// char					*ft_strnstr_l(const char *big, const char *little,
-// 							size_t len);
 char					*get_word(char *argument, int *i);
 char					*expand_vars(t_data *data, char *argument, int i);
 t_command				*expander_command(t_data *data, t_command *list);
@@ -292,7 +307,8 @@ char					**ft_split_str(const char *s, char *del);
 t_command				*free_node(t_command **node);
 void					clear_list(t_command **lst);
 void					free_array(char **array);
-void 					free_int_array(int **array);
+void					free_int_array(int **array);
+void					free_command(t_command *cmd);
 
 // execution
 
@@ -304,23 +320,31 @@ void					open_infile(t_command *node, t_pipex *p);
 void					ft_count_here_doc(t_command *node, t_pipex *p);
 char					*function(char **env);
 char					*slash(char *mycmdargs);
-char					*without_slash(char **env, char *mycmdargs);
-char					*search_path(char *mycmdargs, char **env);
-void					ft_error(char **av);
-pid_t					fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p);
-void					open_here_doc(t_data *data, t_command *node, t_pipex *pipex);
+char					*without_slash(t_data *data, char **env,
+							char *mycmdargs);
+char					*search_path(t_data *data, char *mycmdargs, char **env);
+void					ft_error(t_data *data, char **av);
+pid_t					fork_pipe(t_data *data, t_command *node1, char **env,
+							t_pipex *p);
+void					open_here_doc(t_data *data, t_command *node,
+							t_pipex *pipex);
 void					here_doc(t_data *data, t_command *node, t_pipex *pipex);
-void					ft_excute(char **av, char **env);
+void					ft_excute(t_data *data, char **av, char **env);
 void					ft_error_2(void);
-void					ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p);
+void					ft_pipe(t_data *data, t_command *node1, char **ev,
+							t_pipex *p);
 int						ft_strcmp(char *s1, char *s2);
 int						func(t_data *data, t_command *list);
 char					*strjoin1(char *s1, char *s2);
-void   					infile(t_data *data, t_command *node1, char **env, t_pipex *p);
-void					outfile(t_data *data, t_command *node1, char **env, t_pipex *p);
-void					pipe_heredoc(t_data *data, t_command *node1, char **env, t_pipex *p);
+void					infile(t_data *data, t_command *node1, char **env,
+							t_pipex *p);
+void					outfile(t_data *data, t_command *node1, char **env,
+							t_pipex *p);
+void					pipe_heredoc(t_data *data, t_command *node1, char **env,
+							t_pipex *p);
 int						if_is_buil(t_command *command);
-void					excut_butlin(t_data *data, t_command *node1, char **env);
+void					excut_butlin(t_data *data, t_command *node1, char **env,
+							t_pipex *p);
 void					sig_handler(int signal);
 void					skip_two(t_data *data, char **ev, t_pipex *p);
 int						check(t_command *node);
@@ -328,7 +352,12 @@ int						check_exit_status(int status);
 void					free_int_array(int **array);
 void					skip_pipe(t_pipex *p);
 void					here_doc_error(char **av);
-int						file_info(char **av);
-int						file_info_2(char **av);
-void					handle_direct(char **av);
+void					file_info(char **av, int *flag);
+void					file_info_2(char **av, int *flag, struct stat	file_start);
+int						handle_direct(char **av);
+void					exec_built_in(t_pipex *pipex, t_data *data,
+							t_command *list);
+void					child_process(t_data *data, t_command *node1,
+							char **env, t_pipex *p);
+
 #endif

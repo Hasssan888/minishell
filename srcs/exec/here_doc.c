@@ -6,17 +6,17 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 14:35:34 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/09 16:29:04 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 void	w_loop(t_data *data, t_command *node, t_pipex *pipex, char *str)
 {
 	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
 	{
-		if (pipex->line[0] == '$' && !node->quoted)
+		if (pipex->line[0] == '$' && !pipex->quoted)
 			pipex->line = expand_vars(data, pipex->line, 0);
 		write(pipex->strs[pipex->j][1], pipex->line, ft_strlen(pipex->line));
 		free(pipex->line);
@@ -32,6 +32,8 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 {
 	char	*str;
 
+	str = NULL;
+	pipex->quoted = 0;
 	handle_signals(4);
 	close(pipex->strs[pipex->j][0]);
 	pipex->line = readline("> ");
@@ -40,6 +42,8 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 	else
 		pipex->line = strjoin1(pipex->line, "\n");
 	str = strjoin1(node->args[0], "\n");
+	if (ft_strchr(str, '\'') || ft_strchr(str, '"'))
+		pipex->quoted = 1;
 	str = unquote_arg(node, str, 0, 0);
 	w_loop(data, node, pipex, str);
 	close(pipex->strs[pipex->j][1]);
@@ -48,7 +52,7 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 	clear_all(data);
 	free(pipex->line);
 	free(str);
-	exit(0);
+	exit(g_exit_stat);
 }
 
 void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
@@ -66,10 +70,7 @@ void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
 		data->ignore_sig = check_exit_status(pipex->status);
 	}
 	else
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
+		panic("fork fail\n", 1);
 	pipex->r = pid;
 	wait(&pipex->status);
 	data->ignore_sig = check_exit_status(pipex->status);
@@ -77,20 +78,20 @@ void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
 
 void	type_here_doc(t_data *data, t_command *cur, t_pipex *pipex)
 {
-	pipex->pipe_t = malloc(sizeof(int) * 2);
+	pipex->pipe_t = ft_calloc(2, sizeof(int));
 	pipe(pipex->pipe_t);
 	pipex->strs[pipex->j] = pipex->pipe_t;
 	here_doc(data, cur, pipex);
 	pipex->arr[pipex->q] = pipex->j;
 	pipex->j++;
+	pipex->strs[pipex->j] = NULL;
 }
 
 void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 {
 	t_command	*cur;
 
-	pipex->strs = NULL;
-	pipex->strs = malloc(sizeof(int *) * (pipex->count_here_doc + 1));
+	pipex->strs = ft_calloc((pipex->count_here_doc + 1), sizeof(int *));
 	if (!pipex->strs)
 		exit(1);
 	pipex->j = 0;

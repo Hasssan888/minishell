@@ -6,14 +6,16 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:01 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/04 14:51:15 by hbakrim          ###   ########.fr       */
+/*   Updated: 2024/08/09 14:26:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libraries/minishell.h"
+#include "../../libraries/minishell.h"
 
 int	if_is_buil(t_command *command)
 {
+	if (!command || !command->value)
+		return (0);
 	if (ft_strcmp(command->value, "echo") == 0)
 		return (1);
 	else if (ft_strcmp(command->value, "pwd") == 0)
@@ -31,15 +33,22 @@ int	if_is_buil(t_command *command)
 	return (0);
 }
 
-void	excut_butlin(t_data *data, t_command *node1, char **env)
+void	excut_butlin(t_data *data, t_command *node1, char **env, t_pipex *p)
 {
-	if (if_is_buil(node1))
-	{
+	if (p->d == 1)
 		is_builtin_cmd(data, node1);
-		exit(0);
-	}
 	else
-		ft_excute(node1->args, env);
+	{
+		if (if_is_buil(node1))
+		{
+			is_builtin_cmd(data, node1);
+			clear_list(&data->list);
+			clear_all(data);
+			exit(g_exit_stat);
+		}
+		else
+			ft_excute(data, node1->args, env);
+	}
 }
 
 void	ft_count_pipe(t_command *list, t_pipex *p)

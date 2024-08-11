@@ -6,13 +6,13 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/20 10:22:55 by aelkheta          #+#    #+#              #
-#    Updated: 2023/11/22 20:03:04 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/08/08 15:30:30 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address
 AR = ar rcs
 
 SRCS_M = ft_atoi.c \
@@ -66,18 +66,18 @@ OBJS_M = $(SRCS_M:.c=.o)
 OBJS_B = $(SRCS_B:.c=.o)
 
 $(NAME): $(OBJS_M)
-	$(AR) $(NAME) $(OBJS_M)
+	@$(AR) $(NAME) $(OBJS_M)
 
 all: $(NAME)
 
 bonus: $(OBJS_B)
 
 $(OBJS_B): $(SRCS_B)
-	$(CC) $(CFLAGS) -c $(SRCS_B)
-	$(AR) $(NAME) $(OBJS_B)
+	@$(CC) $(CFLAGS) -c $(SRCS_B)
+	@$(AR) $(NAME) $(OBJS_B)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm -f $(OBJS_M) $(OBJS_B)

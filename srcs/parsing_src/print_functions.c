@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:37:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/07/31 16:25:16 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/06 12:17:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@ void	print_minishell(void)
 {
 	printf("\n");
 	printf("███╗   ███╗██╗███╗   ██╗██╗");
-	printf(COLOR "███████╗██╗  ██╗███████╗██╗     ██╗\n" reset);
+	printf(COLOR "███████╗██╗  ██╗███████╗██╗     ██╗\n" RESET);
 	printf("████╗ ████║██║████╗  ██║██║");
-	printf(COLOR "██╔════╝██║  ██║██╔════╝██║     ██║\n" reset);
+	printf(COLOR "██╔════╝██║  ██║██╔════╝██║     ██║\n" RESET);
 	printf("██╔████╔██║██║██╔██╗ ██║██║");
-	printf(COLOR "███████╗███████║█████╗  ██║     ██║\n" reset);
+	printf(COLOR "███████╗███████║█████╗  ██║     ██║\n" RESET);
 	printf("██║╚██╔╝██║██║██║╚██╗██║██║");
-	printf(COLOR "╚════██║██╔══██║██╔══╝  ██║     ██║\n" reset);
+	printf(COLOR "╚════██║██╔══██║██╔══╝  ██║     ██║\n" RESET);
 	printf("██║ ╚═╝ ██║██║██║ ╚████║██║");
 	printf(COLOR "███████║██║  ██║███████╗███████╗███");
-	printf(COLOR "████╗\n" reset);
+	printf(COLOR "████╗\n" RESET);
 	printf("╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝");
 	printf(COLOR "╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══");
-	printf("════╝\n" reset);
+	printf("════╝\n" RESET);
 	printf("\n");
 }
 
@@ -80,22 +80,5 @@ void	print_args(char **args)
 		printf("	┌───────────────────────────┐\n");
 		printf("  ─────>│ arg[%d]: --------- [%s]\n", i++, *args++);
 		printf("	└───────────────────────────┘\n");
-	}
-}
-
-void	print_list(t_command *table)
-{
-	if (!table)
-		return ;
-	while (table != NULL)
-	{
-		if (table->value != NULL)
-		{
-			printf("┌───────────────────────────┐\n");
-			printf("│ token: ---------- [%s]    \n", table->value);
-			print_type(table->type);
-			print_args(table->args);
-		}
-		table = table->next;
 	}
 }
