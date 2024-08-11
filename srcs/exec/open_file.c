@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 17:11:46 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/10 15:56:55 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	out_app(t_command *cur, t_pipex *p)
 {
-	if (ft_strcmp(cur->args[0], "/dev/stdout") != 0)
+	if (cur->args[0] && ft_strcmp(cur->args[0], "/dev/stdout") != 0)
 	{
 		if (cur->type == RED_OUT && cur->args[0] != NULL)
 		{
@@ -30,7 +30,7 @@ void	out_app(t_command *cur, t_pipex *p)
 		}
 		if (p->fd[p->i] == -1)
 		{
-			ft_putstr_fd(cur->args[0], 2);
+			perror(cur->args[0]);
 			p->indixe = 1;
 		}
 		p->s = cur->args[0];
@@ -58,13 +58,11 @@ void	open_outfile(t_command *node, t_pipex *p)
 	p->b = 0;
 	p->indixe = 0;
 	p->fd = malloc(sizeof(int) * p->count_read_out);
-	p->name_file = malloc(sizeof(char *) * (p->count_read_out + 1));
 	if (p->fd == NULL)
-		panic("malloc fail", 1);
+		panic("malloc fail\n", 1);
 	p->i = 0;
 	cur = node;
 	ft_loop(cur, p);
-	p->name_file[p->i] = NULL;
 	if (p->i > 0)
 		p->outfile = p->fd[p->i - 1];
 	free(p->fd);
@@ -73,12 +71,12 @@ void	open_outfile(t_command *node, t_pipex *p)
 
 void	red_in(t_command *cur, t_pipex *p)
 {
-	if (ft_strcmp(cur->args[0], "/dev/stdin") != 0)
+	if (cur->args[0] && ft_strcmp(cur->args[0], "/dev/stdin") != 0)
 	{
 		p->fd[p->i] = open(cur->args[0], O_RDONLY, 0644);
 		if (p->fd[p->i] == -1)
 		{
-			ft_putstr_fd(cur->args[0], 2);
+			perror(cur->args[0]);
 			p->indixe = 1;
 		}
 		p->i++;

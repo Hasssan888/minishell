@@ -6,13 +6,14 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/08/10 09:09:31 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/08/10 16:24:16 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+MAKEFLAGS += --no-print-directory
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 LIBFT = ./libraries/libft/libft.a
 SRCDIR = ./srcs/parsing_src
 BLTDIR = ./srcs/builtin_src
@@ -57,9 +58,9 @@ SRC_E =	$(EXEDIR)/allcmd.c\
 		$(EXEDIR)/open_file.c\
 		$(EXEDIR)/utillis.c\
 
-OBJ_P = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC_P))
-OBJ_B = $(patsubst $(BLTDIR)/%.c, $(OBJDIR)/%.o, $(SRC_B))
-OBJ_E = $(patsubst $(EXEDIR)/%.c, $(OBJDIR)/%.o, $(SRC_E))
+OBJ_P = $(patsubst $(SRCDIR)%.c, $(OBJDIR)%.o, $(SRC_P))
+OBJ_B = $(patsubst $(BLTDIR)%.c, $(OBJDIR)%.o, $(SRC_B))
+OBJ_E = $(patsubst $(EXEDIR)%.c, $(OBJDIR)%.o, $(SRC_E))
 
 all: $(NAME)
 
@@ -72,29 +73,30 @@ $(OBJDIR)/%.o: $(BLTDIR)/%.c
 $(OBJDIR)/%.o: $(EXEDIR)/%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(LIBFT):
-	@mkdir -p $(OBJDIR)
-	@echo "Compiling libft..."
-	@make -C ./libraries/libft
-	@make bonus -C ./libraries/libft
-	@echo "Compiling libft done"
+# $(LIBFT):
+# 	@mkdir -p $(OBJDIR)
+# 	@echo "Compiling libft..."
+# 	@make -C ./libraries/libft
+# 	@make bonus -C ./libraries/libft
+# 	@echo "Compiling libft done"
 
+#	 @echo "Removing libft obj files..."
+#	 @make clean -C ./libraries/libft
+#	 @make fclean -C ./libraries/libft
+#	 @echo "Cleaning libft..."
+#	 @echo "Cleaning libft done"
+	
 $(NAME): $(LIBFT) $(OBJ_P) $(OBJ_B) $(OBJ_E)
 	@echo "Building..."
 	@$(CC) $(CFLAGS) $(OBJ_P) $(OBJ_B) $(OBJ_E) $(RLFLAG) $(LIBFT) -o $@
 	@echo "Building done"
 
 clean:
-	@echo "Removing libft obj files..."
-	@make clean -C ./libraries/libft
 	@echo "Removing object files..."
 	@rm -rf $(OBJDIR)/*.o
 	@echo "Removing object files done"
 
 fclean: clean
-	@echo "Cleaning libft..."
-	@make fclean -C ./libraries/libft
-	@echo "Cleaning libft done"
 	@echo "Removing program name..."
 	@rm -f $(NAME)
 	@echo "Removing program name done"

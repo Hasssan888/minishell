@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:13:31 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 10:11:25 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/10 15:49:01 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,16 @@ int	ambigous_red(char *red_file)
 	i = 0;
 	if (!red_file)
 		return (1);
-	while (red_file != NULL && red_file[i] && ft_strchr(" \t", red_file[i]))
+	while (red_file != NULL && red_file[i] && ft_strchr(WHITESPACES, red_file[i]))
 		i++;
 	while (red_file != NULL && red_file[i])
 	{
-		str = ft_strchr(" \t", red_file[i]);
+		str = ft_strchr(WHITESPACES, red_file[i]);
 		if (str != NULL)
 		{
-			while (red_file[i] && ft_strchr(" \t", red_file[i]))
+			while (red_file[i] && ft_strchr(WHITESPACES, red_file[i]))
 				i++;
-			if (red_file[i] && !ft_strchr(" \t", red_file[i]))
+			if (red_file[i] && !ft_strchr(WHITESPACES, red_file[i]))
 				return (1);
 		}
 		i++;
@@ -79,7 +79,7 @@ int	ambigous_red(char *red_file)
 
 int	is_ambiguous(t_command *list)
 {
-	if (!list->quoted && (list->type == RED_OUT || list->type == RED_IN))
+	if (!list->quoted && list->type >= 2 && list->type <= 5)
 	{
 		if (list->args != NULL && ambigous_red(list->args[0]))
 		{

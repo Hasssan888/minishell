@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:02:24 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 22:17:39 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/10 16:14:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,9 @@ int	cd(t_data *data, char **args)
 		return (1);
 	else
 	{
+		// strerror(errno);
 		ft_putstr_fd("minishell: cd: ", 2);
-		strerror(errno);
+		perror(args[0]);
 		g_exit_stat = 1;
 	}
 	return (0);

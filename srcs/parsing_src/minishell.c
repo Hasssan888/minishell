@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/10 08:48:44 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/10 16:04:35 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@ int		g_exit_stat = 0;
 void	sig_handler(int signal)
 {
 	(void)signal;
-	printf("before replace line: %s\n", rl_line_buffer);
 	rl_replace_line("", 0);
-	printf("after replace line: %s\n", rl_line_buffer);
 	printf("\n%s", "minishell$ ");
 	g_exit_stat = 130;
 }
@@ -61,7 +59,8 @@ void	shell_loop(t_data *data)
 	{
 		pipex.save1 = dup(STDIN_FILENO);
 		pipex.save2 = dup(STDOUT_FILENO);
-		add_history(command);
+		if (command[0])
+			add_history(command);
 		parse_command(data, command);
 		dup2(pipex.save1, STDIN_FILENO);
 		close(pipex.save1);

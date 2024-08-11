@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 16:55:41 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/10 15:52:20 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,8 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 		child_process(data, node1, env, p);
 		clear_list(&data->list);
 		clear_all(data);
-		free(p->s);
 		exit(g_exit_stat);
 	}
-	close(p->end[1]);
 	dup2(p->end[0], STDIN_FILENO);
 	close(p->end[0]);
 	return (p->pid);
@@ -114,7 +112,8 @@ int	func(t_data *data, t_command *list)
 	if (!list->value && list->next && list->next->type == PIPE)
 		list = list->next;
 	ft_count(data, list, &pipex);
-	if (pipex.count_pipe == 0 && if_is_buil(list))
+
+	if (pipex.count_pipe == 0 && if_is_buil(list) && list->syntxerr == AMPIGOUS)
 	{
 		exec_built_in(&pipex, data, list);
 		free_int_array(pipex.strs);
