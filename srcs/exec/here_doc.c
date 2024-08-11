@@ -6,10 +6,9 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/11 23:42:07 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:29:04 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../../libraries/minishell.h"
 
@@ -17,7 +16,7 @@ void	w_loop(t_data *data, t_command *node, t_pipex *pipex, char *str)
 {
 	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
 	{
-		if (!pipex->quoted)
+		if (pipex->line[0] == '$' && !pipex->quoted)
 			pipex->line = expand_vars(data, pipex->line, 0);
 		write(pipex->strs[pipex->j][1], pipex->line, ft_strlen(pipex->line));
 		free(pipex->line);
@@ -67,12 +66,12 @@ void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
 	{
 		close(pipex->strs[pipex->j][1]);
 		pipex->r = pid;
-		// wait(&pipex->status);
-		// data->ignore_sig = check_exit_status(pipex->status);
+		wait(&pipex->status);
+		data->ignore_sig = check_exit_status(pipex->status);
 	}
 	else
 		panic("fork fail\n", 1);
-	// pipex->r = pid;
+	pipex->r = pid;
 	wait(&pipex->status);
 	data->ignore_sig = check_exit_status(pipex->status);
 }
