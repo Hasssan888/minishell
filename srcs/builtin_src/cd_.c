@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:02:24 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 16:21:12 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 21:09:02 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +82,18 @@ int	cd(t_data *data, char **args)
 {
 	t_env	*env;
 
-	env = NULL;
+	env = NULL;	
+	if (args[0] && args[0][0] != '-' && args[0][0] != '~'&& access(args[0], F_OK) != 0)
+	{
+		perror("minishell: cd");
+		g_exit_stat = 1;
+		return 0;
+	}
 	if (args[0] != NULL && args[1] != NULL)
 	{
 		ft_putstr_fd("cd: too many arguments\n", 2);
 		g_exit_stat = 1;
 		return (0);
-	}
-	else if (args[0] && args[0][0] != '~' && args[0][0] != '-' && access(args[0], F_OK) == -1)
-	{
-		perror("minishell: cd");
-		g_exit_stat = 1;
 	}
 	else if (args[0] != NULL && args[0][0] == '-' && args[0][1] == '\0')
 		return (chdir_home_prev(data, env, args));

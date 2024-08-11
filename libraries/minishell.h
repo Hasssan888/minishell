@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 15:33:22 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/11 21:04:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <sys/stat.h>          // for file and dir info
 # include <sys/types.h>         //
 # include <sys/wait.h>
+# include <sys/stat.h>			// for file and dir info
+
 // for wating child process to terminate execution
 # include <unistd.h> // for system calls
 
