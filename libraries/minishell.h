@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/12 11:56:57 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 21:09:54 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,7 @@ char					*duplicate_word(char *command_line, int *i, int j);
 
 // expander functions
 
-void					what_quote(t_command *list, char *arg, char quote);
+void					what_quote(t_command *list, char *arg);
 char					*get_var(char *env_var, int *i);
 char					*unquote_arg(t_command *list, char *arg, int j, int k);
 char					*get_word(char *argument, int *i);

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:12:16 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/07 10:43:11 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 21:22:32 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,11 @@ void	expand_(t_data *data, char *argument, int *i)
 		(*i)++;
 		data->expanded = ft_strjoin(data->expanded, ft_strdup("$"));
 	}
+	// else if (argument[*i + 1] == '$')
+	// {
+	// 	(*i) += 2;
+	// 	data->expanded = ft_strjoin(data->expanded, ft_strdup("$$"));
+	// }
 	else if (argument[*i + 1] == '?')
 	{
 		*i += 2;

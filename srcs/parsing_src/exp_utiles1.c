@@ -6,18 +6,33 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 09:39:14 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 21:11:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
-void	what_quote(t_command *list, char *arg, char quote)
+void	what_quote(t_command *list, char *arg)
 {
-	if (arg[0] == quote && quote == '\'')
-		list->quoted = 1;
-	else if (arg[0] == quote && quote == '"')
-		list->quoted = 2;
+	int i = -1;
+	char quote = 0;
+	while(arg && arg[++i])
+	{
+		if (arg[i] == '\'' || arg[i] == '"')
+		{
+			quote = arg[i];
+			while(arg[i] && arg[i] != quote)
+				i++;
+			if (arg[i])
+			{
+				if (arg[i] == quote && quote == '\'')
+					list->quoted = 1;
+				else if (arg[i] == quote && quote == '"')
+					list->quoted = 2;
+				return ;
+			}
+		}
+	}
 }
 
 char	*get_var(char *env_var, int *i)
@@ -48,7 +63,7 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 	argument = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
 	while (arg[j])
 	{
-		quote = arg[j];
+		quote = 0;
 		if (arg[j] == '$' && (arg[j + 1] == '"' || arg[j + 1] == '\''))
 			j++;
 		else if (arg[j] == '\'' || arg[j] == '"')
@@ -56,12 +71,13 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 			quote = arg[j++];
 			while (arg[j] && arg[j] != quote)
 				argument[k++] = arg[j++];
-			j++;
+			if (arg[j])
+				j++;
 		}
-		else
+		else if (arg[j])
 			argument[k++] = arg[j++];
-		what_quote(list, arg, quote);
 	}
+	what_quote(list, arg);
 	free(arg);
 	return (argument);
 }

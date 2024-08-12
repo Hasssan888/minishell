@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:03:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/12 12:43:18 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 20:58:37 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,8 @@ int	export(t_data *data, t_command *cmd, t_env *env)
 	}
 	while (cmd->args[++i] != NULL)
 	{
-		cmd->args[i] = unquote_arg(data->list, cmd->args[i], 0, 0);
+		printf("%s\n", cmd->args[i]);
+		// cmd->args[i] = unquote_arg(data->list, cmd->args[i], 0, 0);
 		if (!valid_identifier(cmd->args[i]))
 		{
 			ft_putstr_fd("minishell: export: not a valid identifier `", 2);

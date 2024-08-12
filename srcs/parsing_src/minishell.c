@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/12 13:02:38 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 14:59:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	sig_handler(int signal)
 {
 	(void)signal;
 	rl_replace_line("", 1);
-	rl_redisplay();
+	// rl_redisplay();
 	printf("%s", BGRN"\n>>> "RESET);
 	g_exit_stat = 130;
 }

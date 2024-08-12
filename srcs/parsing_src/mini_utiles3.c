@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:10:40 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 11:36:49 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 14:42:03 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	get_token_type(char *token)
 		return (APP);
 	else if (token[0] == '<' && token[1] == '<' && !token[2])
 		return (HER_DOC);
-	else if ((ft_strchr("|&", token[0]) && ft_strlen(token) > 1)
+	else if ((ft_strchr("|", token[0]) && ft_strlen(token) > 1)
 		|| (ft_strchr("<>", token[0]) && ft_strlen(token) > 2))
 		return (-1);
 	else
