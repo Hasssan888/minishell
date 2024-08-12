@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../../libraries/minishell.h"
 
 void	get_old_current_pwd(t_data *data)

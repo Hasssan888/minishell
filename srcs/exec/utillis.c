@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 18:32:21 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 12:53:03 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 08:48:37 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	file_info_2(char **av, int *flag, struct stat file_start)
 		*flag = 1;
 	}
 }
+
 void	file_info(char **av, int *flag)
 {
 	struct stat	file_start;
@@ -32,7 +33,7 @@ void	file_info(char **av, int *flag)
 	stat(av[0], &file_start);
 	if (ft_strchr(av[0], '/') != NULL && access(av[0], F_OK) == -1)
 		file_info_2(av, flag, file_start);
-	else	if (ft_strchr(av[0], '/') != NULL && access(av[0], F_OK) != -1)
+	else if (ft_strchr(av[0], '/') != NULL && access(av[0], F_OK) != -1)
 	{
 		if (S_ISREG(file_start.st_mode) && access(av[0], X_OK) != -1)
 			*flag = 2;

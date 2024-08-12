@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../../libraries/minishell.h"
 
 int	check_unqoted(char *line)

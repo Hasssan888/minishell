@@ -6,10 +6,9 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 23:52:53 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 11:56:57 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -26,9 +25,9 @@
 # include <stdio.h>             // for printf
 # include <stdlib.h>            // for malloc and free
 # include <sys/stat.h>          // for file and dir info
+# include <sys/stat.h>          // for file and dir info
 # include <sys/types.h>         //
 # include <sys/wait.h>
-# include <sys/stat.h>			// for file and dir info
 
 // for wating child process to terminate execution
 # include <unistd.h> // for system calls
@@ -179,7 +178,7 @@ void					print_list(t_command *table);
 
 // errors
 
-void check_synt_err(char *str);
+void					check_synt_err(char *str);
 
 // buit-in commands:
 
@@ -216,7 +215,7 @@ void					del_one(t_env **env, t_env *env_var);
 void					pwd(t_data *data);
 void					print_array(char **array);
 void					panic(char *error_str, int exit_stat);
-
+void					check_synt_err(char *str);
 // utiles for linked list:
 
 void					add_back_list(t_command **lst, t_command *new);
@@ -360,12 +359,15 @@ int						check_exit_status(int status);
 void					free_int_array(int **array);
 void					skip_pipe(t_pipex *p);
 void					here_doc_error(char **av);
-void					file_info_2(char **av, int *flag, struct stat file_start);
+void					file_info_2(char **av, int *flag,
+							struct stat file_start);
 void					file_info(char **av, int *flag);
 int						handle_direct(char **av);
 void					exec_built_in(t_pipex *pipex, t_data *data,
 							t_command *list);
 void					child_process(t_data *data, t_command *node1,
 							char **env, t_pipex *p);
+char					**get_env_add_ele(char **env);
+void					shlvl_update(t_data *data);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/08/11 23:49:16 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/08/12 12:02:04 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC_P = $(SRCDIR)/minishell.c\
 		$(SRCDIR)/tokenizer.c\
 		$(SRCDIR)/expander.c\
 		$(SRCDIR)/lexer.c\
+		$(SRCDIR)/check_errors.c\
 		$(SRCDIR)/print_functions.c\
 
 SRC_B =	$(BLTDIR)/built_in_.c\
@@ -57,6 +58,7 @@ SRC_E =	$(EXEDIR)/allcmd.c\
 		$(EXEDIR)/one_cmd.c\
 		$(EXEDIR)/open_file.c\
 		$(EXEDIR)/utillis.c\
+		$(EXEDIR)/shlvl.c\
 
 OBJ_P = $(patsubst $(SRCDIR)%.c, $(OBJDIR)%.o, $(SRC_P))
 OBJ_B = $(patsubst $(BLTDIR)%.c, $(OBJDIR)%.o, $(SRC_B))

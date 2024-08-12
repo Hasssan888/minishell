@@ -6,10 +6,9 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:51:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 23:39:41 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 11:56:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../../libraries/minishell.h"
 
@@ -70,16 +69,6 @@ char	*get_token(char *cmd_line, int *i)
 		return (duplicate_word(cmd_line, i, j));
 	}
 	return (NULL);
-}
-
-void	check_synt_err(char *str)
-{
-	if (str && str[0] == '>')
-		ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
-	if (str && str[0] == '|')
-		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
-	if (str && str[0] == '<')
-		ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
 }
 
 t_command	*list_maker(char *cmd_line, int *i)

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 17:11:46 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 12:35:09 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,11 @@ void	open_outfile(t_command *node, t_pipex *p)
 	p->b = 0;
 	p->indixe = 0;
 	p->fd = malloc(sizeof(int) * p->count_read_out);
-	p->name_file = malloc(sizeof(char *) * (p->count_read_out + 1));
 	if (p->fd == NULL)
 		panic("malloc fail", 1);
 	p->i = 0;
 	cur = node;
 	ft_loop(cur, p);
-	p->name_file[p->i] = NULL;
 	if (p->i > 0)
 		p->outfile = p->fd[p->i - 1];
 	free(p->fd);

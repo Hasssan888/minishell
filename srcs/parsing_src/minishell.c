@@ -6,10 +6,9 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:42:13 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 23:46:31 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 13:02:38 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../../libraries/minishell.h"
 
@@ -18,8 +17,9 @@ int		g_exit_stat = 0;
 void	sig_handler(int signal)
 {
 	(void)signal;
-	rl_replace_line("", 0);
-	printf("\n%s", ">>> ");
+	rl_replace_line("", 1);
+	rl_redisplay();
+	printf("%s", BGRN"\n>>> "RESET);
 	g_exit_stat = 130;
 }
 
@@ -54,7 +54,7 @@ void	shell_loop(t_data *data)
 
 	command = NULL;
 	handle_signals(1);
-	command = readline(">>> ");
+	command = readline(BGRN">>> "RESET);
 	handle_signals(2);
 	while (command != NULL)
 	{
@@ -68,7 +68,7 @@ void	shell_loop(t_data *data)
 		dup2(pipex.save2, STDOUT_FILENO);
 		close(pipex.save2);
 		handle_signals(1);
-		command = readline(">>> ");
+		command = readline(BGRN">>> "RESET);
 		handle_signals(2);
 	}
 }

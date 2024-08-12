@@ -6,10 +6,9 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:13:31 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 23:44:34 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 12:41:03 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../../libraries/minishell.h"
 
@@ -85,7 +84,6 @@ int	is_ambiguous(t_command *list)
 	{
 		if (list->args != NULL && ambigous_red(list->args[0]))
 		{
-			ft_putstr_fd("minishell: ambiguous redirect\n", 2);
 			list->syntxerr = AMPIGOUS;
 			g_exit_stat = 1;
 		}

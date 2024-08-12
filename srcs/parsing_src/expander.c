@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 09:39:47 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 12:41:17 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,7 @@ char	**exp___(t_data *data, t_command *list, char **args, int i)
 		list->args[i] = unquote_arg(list, list->args[i], 0, 0);
 	if (!is_empty(list->args[i]))
 	{
-		if (data->flag && list->type != RED_OUT && !list->quoted
-			&& ft_strcmp("export", list->value))
+		if (data->flag && !list->quoted && !ft_strchr(list->args[i], '='))
 		{
 			args = split_and_join(args, list->args[i]);
 			data->flag = 0;

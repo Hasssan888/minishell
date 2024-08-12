@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:03:08 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 10:11:19 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 12:43:18 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,9 @@ int	export(t_data *data, t_command *cmd, t_env *env)
 		cmd->args[i] = unquote_arg(data->list, cmd->args[i], 0, 0);
 		if (!valid_identifier(cmd->args[i]))
 		{
-			ft_putstr_fd("minishell: export: not a valid identifier\n", 2);
+			ft_putstr_fd("minishell: export: not a valid identifier `", 2);
+			ft_putstr_fd(cmd->args[i], 2);
+			ft_putstr_fd("'\n", 2);
 			g_exit_stat = 1;
 			continue ;
 		}

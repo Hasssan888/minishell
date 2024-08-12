@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 16:55:41 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 12:52:06 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	child_process(t_data *data, t_command *node1, char **env, t_pipex *p)
 {
+	shlvl_update(data);
 	if (p->flag == 1)
 		infile(data, node1, env, p);
 	else if (p->flag == 2)
@@ -63,11 +64,11 @@ void	ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p)
 	{
 		if (data->ignore_sig == 130 || data->ignore_sig == 131)
 		{
-			data->ignore_sig = 0;
 			return ;
 		}
 		if (p->cur->next && p->cur->next->syntxerr == AMPIGOUS)
 		{
+			ft_putstr_fd("minishell: ambiguous redirect\n", 2);
 			p->cur = p->cur->next;
 			continue ;
 		}
@@ -81,6 +82,24 @@ void	ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p)
 	}
 }
 
+void exec_cmd(t_data *data, t_pipex *pipex, t_command *list)
+{
+	if (pipex->count_pipe == 0 && if_is_buil(list))
+	{
+		exec_built_in(pipex, data, list);
+		free_int_array(pipex->strs);
+	}
+	else
+	{
+		ft_pipe(data, list, data->envirenment, pipex);
+		free_int_array(pipex->strs);
+		waitpid(pipex->r, &pipex->status, 0);
+		data->ignore_sig = check_exit_status(pipex->status);
+		while (wait(NULL) != -1)
+			;
+	}
+}
+
 void	ft_count(t_data *data, t_command *list, t_pipex *pipex)
 {
 	ft_bzero(pipex, sizeof(t_pipex));
@@ -90,6 +109,10 @@ void	ft_count(t_data *data, t_command *list, t_pipex *pipex)
 	ft_count_read_in(list, pipex);
 	if (pipex->count_here_doc > 0 && pipex->count_here_doc <= 16)
 		open_here_doc(data, list, pipex);
+	if (data->ignore_sig == 130 || data->ignore_sig == 131)
+	{
+		return ;
+	}
 	else if (pipex->count_here_doc > 16)
 	{
 		ft_putstr_fd("minishell: maximum here-document count exceeded\n", 2);
@@ -114,19 +137,12 @@ int	func(t_data *data, t_command *list)
 	if (!list->value && list->next && list->next->type == PIPE)
 		list = list->next;
 	ft_count(data, list, &pipex);
-	if (pipex.count_pipe == 0 && if_is_buil(list))
+	if (data->ignore_sig == 130)
 	{
-		exec_built_in(&pipex, data, list);
 		free_int_array(pipex.strs);
+		data->ignore_sig = 0;
+		return (0);
 	}
-	else
-	{
-		ft_pipe(data, list, data->envirenment, &pipex);
-		free_int_array(pipex.strs);
-		waitpid(pipex.r, &pipex.status, 0);
-		data->ignore_sig = check_exit_status(pipex.status);
-		while (wait(NULL) != -1)
-			;
-	}
+	exec_cmd(data, &pipex, list);
 	return (0);
 }

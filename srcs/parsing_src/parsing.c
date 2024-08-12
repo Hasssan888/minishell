@@ -6,10 +6,9 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:40:09 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 23:47:30 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 11:55:54 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../../libraries/minishell.h"
 
@@ -34,12 +33,7 @@ t_command	*get_command_with_args(t_data *data)
 			data->_tokens_list = redirect_list(data, &data->rdrct_head);
 			if (data->syntax_error)
 			{
-				check_synt_err(data->_tokens_list->value);
-				clear_list(&data->rdrct_head);
-				clear_list(&data->head);
 				return (NULL);
-				// return (syntax_error(data, NULL, data->head,
-						// "minishell: syntax error near unexpected token `aziz'\n"));
 			}
 		}
 	}

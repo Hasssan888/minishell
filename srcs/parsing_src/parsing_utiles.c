@@ -6,10 +6,9 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 23:45:44 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 11:57:26 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../../libraries/minishell.h"
 
@@ -53,6 +52,8 @@ t_command	*redirect_list(t_data *data, t_command **redirect_head)
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
 		check_synt_err(red_node->value);
+		clear_list(&data->rdrct_head);
+		clear_list(&data->head);
 		free_node(&red_node);
 		free_array(data->list_cmd->args);
 		free_node(&data->list_cmd);
@@ -76,8 +77,8 @@ void	get_redirect_node(t_data *data)
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
 		g_exit_stat = SYNTERRR;
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n",
-			2);
+		ft_putstr_fd("minishell: syntax error near unexpected \
+		token `newline'\n", 2);
 		free_array(data->list_cmd->args);
 		free_node(&data->list_cmd);
 		clear_list(&data->_tokens_list);

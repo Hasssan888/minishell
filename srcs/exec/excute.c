@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:17:43 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 16:55:13 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 10:00:31 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*function(char **env)
 	char	*path_from_envp;
 
 	i = 0;
+	if (!env)
+		return (NULL);
 	while (env[i] != NULL)
 	{
 		if (ft_strncmp(env[i], "PATH", ft_strlen("PATH")) == 0)

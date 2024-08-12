@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 16:29:04 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/12 11:57:56 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,7 @@ void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 	while (cur != NULL)
 	{
 		if (data->ignore_sig == 130)
-		{
-			data->ignore_sig = 0;
 			break ;
-		}
 		if (cur->type == HER_DOC)
 			type_here_doc(data, cur, pipex);
 		if (cur->type == PIPE)
