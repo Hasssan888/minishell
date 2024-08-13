@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/12 21:11:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/13 09:52:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,17 @@
 
 void	what_quote(t_command *list, char *arg)
 {
-	int i = -1;
-	char quote = 0;
-	while(arg && arg[++i])
+	int		i;
+	char	quote;
+
+	i = -1;
+	quote = 0;
+	while (arg && arg[++i])
 	{
 		if (arg[i] == '\'' || arg[i] == '"')
 		{
 			quote = arg[i];
-			while(arg[i] && arg[i] != quote)
+			while (arg[i] && arg[i] != quote)
 				i++;
 			if (arg[i])
 			{
@@ -90,7 +93,12 @@ char	*get_word(char *argument, int *i)
 	str = NULL;
 	j = *i;
 	if (argument[j] == '$')
-		j++;
+	{
+		if (argument[j] && argument[j] == '$')
+			j += 2;
+		else
+			j++;
+	}
 	while (argument[j] && argument[j] != '$')
 		j++;
 	str = malloc((j - *i + 1) * sizeof(char));

@@ -12,6 +12,13 @@
 
 #include "../../libraries/minishell.h"
 
+void	put_error(char *str)
+{
+	ft_putstr_fd("minishell: export: not a valid identifier `", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd("'\n", 2);
+}
+
 int	is_builtin_cmd(t_data *data, t_command *command)
 {
 	if (!command)

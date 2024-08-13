@@ -6,31 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/12 12:52:06 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/13 09:58:27 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
-
-void	child_process(t_data *data, t_command *node1, char **env, t_pipex *p)
-{
-	shlvl_update(data);
-	if (p->flag == 1)
-		infile(data, node1, env, p);
-	else if (p->flag == 2)
-		pipe_heredoc(data, node1, env, p);
-	else if (p->w == 2)
-		outfile(data, node1, env, p);
-	else if (node1->type == TOKEN && node1->next == NULL)
-		excut_butlin(data, node1, env, p);
-	else
-	{
-		close(p->end[0]);
-		dup2(p->end[1], STDOUT_FILENO);
-		close(p->end[1]);
-		excut_butlin(data, node1, env, p);
-	}
-}
 
 pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 {
@@ -82,7 +62,7 @@ void	ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p)
 	}
 }
 
-void exec_cmd(t_data *data, t_pipex *pipex, t_command *list)
+void	exec_cmd(t_data *data, t_pipex *pipex, t_command *list)
 {
 	if (pipex->count_pipe == 0 && if_is_buil(list))
 	{

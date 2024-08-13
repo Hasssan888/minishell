@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/12 21:09:54 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/13 10:01:07 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,8 @@ void					print_list(t_command *table);
 // errors
 
 void					check_synt_err(char *str);
+void					put_error(char *str);
+void					ft_perror(char *message);
 
 // buit-in commands:
 
@@ -278,7 +280,6 @@ void					print_list(t_command *table);
 
 void					print_minishell(void);
 void					print_prompt(void);
-void					ft_perror(char *message);
 
 // signals hanling
 
