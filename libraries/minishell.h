@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/13 10:01:07 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/13 12:15:52 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,8 @@ typedef struct s_path
 
 extern int	g_exit_stat; // for use this global var from all files
 
+// print functions
+
 void					print_minishell(void);
 void					print_prompt(void);
 void					print_type(int type);
@@ -275,11 +277,7 @@ void					clear_env(t_env **env);
 int						get_token_type(char *token);
 char					*get_prompt(void);
 void					print_list(t_command *table);
-
-// print functions
-
-void					print_minishell(void);
-void					print_prompt(void);
+char					*read_input(void);
 
 // signals hanling
 

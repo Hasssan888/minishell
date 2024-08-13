@@ -6,11 +6,37 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:50:47 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/11 23:50:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/13 11:46:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
+
+char	*get_prompt(void)
+{
+	char	*prompt;
+	char	*cwd;
+
+	prompt = NULL;
+	cwd = getcwd(NULL, 0);
+	if (cwd)
+	{
+		prompt = ft_strjoin(ft_strdup("┌──(aelkheta㉿1337)-["), cwd);
+		prompt = ft_strjoin(prompt, ft_strdup("]\n└─$ "));
+	}
+	return (prompt);
+}
+
+char	*read_input(void)
+{
+	char	*prompt;
+	char	*command;
+
+	prompt = get_prompt();
+	command = readline(prompt);
+	free(prompt);
+	return (command);
+}
 
 int	check_unqoted(char *line)
 {

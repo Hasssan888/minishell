@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:02:24 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/13 09:57:00 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/13 12:14:05 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,17 @@ int	change_dir(t_data *data, t_env *env, char *path)
 	if (path != NULL)
 	{
 		if (chdir(path) != 0)
+		{
+			perror("minishell: cd");
+			g_exit_stat = 1;
 			return (0);
+		}
 	}
 	else if (env != NULL)
 	{
 		if (chdir(env->env_key) != 0)
 			return (0);
 	}
-	free(data->prompt);
 	get_old_current_pwd(data);
 	return (1);
 }
