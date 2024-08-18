@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:45:44 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/12 11:57:56 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:34:53 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,25 @@
 
 void	w_loop(t_data *data, t_command *node, t_pipex *pipex, char *str)
 {
-	while (pipex->line != NULL && ft_strcmp(pipex->line, str) != 0)
+	while (true)
 	{
-		if (pipex->line[0] == '$' && !pipex->quoted)
-			pipex->line = expand_vars(data, pipex->line, 0);
+		pipex->line = readline("> ");
+		if (!pipex->line)
+		{
+			here_doc_error(node->args);
+			if (pipex->line)
+				free(pipex->line);
+			break ;
+		}
+		else
+			pipex->line = ft_strjoin(pipex->line, ft_strdup("\n"));
+		if (pipex->line && ft_strcmp(pipex->line, str) == 0)
+			break ;
+		if (pipex->line && pipex->line[0] == '$' && !pipex->quoted)
+			pipex->line = expand_vars(data, node, pipex->line);
 		write(pipex->strs[pipex->j][1], pipex->line, ft_strlen(pipex->line));
 		free(pipex->line);
-		pipex->line = readline("> ");
-		if (pipex->line == NULL)
-			here_doc_error(node->args);
-		else
-			pipex->line = strjoin1(pipex->line, "\n");
+		pipex->line = NULL;
 	}
 }
 
@@ -34,13 +42,10 @@ void	here_doc_child_pro(t_data *data, t_command *node, t_pipex *pipex)
 
 	str = NULL;
 	pipex->quoted = 0;
-	handle_signals(4);
+	handle_signals(SIG_QUI_IGN);
 	close(pipex->strs[pipex->j][0]);
-	pipex->line = readline("> ");
-	if (pipex->line == NULL)
-		here_doc_error(node->args);
-	else
-		pipex->line = strjoin1(pipex->line, "\n");
+	if (!node->args || !node->args[0])
+		exit(g_exit_stat);
 	str = strjoin1(node->args[0], "\n");
 	if (ft_strchr(str, '\'') || ft_strchr(str, '"'))
 		pipex->quoted = 1;
@@ -63,17 +68,13 @@ void	here_doc(t_data *data, t_command *node, t_pipex *pipex)
 	if (pid == 0)
 		here_doc_child_pro(data, node, pipex);
 	else if (pid > 0)
-	{
 		close(pipex->strs[pipex->j][1]);
-		pipex->r = pid;
-		wait(&pipex->status);
-		data->ignore_sig = check_exit_status(pipex->status);
-	}
 	else
 		panic("fork fail\n", 1);
 	pipex->r = pid;
 	wait(&pipex->status);
-	data->ignore_sig = check_exit_status(pipex->status);
+	if (g_exit_stat != 130)
+		data->ignore_sig = check_exit_status(pipex->status);
 }
 
 void	type_here_doc(t_data *data, t_command *cur, t_pipex *pipex)
@@ -99,10 +100,12 @@ void	open_here_doc(t_data *data, t_command *node, t_pipex *pipex)
 	cur = node;
 	while (cur != NULL)
 	{
-		if (data->ignore_sig == 130)
+		if (g_exit_stat == 130 && data->ignore_sig == 130)
 			break ;
 		if (cur->type == HER_DOC)
 			type_here_doc(data, cur, pipex);
+		if (g_exit_stat == SYNTERRR)
+			break ;
 		if (cur->type == PIPE)
 			pipex->q++;
 		cur = cur->next;

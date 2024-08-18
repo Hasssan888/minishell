@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:27:48 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 16:23:05 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 18:45:28 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void	free_array(char **array)
 	if (!array)
 		return ;
 	while (array[i] != NULL)
-		free(array[i++]);
+	{
+		free(array[i]);
+		array[i++] = NULL;
+	}
 	free(array);
 	array = NULL;
 }

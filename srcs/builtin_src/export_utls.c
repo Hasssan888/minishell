@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export_utiles1.c                                   :+:      :+:    :+:   */
+/*   export_utls.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:09:15 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/08 22:07:03 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/17 15:29:22 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ t_env	**sort_env(t_env **env_, int env_len)
 		j = 0;
 		while (j < env_len - i - 1)
 		{
-			if (ft_strcmp(env_[j]->env_value, env_[j + 1]->env_value) > 0)
+			if (ft_strncmp(env_[j]->env_value, env_[j + 1]->env_value, -1) > 0)
 			{
 				temp = env_[j];
 				env_[j] = env_[j + 1];

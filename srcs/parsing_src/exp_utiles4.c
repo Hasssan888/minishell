@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:13:28 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 10:11:33 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:16:40 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,11 @@ int	get_cmd_if_empty(t_command *list)
 	{
 		while (list->args[i] != NULL && is_empty(list->args[i]))
 			i++;
-		if (!list->args[i])
-			return (0);
 		free(list->value);
-		list->value = ft_strdup(list->args[0]);
+		if (list->args[i] && !is_empty(list->args[i]))
+			list->value = ft_strdup(list->args[i]);
+		else
+			list->value = NULL;
 	}
 	return (1);
 }

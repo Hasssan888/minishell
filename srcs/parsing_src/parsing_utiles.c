@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 15:28:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/13 12:16:01 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 14:41:36 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,6 @@ void	get_redirect_node(t_data *data)
 	if (!data->_tokens_list || data->_tokens_list->type != TOKEN)
 	{
 		g_exit_stat = SYNTERRR;
-		ft_putstr_fd("minishell: syntax error near unexpected \
-		token `newline'\n", 2);
-		free_array(data->list_cmd->args);
-		free_node(&data->list_cmd);
-		clear_list(&data->_tokens_list);
-		clear_list(&data->head);
 		return ;
 	}
 	data->list_cmd->args = malloc(2 * sizeof(char *));

@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 14:57:02 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/13 09:58:27 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:33:50 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,10 @@ pid_t	fork_pipe(t_data *data, t_command *node1, char **env, t_pipex *p)
 		ft_error_2();
 	else if (p->pid == 0)
 	{
-		handle_signals(3);
+		handle_signals(SIG_INT_QUI_DFL);
 		child_process(data, node1, env, p);
 		clear_list(&data->list);
 		clear_all(data);
-		free(p->s);
 		exit(g_exit_stat);
 	}
 	close(p->end[1]);
@@ -43,9 +42,7 @@ void	ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p)
 	while (p->cur != NULL)
 	{
 		if (data->ignore_sig == 130 || data->ignore_sig == 131)
-		{
 			return ;
-		}
 		if (p->cur->next && p->cur->next->syntxerr == AMPIGOUS)
 		{
 			ft_putstr_fd("minishell: ambiguous redirect\n", 2);
@@ -58,12 +55,19 @@ void	ft_pipe(t_data *data, t_command *node1, char **ev, t_pipex *p)
 		else if ((p->cur->type != RED_OUT || p->cur->type != APP)
 			&& p->cur->type == TOKEN)
 			skip_two(data, ev, p);
+		if (g_exit_stat == SYNTERRR)
+			break ;
 		p->cur = p->cur->next;
 	}
 }
 
 void	exec_cmd(t_data *data, t_pipex *pipex, t_command *list)
 {
+	if (list->next && list->next->syntxerr == AMPIGOUS)
+	{
+		ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+		return ;
+	}
 	if (pipex->count_pipe == 0 && if_is_buil(list))
 	{
 		exec_built_in(pipex, data, list);
@@ -85,12 +89,12 @@ void	ft_count(t_data *data, t_command *list, t_pipex *pipex)
 	ft_bzero(pipex, sizeof(t_pipex));
 	ft_count_here_doc(list, pipex);
 	ft_count_pipe(list, pipex);
-	ft_count_read_out(list, pipex);
-	ft_count_read_in(list, pipex);
+	ft_count_read_out_in(list, pipex);
 	if (pipex->count_here_doc > 0 && pipex->count_here_doc <= 16)
 		open_here_doc(data, list, pipex);
-	if (data->ignore_sig == 130 || data->ignore_sig == 131)
+	if (data->ignore_sig == 130)
 	{
+		free(pipex->line);
 		return ;
 	}
 	else if (pipex->count_here_doc > 16)
@@ -101,10 +105,8 @@ void	ft_count(t_data *data, t_command *list, t_pipex *pipex)
 		clear_all(data);
 		exit(g_exit_stat);
 	}
-	if (pipex->count_read_in > 0)
-		open_infile(list, pipex);
-	if (pipex->count_read_out > 0)
-		open_outfile(list, pipex);
+	if (pipex->count_read_out_in > 0)
+		open_file(list, pipex);
 }
 
 int	func(t_data *data, t_command *list)
@@ -112,6 +114,9 @@ int	func(t_data *data, t_command *list)
 	t_pipex	pipex;
 
 	pipex.s = NULL;
+	pipex.s2 = NULL;
+	pipex.s1 = NULL;
+	data->ignore_sig = 0;
 	if (!list || (!list->value && !list->next))
 		return (0);
 	if (!list->value && list->next && list->next->type == PIPE)
@@ -120,7 +125,13 @@ int	func(t_data *data, t_command *list)
 	if (data->ignore_sig == 130)
 	{
 		free_int_array(pipex.strs);
-		data->ignore_sig = 0;
+		return (0);
+	}
+	if (g_exit_stat == SYNTERRR)
+	{
+		free_int_array(pipex.strs);
+		ft_putstr_fd("minishell: syntax error near unexpected \
+token `newline'\n", 2);
 		return (0);
 	}
 	exec_cmd(data, &pipex, list);

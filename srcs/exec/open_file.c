@@ -6,107 +6,65 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:17 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/12 12:35:09 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:30:10 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
 
-void	out_app(t_command *cur, t_pipex *p)
+void	red_in(t_command *cur, t_pipex *p)
 {
-	if (ft_strcmp(cur->args[0], "/dev/stdout") != 0)
+	if (cur->type == RED_OUT && cur->args[0] != NULL && p->indixe == 0)
 	{
-		if (cur->type == RED_OUT && cur->args[0] != NULL)
-		{
-			p->fd[p->i] = open(cur->args[0], O_WRONLY | O_CREAT | O_TRUNC,
-					0644);
-			p->b = 1;
-		}
-		else if (cur->type == APP && cur->args[0] != NULL)
-		{
-			p->fd[p->i] = open(cur->args[0], O_WRONLY | O_CREAT | O_APPEND,
-					0644);
-			p->b = 2;
-		}
-		if (p->fd[p->i] == -1)
-		{
-			perror(cur->args[0]);
-			p->indixe = 1;
-		}
-		p->s = cur->args[0];
-		p->i++;
+		p->outfile = open(cur->args[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		p->b = 1;
+		p->s2 = cur->args[0];
+	}
+	else if (cur->type == APP && cur->args[0] != NULL && p->indixe == 0)
+	{
+		p->outfile = open(cur->args[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		p->s2 = cur->args[0];
+		p->b = 2;
 	}
 }
 
-void	ft_loop(t_command *cur, t_pipex *p)
+void	out_app_in_(t_command *cur, t_pipex *p)
 {
-	while (cur && p->i < p->count_read_out)
+	if (ft_strncmp(cur->args[0], "/dev/stdout", -1) != 0)
+		red_in(cur, p);
+	if (ft_strncmp(cur->args[0], "/dev/stdin", -1) != 0)
 	{
-		if (cur->type == PIPE)
-			break ;
-		else if (cur->syntxerr != AMPIGOUS && (cur->type == RED_OUT
-				|| cur->type == APP))
-			out_app(cur, p);
-		cur = cur->next;
+		if (cur->type == RED_IN && cur->args[0] != NULL && p->indixe != 1)
+		{
+			p->infile = open(cur->args[0], O_RDONLY, 0644);
+			p->s1 = cur->args[0];
+		}
 	}
+	if (p->outfile == -1)
+		p->indixe = 1;
+	if (p->infile == -1)
+		p->indixe = 2;
+	p->s = cur->args[0];
 }
 
-void	open_outfile(t_command *node, t_pipex *p)
+void	open_file(t_command *node, t_pipex *p)
 {
 	t_command	*cur;
 
 	p->b = 0;
 	p->indixe = 0;
-	p->fd = malloc(sizeof(int) * p->count_read_out);
-	if (p->fd == NULL)
-		panic("malloc fail", 1);
-	p->i = 0;
+	p->outfile = 1;
+	p->infile = 0;
 	cur = node;
-	ft_loop(cur, p);
-	if (p->i > 0)
-		p->outfile = p->fd[p->i - 1];
-	free(p->fd);
-	p->i = -1;
-}
-
-void	red_in(t_command *cur, t_pipex *p)
-{
-	if (ft_strcmp(cur->args[0], "/dev/stdin") != 0)
+	while (cur)
 	{
-		p->fd[p->i] = open(cur->args[0], O_RDONLY, 0644);
-		if (p->fd[p->i] == -1)
-		{
-			perror(cur->args[0]);
-			p->indixe = 1;
-		}
-		p->i++;
-	}
-	else
-		p->save_in = open(cur->args[0], O_RDONLY, 0644);
-}
-
-void	open_infile(t_command *node, t_pipex *p)
-{
-	t_command	*cur;
-
-	p->save_in = 0;
-	p->indixe = 0;
-	p->fd = malloc(sizeof(int) * p->count_read_in);
-	if (p->fd == NULL)
-		panic("malloc fail\n", 1);
-	p->i = 0;
-	cur = node;
-	while (cur && p->i < p->count_read_in)
-	{
+		if (g_exit_stat == SYNTERRR)
+			break ;
 		if (cur->type == PIPE)
 			break ;
-		if (cur->type == RED_IN)
-			red_in(cur, p);
+		else if (cur->syntxerr != AMPIGOUS && (cur->type == RED_OUT
+				|| cur->type == APP || cur->type == RED_IN))
+			out_app_in_(cur, p);
 		cur = cur->next;
 	}
-	if (p->i > 0)
-		p->infile = p->fd[p->i - 1];
-	else
-		p->infile = p->save_in;
-	free(p->fd);
 }

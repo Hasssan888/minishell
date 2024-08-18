@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:43:39 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/13 12:15:52 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 14:34:54 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # include <stdio.h>             // for printf
 # include <stdlib.h>            // for malloc and free
 # include <sys/stat.h>          // for file and dir info
-# include <sys/stat.h>          // for file and dir info
 # include <sys/types.h>         //
 # include <sys/wait.h>
 
@@ -40,6 +39,15 @@
 # define WHITESPACES " \t\v\n"
 # define SYNTERRR 2
 # define AMPIGOUS 1
+
+// MACROS for signals
+
+# define SIG_INT_HANDL 1
+# define SIG_INT_QUI_IGN 2
+# define SIG_INT_QUI_DFL 3
+# define SIG_QUI_IGN 4
+
+// MACROS for parsing
 
 # define TOKEN 0
 # define PIPE 1
@@ -143,14 +151,15 @@ typedef struct s_pipex
 	int					save1;
 	int					save2;
 	int					count_pipe;
-	int					count_read_in;
-	int					count_read_out;
+	int					count_read_out_in;
 	int					count_here_doc;
 	int					flag;
 	int					b;
 	char				*line;
 	t_command			*cur;
 	char				*s;
+	char				*s1;
+	char				*s2;
 	int					*end_1;
 	int					*pipe_t;
 	int					save_in;
@@ -180,13 +189,12 @@ void					print_list(t_command *table);
 
 // errors
 
-void					check_synt_err(char *str);
-void					put_error(char *str);
-void					ft_perror(char *message);
+// void					put_error(char *str);
 
 // buit-in commands:
 
-int						is_builtin_cmd(t_data *data, t_command *command);
+int						is_builtin_cmd(t_data *data, t_command *command,
+							int flag);
 void					get_old_current_pwd(t_data *data);
 int						change_dir(t_data *data, t_env *env, char *path);
 int						chdir_home_prev(t_data *data, t_env *env, char **args);
@@ -201,7 +209,7 @@ int						ft_is_str_digit(char *str);
 int						env(t_env *env);
 int						check_exit_overflow(char *str, int exit_num);
 void					check_exit(t_data *data, t_command *command);
-void					exit_(t_data *data, t_command *command);
+void					exit_(t_data *data, t_command *command, int flag);
 void					print_sorted_env(t_env *env);
 int						valid_identifier(char *str);
 char					**get_exp_splited(char *str, char del);
@@ -220,12 +228,15 @@ void					pwd(t_data *data);
 void					print_array(char **array);
 void					panic(char *error_str, int exit_stat);
 void					check_synt_err(char *str);
+void					put_error(char *str);
+
 // utiles for linked list:
 
 void					add_back_list(t_command **lst, t_command *new);
 t_command				*new_node(int type, char *value);
 void					clear_list(t_command **lst);
 t_command				*lstlastcmd(t_command *lst);
+
 // parsing functions
 
 int						parse_command(t_data *data, char *command);
@@ -247,6 +258,8 @@ char					*duplicate_word(char *command_line, int *i, int j);
 
 // expander functions
 
+t_command				*expander_command(t_data *data, t_command *list);
+char					**ft_split_str(const char *s, char *del);
 void					what_quote(t_command *list, char *arg);
 char					*get_var(char *env_var, int *i);
 char					*unquote_arg(t_command *list, char *arg, int j, int k);
@@ -256,7 +269,8 @@ char					*expand_digits(t_data *data, char *argument, int *i);
 void					expand_(t_data *data, char *argument, int *i);
 char					*expand_vars__(t_data *data, char *argument);
 char					*_get_quoted___word(char *arg, int *i);
-char					*expand_vars(t_data *data, char *argument, int i);
+char					*expand_vars(t_data *data, t_command *list,
+							char *argument);
 size_t					ft_len_arr(char **arr);
 char					**ft_arr_join(char **arr1, char **arr2);
 int						ambigous_red(char *red_file);
@@ -268,7 +282,8 @@ char					**split_argument(t_command *list, int i);
 int						get_cmd_if_empty(t_command *list);
 char					**split_and_join(char **args, char *exp_args);
 int						get_real_len(char **arr);
-
+int						exist_exp_cmd(char *cmd, char *arg);
+int						is_all_quotes(char *str);
 // mini utiles
 
 void					init_minishell(t_data *data, int ac, char **av,
@@ -299,16 +314,6 @@ void					free_env_ptr(t_env **env_ptr);
 int						check_unqoted(char *line);
 char					*lexer_command(t_data *data, char *line);
 
-// expander functions
-
-char					*get_var(char *env_var, int *i);
-char					*unquote_arg(t_command *list, char *arg, int j, int k);
-char					*get_word(char *argument, int *i);
-char					*expand_vars(t_data *data, char *argument, int i);
-t_command				*expander_command(t_data *data, t_command *list);
-int						get_expanded(t_data *data, char *argument, int *i);
-char					**ft_split_str(const char *s, char *del);
-
 // clean functions
 t_command				*free_node(t_command **node);
 void					clear_list(t_command **lst);
@@ -319,10 +324,8 @@ void					free_command(t_command *cmd);
 // execution
 
 void					ft_count_pipe(t_command *list, t_pipex *p);
-void					ft_count_read_out(t_command *node, t_pipex *p);
-void					ft_count_read_in(t_command *node, t_pipex *p);
-void					open_outfile(t_command *node, t_pipex *p);
-void					open_infile(t_command *node, t_pipex *p);
+void					ft_count_read_out_in(t_command *node, t_pipex *p);
+void					open_file(t_command *node, t_pipex *p);
 void					ft_count_here_doc(t_command *node, t_pipex *p);
 char					*function(char **env);
 char					*slash(char *mycmdargs);
@@ -368,5 +371,7 @@ void					child_process(t_data *data, t_command *node1,
 							char **env, t_pipex *p);
 char					**get_env_add_ele(char **env);
 void					shlvl_update(t_data *data);
+void					out_app_in_(t_command *cur, t_pipex *p);
+int						in_out_err(t_pipex *p);
 
 #endif

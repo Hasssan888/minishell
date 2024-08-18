@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 12:12:16 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/13 10:00:15 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 17:59:33 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 char	*expand_digits(t_data *data, char *argument, int *i)
 {
-	int	j;
+	int		j;
+	char	*dup;
 
 	if (argument[*i + 1] && ft_isdigit(argument[*i + 1]))
 	{
@@ -24,8 +25,8 @@ char	*expand_digits(t_data *data, char *argument, int *i)
 			return (data->expanded);
 		while (argument[++j] && argument[j] != '$')
 			;
-		data->expanded = ft_strjoin(data->expanded, duplicate_word(argument, i,
-					j));
+		dup = duplicate_word(argument, i, j);
+		data->expanded = ft_strjoin(data->expanded, dup);
 		*i = j;
 	}
 	return (data->expanded);
@@ -72,6 +73,7 @@ char	*expand_vars__(t_data *data, char *argument)
 		free(data->expanded);
 		data->expanded = NULL;
 	}
+	free(argument);
 	return (data->expanded);
 }
 
@@ -102,21 +104,23 @@ char	*_get_quoted___word(char *arg, int *i)
 	return (_quoted_word);
 }
 
-char	*expand_vars(t_data *data, char *argument, int i)
+char	*expand_vars(t_data *data, t_command *list, char *argument)
 {
+	int		i;
 	char	*word;
 
+	i = 0;
 	data->expanded = ft_strdup("");
 	while (argument[i])
 	{
 		word = _get_quoted___word(argument, &i);
-		if (ft_strchr(word, '$') && word != NULL && word[0] != '\'')
-		{
+		word = unquote_arg(list, word, 0, 0);
+		if (word && ft_strchr(word, '$') && list->quoted != 1)
 			expand_vars__(data, word);
-			free(word);
-		}
-		else
+		else if (word)
+		{
 			data->expanded = ft_strjoin(data->expanded, word);
+		}
 	}
 	free(argument);
 	return (data->expanded);

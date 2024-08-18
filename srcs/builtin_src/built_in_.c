@@ -19,9 +19,9 @@ void	put_error(char *str)
 	ft_putstr_fd("'\n", 2);
 }
 
-int	is_builtin_cmd(t_data *data, t_command *command)
+int	is_builtin_cmd(t_data *data, t_command *command, int flag)
 {
-	if (!command)
+	if (!command || !command->value)
 		return (0);
 	if (ft_strcmp(command->value, "echo") == 0)
 		echo(&command->args[1]);
@@ -36,7 +36,7 @@ int	is_builtin_cmd(t_data *data, t_command *command)
 	else if (ft_strcmp(command->value, "unset") == 0)
 		unset(data, &command->args[1]);
 	else if (ft_strcmp(command->value, "exit") == 0)
-		exit_(data, command);
+		exit_(data, command, flag);
 	else
 		return (0);
 	return (1);

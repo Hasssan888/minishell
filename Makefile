@@ -6,7 +6,7 @@
 #    By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/13 14:40:15 by aelkheta          #+#    #+#              #
-#    Updated: 2024/08/13 09:35:38 by aelkheta         ###   ########.fr        #
+#    Updated: 2024/08/17 08:37:15 by aelkheta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,13 +33,14 @@ SRC_P = $(SRCDIR)/minishell.c\
 		$(SRCDIR)/exp_utiles2.c\
 		$(SRCDIR)/exp_utiles3.c\
 		$(SRCDIR)/exp_utiles4.c\
+		$(SRCDIR)/exp_utiles5.c\
 		$(SRCDIR)/tokenizer.c\
 		$(SRCDIR)/expander.c\
 		$(SRCDIR)/lexer.c\
 		$(SRCDIR)/check_errors.c\
 		$(SRCDIR)/print_functions.c\
 
-SRC_B =	$(BLTDIR)/built_in_.c\
+SRC_B = $(BLTDIR)/built_in_.c\
 		$(BLTDIR)/echo_.c\
 		$(BLTDIR)/exit_.c\
 		$(BLTDIR)/export_utls.c\
@@ -48,7 +49,7 @@ SRC_B =	$(BLTDIR)/built_in_.c\
 		$(BLTDIR)/export_.c\
 		$(BLTDIR)/pwd_unset.c\
 
-SRC_E =	$(EXEDIR)/allcmd.c\
+SRC_E = $(EXEDIR)/allcmd.c\
 		$(EXEDIR)/error.c\
 		$(EXEDIR)/excute.c\
 		$(EXEDIR)/here_doc.c\
@@ -60,53 +61,74 @@ SRC_E =	$(EXEDIR)/allcmd.c\
 		$(EXEDIR)/utillis.c\
 		$(EXEDIR)/shlvl.c\
 
-OBJ_P = $(patsubst $(SRCDIR)%.c, $(OBJDIR)%.o, $(SRC_P))
-OBJ_B = $(patsubst $(BLTDIR)%.c, $(OBJDIR)%.o, $(SRC_B))
-OBJ_E = $(patsubst $(EXEDIR)%.c, $(OBJDIR)%.o, $(SRC_E))
+OBJ_P = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC_P))
+OBJ_B = $(patsubst $(BLTDIR)/%.c, $(OBJDIR)/%.o, $(SRC_B))
+OBJ_E = $(patsubst $(EXEDIR)/%.c, $(OBJDIR)/%.o, $(SRC_E))
+
+OBJ = $(OBJ_P) $(OBJ_B) $(OBJ_E)
 
 all: $(NAME)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(OBJDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/%.o: $(BLTDIR)/%.c
+	@mkdir -p $(OBJDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/%.o: $(EXEDIR)/%.c
+	@mkdir -p $(OBJDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-# $(LIBFT):
-# 	@mkdir -p $(OBJDIR)
-# 	@echo "Compiling libft..."
-# 	@make -C ./libraries/libft
-# 	@make bonus -C ./libraries/libft
-# 	@echo "Compiling libft done"
-
-#	 @echo "Removing libft obj files..."
-#	 @make clean -C ./libraries/libft
-#	 @make fclean -C ./libraries/libft
-#	 @echo "Cleaning libft..."
-#	 @echo "Cleaning libft done"
-	
-$(NAME): $(LIBFT) $(OBJ_P) $(OBJ_B) $(OBJ_E)
+$(NAME): $(OBJ)
 	@echo "Building..."
-	@$(CC) $(CFLAGS) $(OBJ_P) $(OBJ_B) $(OBJ_E) $(RLFLAG) $(LIBFT) -o $@
-#	@./compiling Building 2
+	@$(CC) $(CFLAGS) $(OBJ) $(RLFLAG) $(LIBFT) -o $@
 	@echo "Building done"
 
 clean:
 	@echo "Removing object files..."
 	@rm -rf $(OBJDIR)/*.o
-#	@./compiling Cleaning 2
 	@echo "Removing object files done"
 
 fclean: clean
 	@echo "Removing program name..."
 	@rm -f $(NAME)
-#	@./compiling Cleaning 2
 	@echo "Removing program name done"
 
 re: fclean all
 
 .PHONY: all clean fclean re
-.SECONDARY:
+
+
+#all: $(NAME)
+#
+#$(OBJDIR)/%.o: $(SRCDIR)/%.c
+#	@mkdir -p objs
+#	@$(CC) $(CFLAGS) -c $< -o $@
+#
+#$(OBJDIR)/%.o: $(BLTDIR)/%.c
+#	@$(CC) $(CFLAGS) -c $< -o $@
+#
+#$(OBJDIR)/%.o: $(EXEDIR)/%.c
+#	@$(CC) $(CFLAGS) -c $< -o $@
+#
+#$(NAME): $(LIBFT) $(OBJ_P) $(OBJ_B) $(OBJ_E)
+#	@echo "Building..."
+#	@$(CC) $(CFLAGS) $(OBJ_P) $(OBJ_B) $(OBJ_E) $(RLFLAG) $(LIBFT) -o $@
+#	@echo "Building done"
+#
+#clean:
+#	@echo "Removing object files..."
+#	@rm -rf $(OBJDIR)/*.o
+#	@echo "Removing object files done"
+#
+#fclean: clean
+#	@echo "Removing program name..."
+#	@rm -f $(NAME)
+#	@echo "Removing program name done"
+#
+#re: fclean all
+#
+#.PHONY: all clean fclean re
+#.SECONDARY:

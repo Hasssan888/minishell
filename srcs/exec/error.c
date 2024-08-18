@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:47:09 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/09 15:10:44 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 11:08:07 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ void	ft_error_2(void)
 
 void	ft_error(t_data *data, char **av)
 {
-	if (ft_strcmp(av[0], ".") == 0)
+	if (av[0] && ft_strcmp(av[0], ".") == 0)
 	{
 		ft_putstr_fd(".: filename argument required\n", 2);
 		ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
 		g_exit_stat = 2;
 	}
-	else if (ft_strcmp(av[0], "..") == 0)
+	else if (av[0] && ft_strcmp(av[0], "..") == 0)
 	{
 		ft_putstr_fd("command not found: ..\n", 2);
 		g_exit_stat = 127;
@@ -55,23 +55,10 @@ void	ft_error(t_data *data, char **av)
 	}
 }
 
-char	*ft_strchr(const char *s, int c)
-{
-	if (!s)
-		return (0);
-	while (*s != '\0')
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	if (*s == (char)c)
-		return ((char *)s);
-	return (0);
-}
-
 int	ft_strcmp(char *s1, char *s2)
 {
+	if (!s1 || !s2)
+		return (1);
 	while (*s1 && *s2 && *s1 == *s2)
 	{
 		s1++;

@@ -6,37 +6,11 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 09:33:27 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/13 09:52:05 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:18:45 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libraries/minishell.h"
-
-void	what_quote(t_command *list, char *arg)
-{
-	int		i;
-	char	quote;
-
-	i = -1;
-	quote = 0;
-	while (arg && arg[++i])
-	{
-		if (arg[i] == '\'' || arg[i] == '"')
-		{
-			quote = arg[i];
-			while (arg[i] && arg[i] != quote)
-				i++;
-			if (arg[i])
-			{
-				if (arg[i] == quote && quote == '\'')
-					list->quoted = 1;
-				else if (arg[i] == quote && quote == '"')
-					list->quoted = 2;
-				return ;
-			}
-		}
-	}
-}
 
 char	*get_var(char *env_var, int *i)
 {
@@ -56,14 +30,26 @@ char	*get_var(char *env_var, int *i)
 	return (env_val);
 }
 
+char	*check_arg(t_command *list, char *arg)
+{
+	char	*argument;
+
+	argument = NULL;
+	if (!list || !arg)
+		return (NULL);
+	what_quote(list, arg);
+	argument = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
+	if (!argument)
+		panic("malloc fail\n", 1);
+	return (argument);
+}
+
 char	*unquote_arg(t_command *list, char *arg, int j, int k)
 {
 	char	quote;
 	char	*argument;
 
-	if (!list || !arg)
-		return (NULL);
-	argument = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
+	argument = check_arg(list, arg);
 	while (arg[j])
 	{
 		quote = 0;
@@ -80,7 +66,6 @@ char	*unquote_arg(t_command *list, char *arg, int j, int k)
 		else if (arg[j])
 			argument[k++] = arg[j++];
 	}
-	what_quote(list, arg);
 	free(arg);
 	return (argument);
 }

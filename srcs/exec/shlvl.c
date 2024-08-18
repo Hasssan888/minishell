@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 11:49:23 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/13 09:58:37 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 10:23:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,23 @@ void	shlvl_update(t_data *data)
 	t_env	*env_ptr;
 
 	ptr = NULL;
-	env_ptr = NULL;
 	env_ptr = get_env_ele_ptr(data->env, "SHLVL");
 	if (env_ptr && env_ptr->env_key)
 	{
 		a = ft_atoi(env_ptr->env_key) + 1;
+		if (a < 1 || a > 1000)
+			a = 1;
 		ptr = get_env_add_ele(data->envirenment);
 		if (ptr && *ptr)
 		{
 			free(*ptr);
 			*ptr = ft_strjoin(ft_strdup("SHLVL="), ft_itoa(a));
 		}
+	}
+	else if (!env_ptr)
+	{
+		add_back(&data->env, lstnew(ft_strdup("SHLVL"), ft_strdup("0")));
+		free_array(data->envirenment);
+		data->envirenment = env_to_array_(data->env);
 	}
 }

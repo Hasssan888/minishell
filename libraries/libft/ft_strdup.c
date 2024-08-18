@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 14:43:00 by aelkheta          #+#    #+#             */
-/*   Updated: 2023/11/23 10:36:15 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 09:49:46 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_strdup(const char *s)
 	size_t	len;
 	char	*ptr;
 
+	if (!s)
+		return (NULL);
 	len = ft_strlen(s);
 	ptr = (char *)malloc(len * sizeof(char) + 1);
 	if (!ptr)

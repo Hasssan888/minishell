@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 22:01:31 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/09 10:11:10 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/15 15:50:59 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	check_exit_overflow(char *str, int exit_num)
 
 void	check_exit(t_data *data, t_command *command)
 {
+	if (!command->args[1])
+		exit(g_exit_stat);
 	data->exit_status = ft_atoi(command->args[1]);
 	if (check_exit_overflow(command->args[1], data->exit_status))
 	{
@@ -36,9 +38,10 @@ void	check_exit(t_data *data, t_command *command)
 	g_exit_stat = data->exit_status;
 }
 
-void	exit_(t_data *data, t_command *command)
+void	exit_(t_data *data, t_command *command, int flag)
 {
-	printf("exit\n");
+	if (flag)
+		ft_putstr_fd("exit\n", 2);
 	if (command->args[1] != NULL && !ft_is_str_digit(command->args[1]))
 	{
 		ft_putstr_fd("minishell: exit: numeric argument required\n", 2);

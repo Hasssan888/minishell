@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:46:47 by hbakrim           #+#    #+#             */
-/*   Updated: 2024/08/13 09:58:51 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:13:28 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,9 @@ void	skip_pipe(t_pipex *p)
 	if (p->cur->type == PIPE)
 	{
 		p->indixe = 0;
-		ft_count_read_in(p->cur->next, p);
-		if (p->count_read_in > 0)
-			open_infile(p->cur->next, p);
-		ft_count_read_out(p->cur->next, p);
-		if (p->count_read_out > 0)
-			open_outfile(p->cur->next, p);
+		ft_count_read_out_in(p->cur->next, p);
+		if (p->count_read_out_in > 0)
+			open_file(p->cur->next, p);
 		p->k++;
 		p->w = check(p->cur->next);
 	}
@@ -71,10 +68,9 @@ void	ft_count_here_doc(t_command *node, t_pipex *p)
 void	here_doc_error(char **av)
 {
 	ft_putstr_fd("minishell: warning: here-document \
-	delimited by end-of-file wanted ", 2);
+delimited by end-of-file wanted ", 2);
 	ft_putstr_fd(av[0], 2);
 	write(2, "\n", 1);
-	g_exit_stat = 1;
 }
 
 void	exec_built_in(t_pipex *pipex, t_data *data, t_command *list)

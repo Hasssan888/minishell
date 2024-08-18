@@ -6,7 +6,7 @@
 /*   By: aelkheta <aelkheta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 14:52:20 by aelkheta          #+#    #+#             */
-/*   Updated: 2024/08/13 10:44:36 by aelkheta         ###   ########.fr       */
+/*   Updated: 2024/08/18 20:26:53 by aelkheta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ char	**ft_arr_add_back(char **arr, char *str)
 		arr_cpy[1] = NULL;
 		return (arr_cpy);
 	}
-	if (!arr_cpy)
-		return (NULL);
 	while (++i < len)
 		arr_cpy[i] = ft_strdup(arr[i]);
 	arr_cpy[i] = ft_strdup(str);
@@ -39,18 +37,36 @@ char	**ft_arr_add_back(char **arr, char *str)
 	return (arr_cpy);
 }
 
+int	is_all_quotes(char *str)
+{
+	int	i;
+	int	quote;
+
+	i = 0;
+	quote = 0;
+	if (str && (str[i] == '\'' || str[i] == '"'))
+		quote = str[i++];
+	else
+		return (0);
+	while (str && str[i++] && str[i] == quote)
+		;
+	if (!str[i] && ft_strlen(str) > 2)
+		return (1);
+	return (0);
+}
+
 char	**exp___(t_data *data, t_command *list, char **args, int i)
 {
 	if (ft_strchr(list->args[i], '$') && list->type != HER_DOC)
 	{
-		list->args[i] = expand_vars(data, list->args[i], 0);
+		list->args[i] = expand_vars(data, list, list->args[i]);
 		data->flag = 1;
 	}
-	if (list->type != HER_DOC && ft_strncmp(list->value, "echo", -1))
+	else if (!is_empty(list->args[i]) && list->type != HER_DOC)
 		list->args[i] = unquote_arg(list, list->args[i], 0, 0);
-	if (!is_empty(list->args[i]))
+	if (!is_empty(list->args[i]) || !data->flag)
 	{
-		if (data->flag && !list->quoted && !ft_strchr(list->args[i], '='))
+		if (data->flag && !list->quoted && !is_empty(list->args[i]))
 		{
 			args = split_and_join(args, list->args[i]);
 			data->flag = 0;
@@ -63,6 +79,8 @@ char	**exp___(t_data *data, t_command *list, char **args, int i)
 			return (NULL);
 		}
 	}
+	if (is_empty(list->args[0]))
+		free(list->args[i]);
 	return (args);
 }
 
@@ -87,8 +105,7 @@ int	expander_extended(t_data *data, t_command *list)
 		list->args = args;
 	}
 	if (list->value && list->value[0] && ft_strchr(list->value, '$'))
-		list->value = expand_vars(data, list->value, 0);
-	list->value = unquote_arg(list, list->value, 0, 0);
+		list->value = expand_vars(data, list, list->value);
 	get_cmd_if_empty(list);
 	is_ambiguous(list);
 	return (1);
